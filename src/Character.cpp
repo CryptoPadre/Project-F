@@ -1,0 +1,77 @@
+#include "Character.h"
+#include "raylib.h"
+#include "raymath.h"
+
+Character::Character()
+{
+
+width = (float)texture.width / totalColumns;
+ height = (float)texture.height / totalRows;
+}
+
+void Character::setScreenPos(int winWidht, int winHeight)
+{
+	screenPos = {
+		(float)winWidht / 2.0f -  0.5f * width,
+		(float)winHeight / 2.0f - 0.5f * height};
+}
+void Character::tick(float deltaTime)
+{	
+	worldPosLastFrame = worldPos;
+
+	Vector2 direction{};
+	if (IsKeyDown(KEY_A))
+	{
+		direction.x -= 1.0;
+		currentRow = 1;
+	}
+	if (IsKeyDown(KEY_D))
+	{
+		direction.x += 1.0;
+		currentRow = 3;
+	}
+	if (IsKeyDown(KEY_W))
+	{
+		direction.y -= 1.0;
+		currentRow = 0;
+	}
+	if (IsKeyDown(KEY_S))
+	{
+		direction.y += 1.0;
+		currentRow = 2;
+	}
+	if (Vector2Length(direction) != 0.0)
+	{
+		// set worldPos = worldPos + direction
+
+		worldPos = Vector2Add(worldPos, Vector2Scale(Vector2Normalize(direction), speed));
+		frameTime += deltaTime;
+		if (frameTime >= frameDuration)
+		{
+			currentFrame++;
+			if (currentFrame >= totalColumns)
+				currentFrame = 0;
+			frameTime = 0.0f;
+		}
+	}
+
+	// Define source rectangle to pick one frame
+	Rectangle source{
+		width * currentFrame, // X: shift by frame
+		height * currentRow,  // Y: shift by row
+		width,
+		height};
+
+	// Define destination rectangle
+	Rectangle dest{
+		screenPos.x,
+		screenPos.y,
+		width * 2.0f,
+		height * 2.0f};
+	// draw character
+	DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+}
+
+void Character::undoMovement(){
+	worldPos = worldPosLastFrame;
+}
