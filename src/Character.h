@@ -3,11 +3,11 @@
 class Character
 {
 public:
-	Character();
+	Character(int winWidth, int winHeight);
 	Vector2 getWorldPos() { return worldPos; }
-	void setScreenPos(int winWidth, int winHeight);
 	void tick(float deltaTime);
 	void undoMovement();
+	Rectangle GetCollisionRec();
 
 private:
 	Texture2D texture{LoadTexture("hero-walk.png")};
@@ -26,4 +26,5 @@ private:
 	const float speed{3.f};
 	float width{};
 	float height{};
+	float scale{2.0f};
 };

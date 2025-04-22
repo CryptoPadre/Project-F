@@ -2,21 +2,18 @@
 #include "raylib.h"
 #include "raymath.h"
 
-Character::Character()
+Character::Character(int winWidth, int winHeight)
 {
 
-width = (float)texture.width / totalColumns;
- height = (float)texture.height / totalRows;
-}
-
-void Character::setScreenPos(int winWidht, int winHeight)
-{
+	width = (float)texture.width / totalColumns;
+	height = (float)texture.height / totalRows;
 	screenPos = {
-		(float)winWidht / 2.0f -  0.5f * width,
-		(float)winHeight / 2.0f - 0.5f * height};
+		static_cast<float>(winWidth) / 2.0f - (0.5f * width),
+		static_cast<float>(winHeight) / 2.0f - (0.5f * height)};
 }
+
 void Character::tick(float deltaTime)
-{	
+{
 	worldPosLastFrame = worldPos;
 
 	Vector2 direction{};
@@ -66,12 +63,23 @@ void Character::tick(float deltaTime)
 	Rectangle dest{
 		screenPos.x,
 		screenPos.y,
-		width * 2.0f,
-		height * 2.0f};
+		width * scale,
+		height * scale};
 	// draw character
 	DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+	DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
 }
 
-void Character::undoMovement(){
+void Character::undoMovement()
+{
 	worldPos = worldPosLastFrame;
+}
+
+Rectangle Character::GetCollisionRec()
+{
+	return Rectangle{
+		screenPos.x - 50,
+		screenPos.y + 50,
+		width * scale,
+		height * scale};
 }

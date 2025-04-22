@@ -11,6 +11,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "raymath.h"
 #include "resource_dir.h" // utility header for SearchAndSetResourceDir
 #include "Character.h"
+#include <string>
+#include "Prop.h"
 
 int main()
 {
@@ -36,14 +38,16 @@ int main()
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
-	Vector2 mapNightPos{entryWidth, entryHeight};
+	// Render props
+
+	Prop props[1]{
+		Prop{Vector2{1500.f, 10.f}, LoadTexture("house.png")}};
+
 	// set target fps
 	SetTargetFPS(60);
 	// change the map if it night or daytime
 	bool isDayTime{true};
-
-	Character hero;
-	hero.setScreenPos(screenWidth, screenHeight);
+	Character hero{screenWidth, screenHeight};
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
@@ -56,12 +60,17 @@ int main()
 		if (isDayTime)
 		{
 			// draw the map for daytime
-			DrawTextureEx(map, mapPos, 0.0, 2.0, WHITE);
+			DrawTextureEx(map, mapPos, 0.0, mapScale, WHITE);
 		}
 		else
 		{
 			// draw the map for nighttime
-			DrawTextureEx(mapNightTexture, mapNightPos, 0.0, mapScale, WHITE);
+			DrawTextureEx(mapNightTexture, mapPos, 0.0, mapScale, WHITE);
+		}
+		// draw props
+		for (auto prop : props)
+		{
+			prop.Render(hero.getWorldPos());
 		}
 		hero.tick(GetFrameTime());
 		if (hero.getWorldPos().x < 0.f || hero.getWorldPos().y < 0.f ||
@@ -70,17 +79,26 @@ int main()
 		{
 			hero.undoMovement();
 		}
+		// check prop collision
+		for (auto prop : props)
+		{
+			if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()),
+			hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+			}
+		}
 
-		// end the frame and get ready for the next one  (display frame, poll input, etc...)
-		EndDrawing();
+			// end the frame and get ready for the next one  (display frame, poll input, etc...)
+			EndDrawing();
+		}
+
+		// cleanup
+		// unload our texture so it can be cleaned up
+		UnloadTexture(map);
+		UnloadTexture(mapNightTexture);
+
+		// destroy the window and cleanup the OpenGL context
+		CloseWindow();
+		return 0;
 	}
-
-	// cleanup
-	// unload our texture so it can be cleaned up
-	UnloadTexture(map);
-	UnloadTexture(mapNightTexture);
-
-	// destroy the window and cleanup the OpenGL context
-	CloseWindow();
-	return 0;
-}
