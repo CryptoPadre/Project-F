@@ -44,7 +44,7 @@ int main()
 	Prop props[1]{
 		Prop{Vector2{1500.f, 10.f}, LoadTexture("house.png")}};
     // render enemy
-	Enemy she{Vector2{},LoadTexture("monster-she.png") };
+	Enemy she{Vector2{},LoadTexture("monster-she-walk.png") };
 
 	// set target fps
 	SetTargetFPS(60);
