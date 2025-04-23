@@ -13,8 +13,8 @@ Character::Character(int winWidth, int winHeight)
 }
 
 void Character::tick(float deltaTime)
-{
-	worldPosLastFrame = worldPos;
+{	
+	BaseCharacter::tick(deltaTime);
 
 	Vector2 direction{};
 	if (IsKeyDown(KEY_A))
@@ -43,43 +43,16 @@ void Character::tick(float deltaTime)
 
 		worldPos = Vector2Add(worldPos, Vector2Scale(Vector2Normalize(direction), speed));
 		frameTime += deltaTime;
-		if (frameTime >= frameDuration)
-		{
-			currentFrame++;
-			if (currentFrame >= totalColumns)
-				currentFrame = 0;
-			frameTime = 0.0f;
-		}
+    if (frameTime >= frameDuration)
+    {
+        currentFrame++;
+        if (currentFrame >= totalColumns)
+            currentFrame = 0;
+        frameTime = 0.0f;
+    }
 	}
 
-	// Define source rectangle to pick one frame
-	Rectangle source{
-		width * currentFrame, // X: shift by frame
-		height * currentRow,  // Y: shift by row
-		width,
-		height};
-
-	// Define destination rectangle
-	Rectangle dest{
-		screenPos.x,
-		screenPos.y,
-		width * scale,
-		height * scale};
-	// draw character
-	DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+	
 	DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
 }
 
-void Character::undoMovement()
-{
-	worldPos = worldPosLastFrame;
-}
-
-Rectangle Character::GetCollisionRec()
-{
-	return Rectangle{
-		screenPos.x,
-		screenPos.y ,
-		width * scale,
-		height * scale};
-}

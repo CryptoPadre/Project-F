@@ -1,56 +1,31 @@
 #include "Enemy.h"
 #include "raymath.h"
-#include "raylib.h"
+#include "Character.h"
 
-Enemy::Enemy(Vector2 pos, Texture2D idle_texture) : worldPos(pos),
-                                                    texture(idle_texture)
-                                                                            
-{
+Enemy::Enemy(Vector2 pos, Texture2D idle_texture)                                                                            
+{   
+    worldPos = pos;
+    texture= idle_texture;
     width = (float)texture.width / totalColumns;
     height = (float)texture.height / totalRows;
+    speed = 1.0f;
 }
 
 void Enemy::tick(float deltaTime)
-{
-    worldPosLastFrame = worldPos;
-    // set worldPos = worldPos + direction
-
-    frameTime += deltaTime;
-    if (frameTime >= frameDuration)
-    {
-        currentFrame++;
-        if (currentFrame >= totalColumns)
-            currentFrame = 0;
-        frameTime = 0.0f;
+{   
+    // get toTarget
+    Vector2 toTarget = Vector2Subtract(target->getScreenPos(), screenPos);
+    // normalize toTarget
+    toTarget = Vector2Normalize(toTarget);
+    // multiple toTarget by speed
+    toTarget = Vector2Scale(toTarget, speed);
+    // move the Enemy
+    worldPos = Vector2Add(worldPos, toTarget);
+    screenPos = Vector2Subtract(worldPos, target->getWorldPos());
+    if(worldPos.x > target->getWorldPos().x){
+        currentRow = 1;
     }
-
-    // Define source rectangle to pick one frame
-    Rectangle source{
-        width * currentFrame, // X: shift by frame
-        height * currentRow,  // Y: shift by row
-        width,
-        height};
-
-    // Define destination rectangle
-    Rectangle dest{
-        screenPos.x,
-        screenPos.y,
-        width * scale,
-        height * scale};
-    // draw character
-    DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+   
+    BaseCharacter::tick(deltaTime);
 }
 
-void Enemy::undoMovement()
-{
-	worldPos = worldPosLastFrame;
-}
-
-Rectangle Enemy::GetCollisionRec()
-{
-	return Rectangle{
-		screenPos.x,
-		screenPos.y,
-		width * scale,
-		height * scale};
-}

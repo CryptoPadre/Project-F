@@ -30,7 +30,8 @@ int main()
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
-
+    // draw hero
+	Character hero{screenWidth, screenHeight};
 	// Load the map for day time
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
@@ -45,12 +46,11 @@ int main()
 		Prop{Vector2{1500.f, 10.f}, LoadTexture("house.png")}};
     // render enemy
 	Enemy she{Vector2{},LoadTexture("monster-she-walk.png") };
-
+    she.setTarget(&hero);
 	// set target fps
 	SetTargetFPS(60);
 	// change the map if it night or daytime
 	bool isDayTime{true};
-	Character hero{screenWidth, screenHeight};
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
