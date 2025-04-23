@@ -13,6 +13,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "Character.h"
 #include <string>
 #include "Prop.h"
+#include "Enemy.h"
 
 int main()
 {
@@ -42,6 +43,8 @@ int main()
 
 	Prop props[1]{
 		Prop{Vector2{1500.f, 10.f}, LoadTexture("house.png")}};
+    // render enemy
+	Enemy she{Vector2{},LoadTexture("monster-she.png") };
 
 	// set target fps
 	SetTargetFPS(60);
@@ -88,6 +91,7 @@ int main()
 				hero.undoMovement();
 			}
 		}
+		she.tick(GetFrameTime());
 
 			// end the frame and get ready for the next one  (display frame, poll input, etc...)
 			EndDrawing();

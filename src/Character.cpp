@@ -78,8 +78,8 @@ void Character::undoMovement()
 Rectangle Character::GetCollisionRec()
 {
 	return Rectangle{
-		screenPos.x - 50,
-		screenPos.y + 50,
+		screenPos.x,
+		screenPos.y ,
 		width * scale,
 		height * scale};
 }
