@@ -9,11 +9,11 @@ class BaseCharacter{
     void undoMovement();
 	Rectangle GetCollisionRec();
     virtual void tick(float deltaTime);
+	virtual Vector2 getScreenPos() = 0;
     protected:
     Texture2D texture{LoadTexture("hero-walk.png")};
 	Texture2D interact{LoadTexture("hero-interact.png")};
 	Texture2D die{LoadTexture("hero-hurt.png")};
-	Vector2 screenPos{};
 	Vector2 worldPos{};
 	Vector2 worldPosLastFrame{}; 
 	// animation for character
@@ -27,6 +27,7 @@ class BaseCharacter{
 	float width{};
 	float height{};
 	float scale{2.0f};
+	Vector2 velocity{};
     private:
 };
 

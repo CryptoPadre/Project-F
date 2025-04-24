@@ -1,27 +1,43 @@
 #include "BaseCharacter.h"
+#include "raymath.h"
 
-BaseCharacter::BaseCharacter(){
+BaseCharacter::BaseCharacter() {
 
 };
 
 void BaseCharacter::undoMovement()
 {
-	worldPos = worldPosLastFrame;
+    worldPos = worldPosLastFrame;
 }
 
 Rectangle BaseCharacter::GetCollisionRec()
 {
-	return Rectangle{
-		screenPos.x,
-		screenPos.y ,
-		width * scale,
-		height * scale};
+    return Rectangle{
+        getScreenPos().x,
+        getScreenPos().y,
+        width * scale,
+        height * scale};
 }
 
 void BaseCharacter::tick(float deltaTime)
-{   
-	worldPosLastFrame = worldPos;
+{
+    worldPosLastFrame = worldPos;
 
+    if (Vector2Length(velocity) != 0.0)
+    {
+        // set worldPos = worldPos + direction
+
+        worldPos = Vector2Add(worldPos, Vector2Scale(Vector2Normalize(velocity), speed));
+        frameTime += deltaTime;
+        if (frameTime >= frameDuration)
+        {
+            currentFrame++;
+            if (currentFrame >= totalColumns)
+                currentFrame = 0;
+            frameTime = 0.0f;
+        }
+    }
+    velocity = {};
     // Define source rectangle to pick one frame
     Rectangle source{
         width * currentFrame, // X: shift by frame
@@ -31,8 +47,8 @@ void BaseCharacter::tick(float deltaTime)
 
     // Define destination rectangle
     Rectangle dest{
-        screenPos.x,
-        screenPos.y,
+        getScreenPos().x,
+        getScreenPos().y,
         width * scale,
         height * scale};
     // draw character
