@@ -15,6 +15,16 @@ void Enemy::tick(float deltaTime)
 {
     // get toTarget
     velocity = Vector2Subtract(target->getScreenPos(), getScreenPos());
+    if (velocity.x > velocity.y) {
+        // Horizontal movement dominates
+        if (velocity.x > 0) currentRow = 3; // Right
+        else currentRow = 1;               // Left
+    } else {
+        // Vertical movement dominates
+        if (velocity.y > 0) currentRow = 2; // Down
+        else currentRow = 0;               // Up
+    }
+   
     // move the Enemy
     BaseCharacter::tick(deltaTime);
 }

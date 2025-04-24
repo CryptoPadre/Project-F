@@ -3,17 +3,18 @@
 #include "raylib.h"
 #include "BaseCharacter.h"
 
-
 class Character : public BaseCharacter
 {
 public:
 	Character(int winWidth, int winHeight);
 	virtual void tick(float deltaTime) override;
 	virtual Vector2 getScreenPos() override;
+
 private:
-int windowWidth{};
-int windowHeight{};
-	
+	int windowWidth{};
+	int windowHeight{};
+	// Texture2D talisman{LoadTexture("talisman.png")};
+	// Rectangle talismanCollisionRec{};
 };
 
 #endif

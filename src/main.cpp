@@ -43,7 +43,7 @@ int main()
 	// Render props
 
 	Prop props[1]{
-		Prop{Vector2{1500.f, 10.f}, LoadTexture("house.png")}};
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png")}};
     // render enemy
 	Enemy she{Vector2{},LoadTexture("monster-she-walk.png") };
     she.setTarget(&hero);
