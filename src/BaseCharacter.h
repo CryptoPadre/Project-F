@@ -10,6 +10,8 @@ class BaseCharacter{
 	Rectangle GetCollisionRec();
     virtual void tick(float deltaTime);
 	virtual Vector2 getScreenPos() = 0;
+	bool getAlive() {return alive;}
+	void setAlive(bool isAlive) {alive = isAlive;}
     protected:
     Texture2D texture{LoadTexture("hero-walk.png")};
 	Texture2D interact{LoadTexture("hero-interact.png")};
@@ -29,6 +31,7 @@ class BaseCharacter{
 	float scale{2.0f};
 	Vector2 velocity{};
     private:
+	bool alive{true};
 };
 
 #endif

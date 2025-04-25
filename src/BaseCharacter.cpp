@@ -13,14 +13,19 @@ void BaseCharacter::undoMovement()
 Rectangle BaseCharacter::GetCollisionRec()
 {
     return Rectangle{
-        getScreenPos().x,
-        getScreenPos().y,
-        width * scale,
-        height * scale};
+        getScreenPos().x + 50,
+        getScreenPos().y + 50,
+        width / 2,
+        height / 2 };
 }
 
 void BaseCharacter::tick(float deltaTime)
-{
+{   
+    DrawRectangleLines(getScreenPos().x + 50,
+    getScreenPos().y + 50,
+    width / 2,
+    height / 2, RED);
+
     worldPosLastFrame = worldPos;
 
     if (Vector2Length(velocity) != 0.0)

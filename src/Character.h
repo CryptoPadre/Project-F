@@ -15,6 +15,11 @@ private:
 	int windowHeight{};
 	// Texture2D talisman{LoadTexture("talisman.png")};
 	// Rectangle talismanCollisionRec{};
+	int deathFrame = 0;
+	float deathFrameTime = 0.0f;
+	float deathFrameDuration = 0.5f;
+	int deathTotalFrames = 6;
+	bool deathAnimDone = false;
 };
 
 #endif

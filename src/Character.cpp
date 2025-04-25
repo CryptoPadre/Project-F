@@ -18,7 +18,40 @@ Vector2 Character::getScreenPos()
 
 void Character::tick(float deltaTime)
 {
+	if (!getAlive())
+    {
+        texture = die;
 
+        if (!deathAnimDone)
+        {
+            deathFrameTime += deltaTime;
+            if (deathFrameTime >= deathFrameDuration)
+            {
+                deathFrame++;
+                deathFrameTime = 0.f;
+                if (deathFrame >= deathTotalFrames)
+                {
+                    deathFrame = deathTotalFrames - 1;
+                    deathAnimDone = true;
+                }
+            }
+        }
+
+        Rectangle source{
+            width * deathFrame,
+            0,
+            width,
+            height};
+
+        Rectangle dest{
+            getScreenPos().x,
+            getScreenPos().y,
+            width * scale,
+            height * scale};
+
+        DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+        return;
+    }
 	if (IsKeyDown(KEY_A))
 	{
 		velocity.x -= 1.0;

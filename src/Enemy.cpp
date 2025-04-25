@@ -15,6 +15,7 @@ void Enemy::tick(float deltaTime)
 {
     // get toTarget
     velocity = Vector2Subtract(target->getScreenPos(), getScreenPos());
+    if(Vector2Length(velocity) < radius) velocity = {};
     if (velocity.x > velocity.y) {
         // Horizontal movement dominates
         if (velocity.x > 0) currentRow = 3; // Right
