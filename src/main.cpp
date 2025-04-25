@@ -30,7 +30,7 @@ int main()
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
-    // draw hero
+	// draw hero
 	Character hero{screenWidth, screenHeight};
 	// Load the map for day time
 	Texture2D map = LoadTexture("fromville.png");
@@ -42,21 +42,33 @@ int main()
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
 	// Render props
 
-	Prop props[1]{
-		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png")}};
-    // render enemy
-	Enemy she{Vector2{},LoadTexture("monster-she-walk.png") };
-    she.setTarget(&hero);
+	Prop props[2]{
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f},
+		Prop{Vector2{1000.f, 50.f}, LoadTexture("temple.png"), 4.f}};
+	// render enemy
+	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png")};
+	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png")};
+	Enemy *enemies[]{
+		&she,
+		&he};
+	for (auto enemy : enemies)
+	{
+		enemy->setTarget(&hero);
+	}
 	// set target fps
 	SetTargetFPS(60);
-	// change the map if it night or daytime
-	bool isDayTime{true};
+	float night[]{
+		10.f,30.f,50.f
+	};
+	
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
 		// drawing
 		BeginDrawing();
-
+        double time = GetTime();
+		// change the map if it night or daytime
+		bool isDayTime = fmod(GetTime(), 120.0) < 60.0; 
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
@@ -69,6 +81,14 @@ int main()
 		{
 			// draw the map for nighttime
 			DrawTextureEx(mapNightTexture, mapPos, 0.0, mapScale, WHITE);
+			for (auto enemy : enemies)
+		{
+			enemy->tick(GetFrameTime());
+			if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.setAlive(false);
+			}
+		}
 		}
 		// draw props
 		for (auto prop : props)
@@ -86,25 +106,30 @@ int main()
 		for (auto prop : props)
 		{
 			if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()),
-			hero.GetCollisionRec()))
+								   hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
 			}
+			for (auto enemy : enemies)
+			{
+				if (CheckCollisionRecs(prop.GetCollisionRec(enemy->getWorldPos()),
+									   enemy->GetCollisionRec()))
+				{
+					enemy->undoMovement();
+				}
+			}
 		}
-		she.tick(GetFrameTime());
-		if(CheckCollisionRecs(she.GetCollisionRec(), hero.GetCollisionRec())){
-			hero.setAlive(false);
-		}
-			// end the frame and get ready for the next one  (display frame, poll input, etc...)
-			EndDrawing();
-		}
-
-		// cleanup
-		// unload our texture so it can be cleaned up
-		UnloadTexture(map);
-		UnloadTexture(mapNightTexture);
-
-		// destroy the window and cleanup the OpenGL context
-		CloseWindow();
-		return 0;
+		DrawText(TextFormat("Time %.2f", time), 50,50,20,RED);
+		// end the frame and get ready for the next one  (display frame, poll input, etc...)
+		EndDrawing();
 	}
+
+	// cleanup
+	// unload our texture so it can be cleaned up
+	UnloadTexture(map);
+	UnloadTexture(mapNightTexture);
+
+	// destroy the window and cleanup the OpenGL context
+	CloseWindow();
+	return 0;
+}

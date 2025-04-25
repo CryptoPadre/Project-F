@@ -1,9 +1,10 @@
 #include "Prop.h"
 #include "raymath.h"
 
-Prop::Prop(Vector2 pos, Texture2D tex) : 
+Prop::Prop(Vector2 pos, Texture2D tex, float scale) : 
     worldPos(pos),
-    texture(tex)
+    texture(tex),
+    scale(scale)
 {
 
 }
@@ -13,8 +14,8 @@ void Prop::Render(Vector2 heroPos){
     DrawTextureEx(texture, screenPos, 0.f, scale,WHITE);
     DrawRectangleLines( screenPos.x,
         screenPos.y -60,
-        texture.width * scale,
-        texture.height * scale, RED);
+        texture.width * scale  + 50,
+        texture.height * scale - 30, RED);
 }
 
 Rectangle Prop:: GetCollisionRec(Vector2 heroPos){
