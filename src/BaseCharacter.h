@@ -14,6 +14,7 @@ class BaseCharacter{
 	void setAlive(bool isAlive) {alive = isAlive;}
     protected:
     Texture2D texture{LoadTexture("hero-walk.png")};
+	Texture2D walk{LoadTexture("hero-walk.png")};
 	Texture2D interact{LoadTexture("hero-interact.png")};
 	Texture2D die{LoadTexture("hero-hurt.png")};
 	Vector2 worldPos{};

@@ -42,33 +42,33 @@ int main()
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
 	// Render props
 
-	Prop props[2]{
+	Prop props[3]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f},
-		Prop{Vector2{1000.f, 50.f}, LoadTexture("temple.png"), 4.f}};
+		Prop{Vector2{1000.f, 50.f}, LoadTexture("temple.png"), 4.f},
+		Prop{Vector2{1200.f, 1000.f}, LoadTexture("bottle_tree.png"), 4.f}};
 	// render enemy
-	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png")};
-	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png")};
+	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
+	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
+	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png")};
 	Enemy *enemies[]{
 		&she,
-		&he};
+		&he,
+		&monster};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
 	}
 	// set target fps
 	SetTargetFPS(60);
-	float night[]{
-		10.f,30.f,50.f
-	};
-	
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
 		// drawing
 		BeginDrawing();
-        double time = GetTime();
+		// counting the time since gamestart
+		double time = GetTime();
 		// change the map if it night or daytime
-		bool isDayTime = fmod(GetTime(), 120.0) < 60.0; 
+		bool isDayTime = fmod(GetTime(), 120.0) < 60.0;
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
@@ -82,13 +82,13 @@ int main()
 			// draw the map for nighttime
 			DrawTextureEx(mapNightTexture, mapPos, 0.0, mapScale, WHITE);
 			for (auto enemy : enemies)
-		{
-			enemy->tick(GetFrameTime());
-			if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
 			{
-				hero.setAlive(false);
+				enemy->tick(GetFrameTime());
+				if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.setAlive(true);
+				}
 			}
-		}
 		}
 		// draw props
 		for (auto prop : props)
@@ -119,7 +119,7 @@ int main()
 				}
 			}
 		}
-		DrawText(TextFormat("Time %.2f", time), 50,50,20,RED);
+		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
 	}
