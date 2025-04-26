@@ -11,9 +11,19 @@ NPC::NPC(Vector2 pos, Texture2D texture, Texture2D interact)
     speed = 3.f;
 }
 
-std::string NPC::talk(){
-    for(int i = 0; i < NPCDialog.size(); i++){
-        DrawText(NPCDialog[i].c_str(), worldPos.x, worldPos.y - 30, 30, RED );
+int NPC::setInteractionCount()
+{
+    while (interactionCount != NPCDialog.size() - 1)
+    {
+        interactionCount++;
     }
 }
 
+std::string NPC::talk()
+{
+    DrawText(NPCDialog[interactionCount].c_str(), worldPos.x, worldPos.y - 30, 30, RED);
+    if (interactionCount == NPCDialog.size() - 1)
+    {
+        DrawText(NPCDialog[interactionCount].c_str(), worldPos.x, worldPos.y - 30, 30, RED);
+    }
+}

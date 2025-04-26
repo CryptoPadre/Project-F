@@ -10,11 +10,11 @@ class NPC : public BaseCharacter{
     virtual Vector2 getScreenPos() override;
     void addDialog(const std::string& dialog){ NPCDialog.push_back(dialog);};
     std::string talk();
-    bool setIsHuman();
-    int setInteractionCount(){return interactionCount++;}
+    bool setIsHuman(){ return isHuman = true ? false : true;};
+    int setInteractionCount();
     private:
     std::vector<std::string> NPCDialog;
     float radius{25.f};
-    bool isHuman{true};
+    bool isHuman{};
     int interactionCount{0};
 };
