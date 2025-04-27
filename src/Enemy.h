@@ -1,3 +1,5 @@
+#ifndef ENEMY_H
+#define ENEMY_H
 #include "raylib.h"
 #include "BaseCharacter.h"
 #include "Character.h"
@@ -12,3 +14,5 @@ class Enemy : public BaseCharacter{
     Character* target;
     float radius{25.f};
 };
+
+#endif

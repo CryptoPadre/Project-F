@@ -14,6 +14,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include <string>
 #include "Prop.h"
 #include "Enemy.h"
+#include "NPC.h"
 
 int main()
 {
@@ -32,6 +33,9 @@ int main()
 	SearchAndSetResourceDir("resources");
 	// draw hero
 	Character hero{screenWidth, screenHeight};
+	// render NPCs
+	NPC kid{Vector2{0.f,0.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png")};
+	kid.setTarget(&hero);
 	// Load the map for day time
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
@@ -41,11 +45,10 @@ int main()
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
 	// Render props
-
-	Prop props[3]{
+	Prop props[2]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f},
-		Prop{Vector2{1000.f, 50.f}, LoadTexture("temple.png"), 4.f},
-		Prop{Vector2{1200.f, 1000.f}, LoadTexture("bottle_tree.png"), 4.f}};
+		Prop{Vector2{1000.f, 50.f}, LoadTexture("temple.png"), 4.f}
+	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
@@ -119,6 +122,7 @@ int main()
 				}
 			}
 		}
+		kid.tick(GetFrameTime());
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
