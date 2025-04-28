@@ -3,15 +3,15 @@
 #include "raylib.h"
 #include "raymath.h"
 
-NPC::NPC(Vector2 pos, Texture2D texture, Texture2D interact)
+NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact)
 {
     worldPos = pos;
-    texture = texture; 
-    walk = texture; 
+    texture = idle_texture;
+    walk = idle_texture;
+    this->interact = interact;
     width = (float)texture.width / totalColumns;
     height = (float)texture.height / totalRows;
-    speed = 1.0f;
-    interact = interact;
+    speed = 1.f;
 }
 
 void NPC::setInteractionCount()
@@ -32,38 +32,12 @@ void NPC::talk()
 }
 
 void NPC::tick(float deltaTime)
-{
-    // get toTarget
-    velocity = Vector2Subtract(target->getScreenPos(), getScreenPos());
-    if (Vector2Length(velocity) < radius)
-    {
-        velocity = {};
-        texture = interact;
-    } else {
-        texture = walk;
-    }
-    if (velocity.x > velocity.y)
-    {
-        // Horizontal movement dominates
-        if (velocity.x > 0)
-            currentRow = 3; // Right
-        else
-            currentRow = 1; // Left
-    }
-    else
-    {
-        // Vertical movement dominates
-        if (velocity.y > 0)
-            currentRow = 2; // Down
-        else
-            currentRow = 0; // Up
-    }
-
-    // move the Enemy
+{   
+    // move the NPC
     BaseCharacter::tick(deltaTime);
 }
 
 Vector2 NPC::getScreenPos()
 {
-    return Vector2Subtract(worldPos, target->getWorldPos());
+    return Vector2Subtract(worldPos, hero->getWorldPos());
 }
