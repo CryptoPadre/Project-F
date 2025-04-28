@@ -34,8 +34,15 @@ int main()
 	// draw hero
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
-	NPC kid{Vector2{500.f,500.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png")};
-	kid.setTarget(&hero);
+	NPC boyd{Vector2{1850.f,1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
+	NPC kid{Vector2{700.f,300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
+	NPC *npcs[2]{
+		&boyd,
+		&kid
+	};
+	for(auto npc:npcs){
+		npc->setTarget(&hero);
+	}
 	// Load the map for day time
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
@@ -105,7 +112,7 @@ int main()
 		{
 			hero.undoMovement();
 		}
-		kid.tick(GetFrameTime());
+		
 		// check prop collision
 		for (auto prop : props)
 		{
@@ -116,12 +123,15 @@ int main()
 			}
 			for (auto enemy : enemies)
 			{
-				if (CheckCollisionRecs(prop.GetCollisionRec(enemy->getWorldPos()),
-									   enemy->GetCollisionRec()))
-				{
-					enemy->undoMovement();
-				}
+				if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), enemy->GetCollisionRec()))
+        {
+            enemy->undoMovement();
+        }
 			}
+		
+		}
+		for (auto npc : npcs){
+			npc->tick(GetFrameTime());
 		}
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
