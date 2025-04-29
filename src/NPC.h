@@ -13,6 +13,7 @@ class NPC : public BaseCharacter{
     void setTarget(Character* character){hero = character;}
     virtual void tick(float deltaTime) override;
     virtual Vector2 getScreenPos() override;
+    bool isDay{};
     private:
     bool isHuman{};
     std::vector<std::string> NPCDialog;

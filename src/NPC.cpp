@@ -33,43 +33,58 @@ void NPC::talk()
 }
 
 void NPC::tick(float deltaTime)
-{   
-    
+{
+
     if (interactionCount == 0 && isHuman)
+    {
         currentRow = 1;
-        if (!isHuman && GetTime() < 60)
+    }
+    if (!isHuman)
+    { 
+        if (!isDay)
         {
             texture = interact; // Set texture to dance
             danceFrameTime += deltaTime;
-    
+
             if (danceFrameTime >= danceFrameDuration)
             {
                 danceFrame++;
                 danceFrameTime = 0.f;
-    
+
                 if (danceFrame >= 5) // 5 columns
                 {
                     danceFrame = 0;
                     danceRows++;
                 }
-    
+
                 if (danceRows >= 4) // 4 rows
                 {
                     danceRows = 0;
                 }
             }
-    
             // Match BaseCharacter expectations
             currentFrame = danceFrame;
             currentRow = danceRows;
         }
-            
-    if (interactionCount == 0 && !isHuman && GetTime() > 120)
-    {
+    }
+
+    if (interactionCount == 0 && !isHuman && isDay)
+    {   
+        texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
         if (Vector2Length(velocity) < radius)
         {
             velocity = {};
+            // Conversation bubble
+            /* Rectangle conversation{
+                getScreenPos().x,
+                getScreenPos().y - 50,
+                100,
+                100
+            };
+            DrawRectangleRounded(conversation, 0.2f, 6, LIGHTGRAY);
+            DrawRectangleRoundedLines(conversation, 0.2f, 6, DARKGRAY); 
+            */
             DrawText("Anghkooey", 40, 40, 40, RED);
         }
         if (velocity.x > velocity.y)
