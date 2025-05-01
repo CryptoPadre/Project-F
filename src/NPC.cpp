@@ -17,25 +17,55 @@ NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, bool human)
 
 void NPC::setInteractionCount()
 {
-    if (interactionCount != NPCDialog.size() - 1)
+    if (interactionCount != NPCDialog.size() - 1 && isTalking)
     {
         interactionCount++;
     }
 }
 
 void NPC::talk()
-{
+{   
     isTalking = true;
+    if(Vector2Distance(getScreenPos(), hero->getScreenPos()) > 150.f){
+        isTalking = false;
+    }
 }
 
 void NPC::tick(float deltaTime)
 {
     if (isHuman)
     {
-        currentRow = 1; 
+        currentRow = 1;
         if (isTalking && interactionCount < NPCDialog.size())
         {
-            DrawText(NPCDialog[interactionCount].c_str(), getScreenPos().x, getScreenPos().y - 30, 30, RED);
+            std::string dialogText = NPCDialog[interactionCount];
+            int fontSize = 15;
+            int padding = 10;
+
+            // Measure the width of the text
+            int textWidth = MeasureText(dialogText.c_str(), fontSize);
+
+            // Set minimum width and height for the bubble
+            int minWidth = 100;
+            int minHeight = 40;
+
+            // Final width and height with padding
+            int bubbleWidth = std::max(minWidth, textWidth + 2 * padding);
+            int bubbleHeight = minHeight; // You can adjust height further if needed
+
+            // Build the rectangle based on text size
+            Rectangle conversation{
+                getScreenPos().x - bubbleWidth / 2,
+                getScreenPos().y - 40,
+                static_cast<float>(bubbleWidth),
+                static_cast<float>(bubbleHeight)};
+
+            // Draw the bubble and the text
+            if(Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f){
+            DrawRectangleRounded(conversation, 0.2f, 6, WHITE);
+            DrawRectangleRoundedLines(conversation, 0.2f, 6, DARKGRAY);
+            DrawText(dialogText.c_str(), conversation.x + padding, conversation.y + padding, fontSize, BLACK);
+            }
         }
     }
     if (!isHuman)

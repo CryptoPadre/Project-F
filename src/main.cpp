@@ -146,7 +146,7 @@ int main()
 		{
 			npc->isDay = isDayTime;
 			npc->tick(GetFrameTime());
-			if (IsKeyPressed(KEY_E) && Vector2Distance(npc->getScreenPos(), hero.getScreenPos()) < 150.f)
+			if (IsKeyPressed(KEY_E))
 			{
 				npc->talk();
 				npc->setInteractionCount();
