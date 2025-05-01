@@ -25,22 +25,21 @@ void NPC::setInteractionCount()
 
 void NPC::talk()
 {
-    DrawText(NPCDialog[interactionCount].c_str(), worldPos.x, worldPos.y - 30, 30, RED);
-    if (interactionCount == NPCDialog.size() - 1)
-    {
-        DrawText(NPCDialog[interactionCount].c_str(), worldPos.x, worldPos.y - 30, 30, RED);
-    }
+    isTalking = true;
 }
 
 void NPC::tick(float deltaTime)
 {
-
-    if (interactionCount == 0 && isHuman)
+    if (isHuman)
     {
-        currentRow = 1;
+        currentRow = 1; 
+        if (isTalking && interactionCount < NPCDialog.size())
+        {
+            DrawText(NPCDialog[interactionCount].c_str(), getScreenPos().x, getScreenPos().y - 30, 30, RED);
+        }
     }
     if (!isHuman)
-    { 
+    {
         if (!isDay)
         {
             texture = interact; // Set texture to dance
@@ -68,8 +67,8 @@ void NPC::tick(float deltaTime)
         }
     }
 
-    if (interactionCount == 0 && !isHuman && isDay)
-    {   
+    if (interactionCount > 0 && !isHuman && isDay)
+    {
         texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
         if (Vector2Length(velocity) < radius)
@@ -83,7 +82,7 @@ void NPC::tick(float deltaTime)
                 100
             };
             DrawRectangleRounded(conversation, 0.2f, 6, LIGHTGRAY);
-            DrawRectangleRoundedLines(conversation, 0.2f, 6, DARKGRAY); 
+            DrawRectangleRoundedLines(conversation, 0.2f, 6, DARKGRAY);
             */
             DrawText("Anghkooey", 40, 40, 40, RED);
         }

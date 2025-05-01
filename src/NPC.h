@@ -11,11 +11,13 @@ class NPC : public BaseCharacter{
     void talk();
     void setInteractionCount();
     void setTarget(Character* character){hero = character;}
+    const std::vector<std::string>& getDialogues() const { return NPCDialog; }
     virtual void tick(float deltaTime) override;
     virtual Vector2 getScreenPos() override;
     bool isDay{};
     private:
     bool isHuman{};
+    bool isTalking{}; 
     std::vector<std::string> NPCDialog;
     float radius{25.f};
     int interactionCount{0};

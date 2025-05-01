@@ -15,6 +15,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "Prop.h"
 #include "Enemy.h"
 #include "NPC.h"
+#include "Dialogues.h"
 
 int main()
 {
@@ -35,7 +36,7 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	NPC boyd{Vector2{1850.f, 1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
-	NPC kid{Vector2{700.f, 300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
+	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
 	NPC *npcs[2]{
 		&boyd,
 		&kid};
@@ -43,6 +44,10 @@ int main()
 	{
 		npc->setTarget(&hero);
 	}
+	for (auto dialogue : boydDialogues)
+	{
+		boyd.addDialog(dialogue);
+	};
 	// Load the map for day time
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
@@ -54,7 +59,7 @@ int main()
 	// Render props
 	Prop props[2]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f},
-		Prop{Vector2{1000.f, 50.f}, LoadTexture("temple.png"), 4.f},
+		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -108,7 +113,8 @@ int main()
 		hero.tick(GetFrameTime());
 		if (hero.getWorldPos().x < 0.f || hero.getWorldPos().y < 0.f ||
 			hero.getWorldPos().x + screenWidth > map.width * mapScale ||
-			hero.getWorldPos().y + screenHeight > map.height * mapScale - 30)
+			hero.getWorldPos().y + screenHeight > map.height * mapScale - 30 ||
+			hero.getWorldPos().x >= 2930 && hero.getWorldPos().y > 35 && hero.getWorldPos().y < 345)
 		{
 			hero.undoMovement();
 		}
@@ -128,11 +134,11 @@ int main()
 					enemy->undoMovement();
 				}
 			}
-			for (auto npc : npcs ){
+			for (auto npc : npcs)
+			{
 				if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), npc->GetCollisionRec()))
 				{
 					npc->undoMovement();
-					
 				}
 			}
 		}
@@ -140,23 +146,31 @@ int main()
 		{
 			npc->isDay = isDayTime;
 			npc->tick(GetFrameTime());
+			if (IsKeyPressed(KEY_E) && Vector2Distance(npc->getScreenPos(), hero.getScreenPos()) < 150.f)
+			{
+				npc->talk();
+				npc->setInteractionCount();
+			}
 			if (CheckCollisionRecs(npc->GetCollisionRec(), hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
 				npc->undoMovement();
 			}
+			
 		}
-		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
-		// end the frame and get ready for the next one  (display frame, poll input, etc...)
-		EndDrawing();
-	}
+	
 
-	// cleanup
-	// unload our texture so it can be cleaned up
-	UnloadTexture(map);
-	UnloadTexture(mapNightTexture);
+	DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
+	// end the frame and get ready for the next one  (display frame, poll input, etc...)
+	EndDrawing();
+}
 
-	// destroy the window and cleanup the OpenGL context
-	CloseWindow();
-	return 0;
+// cleanup
+// unload our texture so it can be cleaned up
+UnloadTexture(map);
+UnloadTexture(mapNightTexture);
+
+// destroy the window and cleanup the OpenGL context
+CloseWindow();
+return 0;
 }
