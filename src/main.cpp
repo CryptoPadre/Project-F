@@ -37,14 +37,17 @@ int main()
 	// draw NPCs
 	NPC boyd{Vector2{1850.f, 1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
-	NPC *npcs[2]{
+	NPC sara{Vector2{1080.f, 2700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
+	NPC *npcs[3]{
 		&boyd,
-		&kid};
+		&kid,
+		&sara};
 	for (auto npc : npcs)
 	{
 		npc->setTarget(&hero);
 	}
-	for (auto dialogue : boydDialogues)
+	// Add the dialogues to npcs dialogue vector for the first day in the game
+	for (auto dialogue : boydDialoguesDayOne)
 	{
 		boyd.addDialog(dialogue);
 	};
@@ -57,9 +60,10 @@ int main()
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
 	// Render props
-	Prop props[2]{
+	Prop props[3]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f},
+		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5f}
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -80,10 +84,12 @@ int main()
 	{
 		// drawing
 		BeginDrawing();
-		// counting the time since gamestart
+		// counting the time since gamestart and days survived
 		double time = GetTime();
+		int daysSurvived = 0;
+		if(fmod(GetTime(), 240.0) < 120.0) {daysSurvived ++;}
 		// change the map if it night or daytime
-		bool isDayTime = fmod(GetTime(), 120.0) < 60.0;
+		bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);

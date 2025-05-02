@@ -51,7 +51,7 @@ void NPC::tick(float deltaTime)
 
             // Final width and height with padding
             int bubbleWidth = std::max(minWidth, textWidth + 2 * padding);
-            int bubbleHeight = minHeight; // You can adjust height further if needed
+            int bubbleHeight = minHeight; 
 
             // Build the rectangle based on text size
             Rectangle conversation{
@@ -63,7 +63,6 @@ void NPC::tick(float deltaTime)
             // Draw the bubble and the text
             if(Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f){
             DrawRectangleRounded(conversation, 0.2f, 6, WHITE);
-            DrawRectangleRoundedLines(conversation, 0.2f, 6, DARKGRAY);
             DrawText(dialogText.c_str(), conversation.x + padding, conversation.y + padding, fontSize, BLACK);
             }
         }

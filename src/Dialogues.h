@@ -3,7 +3,7 @@
 #include <vector>
 
 // Dialogs for Boyd
-inline std::vector<std::string> boydDialogues = {
+inline std::vector<std::string> boydDialoguesDayOne = {
     "You shouldn't be here.",
     "You hear them too, don't you?",
     "Did the sky always look like that?",

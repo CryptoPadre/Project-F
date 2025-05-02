@@ -13,7 +13,7 @@ void Prop::Render(Vector2 heroPos){
     Vector2 screenPos{Vector2Subtract(worldPos, heroPos)};
     DrawTextureEx(texture, screenPos, 0.f, scale,WHITE);
     DrawRectangleLines( screenPos.x,
-        screenPos.y -60,
+        screenPos.y - 80,
         texture.width * scale,
         texture.height * scale, RED);
 }
@@ -22,7 +22,7 @@ Rectangle Prop:: GetCollisionRec(Vector2 heroPos){
     Vector2 screenPos{Vector2Subtract(worldPos, heroPos)};
     return Rectangle{
         screenPos.x,
-        screenPos.y - 60,
+        screenPos.y -80,
         texture.width * scale,
         texture.height * scale
     };
