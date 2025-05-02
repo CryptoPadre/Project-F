@@ -51,6 +51,10 @@ int main()
 	{
 		boyd.addDialog(dialogue);
 	};
+	for (auto dialogue : kidDialogues)
+	{
+		kid.addDialog(dialogue);
+	};
 	// Load the map for day time
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
@@ -63,8 +67,7 @@ int main()
 	Prop props[3]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f},
-		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5f}
-	};
+		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5f}};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
@@ -87,7 +90,10 @@ int main()
 		// counting the time since gamestart and days survived
 		double time = GetTime();
 		int daysSurvived = 0;
-		if(fmod(GetTime(), 240.0) < 120.0) {daysSurvived ++;}
+		if (fmod(GetTime(), 240.0) < 120.0)
+		{
+			daysSurvived++;
+		}
 		// change the map if it night or daytime
 		bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
 		// Setup the back buffer for drawing (clear color and depth buffers)
@@ -162,21 +168,19 @@ int main()
 				hero.undoMovement();
 				npc->undoMovement();
 			}
-			
 		}
-	
 
-	DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
-	// end the frame and get ready for the next one  (display frame, poll input, etc...)
-	EndDrawing();
-}
+		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
+		// end the frame and get ready for the next one  (display frame, poll input, etc...)
+		EndDrawing();
+	}
 
-// cleanup
-// unload our texture so it can be cleaned up
-UnloadTexture(map);
-UnloadTexture(mapNightTexture);
+	// cleanup
+	// unload our texture so it can be cleaned up
+	UnloadTexture(map);
+	UnloadTexture(mapNightTexture);
 
-// destroy the window and cleanup the OpenGL context
-CloseWindow();
-return 0;
+	// destroy the window and cleanup the OpenGL context
+	CloseWindow();
+	return 0;
 }

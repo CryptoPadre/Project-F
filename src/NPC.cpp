@@ -100,20 +100,35 @@ void NPC::tick(float deltaTime)
     {
         texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
-        if (Vector2Length(velocity) < radius)
+        if (isTalking && interactionCount < NPCDialog.size())
         {
-            velocity = {};
-            // Conversation bubble
-            /* Rectangle conversation{
-                getScreenPos().x,
-                getScreenPos().y - 50,
-                100,
-                100
-            };
-            DrawRectangleRounded(conversation, 0.2f, 6, LIGHTGRAY);
-            DrawRectangleRoundedLines(conversation, 0.2f, 6, DARKGRAY);
-            */
-            DrawText("Anghkooey", 40, 40, 40, RED);
+            std::string dialogText = NPCDialog[interactionCount];
+            int fontSize = 15;
+            int padding = 10;
+
+            // Measure the width of the text
+            int textWidth = MeasureText(dialogText.c_str(), fontSize);
+
+            // Set minimum width and height for the bubble
+            int minWidth = 100;
+            int minHeight = 40;
+
+            // Final width and height with padding
+            int bubbleWidth = std::max(minWidth, textWidth + 2 * padding);
+            int bubbleHeight = minHeight; 
+
+            // Build the rectangle based on text size
+            Rectangle conversation{
+                getScreenPos().x - bubbleWidth / 2,
+                getScreenPos().y - 40,
+                static_cast<float>(bubbleWidth),
+                static_cast<float>(bubbleHeight)};
+
+            // Draw the bubble and the text
+            if(Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f){
+            DrawRectangleRounded(conversation, 0.2f, 6, WHITE);
+            DrawText(dialogText.c_str(), conversation.x + padding, conversation.y + padding, fontSize, BLACK);
+            }
         }
         if (velocity.x > velocity.y)
         {
