@@ -35,9 +35,6 @@ inline std::vector<std::string> boydDialoguesDayTwo = {
     "Congratulation for surviving your first day!"
 };
 
-inline std::vector<std::string> boydDialoguesDayTwo = {
-};
-
 inline std::vector<std::string> kidDialogues = {
     "You always come back. You just don't remember.",
     "Anghkooey",

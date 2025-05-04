@@ -16,6 +16,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "Enemy.h"
 #include "NPC.h"
 #include "Dialogues.h"
+#include "Conversation.h"
 
 int main()
 {
@@ -64,10 +65,14 @@ int main()
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
 	// Render props
-	Prop props[3]{
-		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f},
-		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f},
-		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5f}};
+	Prop props[7]{
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
+		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true},
+		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5f, false},
+		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5f, true},
+		Prop{Vector2{400.f, 600.f}, LoadTexture("gravestone.png"), 2.f, false},
+		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false},
+		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false}};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
@@ -127,7 +132,8 @@ int main()
 			hero.getWorldPos().x + screenWidth > map.width * mapScale ||
 			hero.getWorldPos().y + screenHeight > map.height * mapScale - 30 ||
 			hero.getWorldPos().x >= 2930 && hero.getWorldPos().y > 35 && hero.getWorldPos().y < 345)
-		{
+		{	
+			conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y );
 			hero.undoMovement();
 		}
 
@@ -168,6 +174,7 @@ int main()
 				hero.undoMovement();
 				npc->undoMovement();
 			}
+
 		}
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
