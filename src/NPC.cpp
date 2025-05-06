@@ -1,5 +1,6 @@
 #include "NPC.h"
 #include <string>
+#include <vector>
 #include "raylib.h"
 #include "raymath.h"
 #include "Conversation.h"
@@ -75,35 +76,9 @@ void NPC::tick(float deltaTime)
     {
         texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
-        if (isTalking && interactionCount < NPCDialog.size())
+        if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
         {
-            std::string dialogText = NPCDialog[interactionCount];
-            int fontSize = 15;
-            int padding = 10;
-
-            // Measure the width of the text
-            int textWidth = MeasureText(dialogText.c_str(), fontSize);
-
-            // Set minimum width and height for the bubble
-            int minWidth = 100;
-            int minHeight = 40;
-
-            // Final width and height with padding
-            int bubbleWidth = std::max(minWidth, textWidth + 2 * padding);
-            int bubbleHeight = minHeight; 
-
-            // Build the rectangle based on text size
-            Rectangle conversation{
-                getScreenPos().x - bubbleWidth / 2,
-                getScreenPos().y - 40,
-                static_cast<float>(bubbleWidth),
-                static_cast<float>(bubbleHeight)};
-
-            // Draw the bubble and the text
-            if(Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f){
-            DrawRectangleRounded(conversation, 0.2f, 6, WHITE);
-            DrawText(dialogText.c_str(), conversation.x + padding, conversation.y + padding, fontSize, BLACK);
-            }
+            conversation(NPCDialog[interactionCount],  getScreenPos().x, getScreenPos().y);
         }
         if (velocity.x > velocity.y)
         {
@@ -129,4 +104,9 @@ void NPC::tick(float deltaTime)
 Vector2 NPC::getScreenPos()
 {
     return Vector2Subtract(worldPos, hero->getWorldPos());
+}
+
+void NPC::addDialog(const std::vector<std::string>& dialogs){
+    for (const auto& dialog : dialogs)
+            NPCDialog.push_back(dialog);
 }

@@ -6,8 +6,7 @@
 inline std::vector<std::string> boydDialoguesDayOne = {
     "You shouldn't be here.",
     "You hear them too, don't you?",
-    "Did the sky always look like that?",
-    "We're all stuck here... like you.",
+    "We're stuck here... like you.",
     "The talismans never kept the monsters away.",
     "They were never afraid of the talismans.",
     "They were just biding their time, playing with us.",
@@ -32,7 +31,22 @@ inline std::vector<std::string> boydDialoguesDayOne = {
 };
 
 inline std::vector<std::string> boydDialoguesDayTwo = {
-    "Congratulation for surviving your first day!"
+    "Who are you?",
+    "The monsters returned...",
+    "Listen to me, son!",
+    "Who are you?",
+    "It is not a coincidence.",
+    "It can't be...",
+};
+
+inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
+    "Have you seen a kid?",
+    "What did she tell you?",
+    "You've been here before...",
+    "You died, you returned...",
+    "You will die again...",
+    "You need to find the man in yellow.",
+    "He will know you."
 };
 
 inline std::vector<std::string> kidDialogues = {
@@ -41,4 +55,21 @@ inline std::vector<std::string> kidDialogues = {
     "It's not your first goodbye.",
     "The tree opens a way, but not a way out."
 
+};
+
+inline std::vector<std::string> saraDialoguesDayOne = {
+    "Isn't it sad?",
+    "Those bottles, and the...",
+    "And the many sad endings!",
+    "Have you met Boyd?",
+    "He buried his son.",
+    "He hasn't moved since.",
+    "He has been waiting for them since that day...",
+    "But they are not coming, they will not.",
+    "They are afraid of him.",
+    "He said we are safe.",
+    "I thought I was safe... but then I remembered.",
+    "I feel their pain, I hear them screaming...",
+    "He tries to get out.",
+    "We must stop him."
 };

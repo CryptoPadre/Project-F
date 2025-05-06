@@ -48,15 +48,9 @@ int main()
 		npc->setTarget(&hero);
 	}
 	// Add the dialogues to npcs dialogue vector for the first day in the game
-	for (auto dialogue : boydDialoguesDayOne)
-	{
-		boyd.addDialog(dialogue);
-	};
-	for (auto dialogue : kidDialogues)
-	{
-		kid.addDialog(dialogue);
-	};
-	// Load the map for day time
+	boyd.addDialog(boydDialoguesDayOne);
+	kid.addDialog(kidDialogues);
+	sara.addDialog(saraDialoguesDayOne);
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
 	const float mapScale{2.0};
@@ -64,6 +58,14 @@ int main()
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
+	Texture2D temple = LoadTexture("temple-interior.png");
+	Texture2D maps[3]{
+		map,
+		mapNightTexture,
+		temple};
+	Vector2 interiorPos = {
+		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
+		static_cast<float>(screenHeight)/ 2 - maps[2].height * 1.5f};
 	// Render props
 	Prop props[7]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
@@ -85,6 +87,7 @@ int main()
 	{
 		enemy->setTarget(&hero);
 	}
+	bool isInside{};
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -104,88 +107,97 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
-		if (isDayTime)
+		if (!isInside)
 		{
-			// draw the map for daytime
-			DrawTextureEx(map, mapPos, 0.0, mapScale, WHITE);
-		}
-		else
-		{
-			// draw the map for nighttime
-			DrawTextureEx(mapNightTexture, mapPos, 0.0, mapScale, WHITE);
-			for (auto enemy : enemies)
+			if (isDayTime)
 			{
-				enemy->tick(GetFrameTime());
-				if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
+				// draw the map for daytime
+				DrawTextureEx(maps[0], mapPos, 0.0, mapScale, WHITE);
+			}
+			else
+			{
+				// draw the map for nighttime
+				DrawTextureEx(maps[1], mapPos, 0.0, mapScale, WHITE);
+				for (auto enemy : enemies)
 				{
-					hero.setAlive(true);
+					enemy->tick(GetFrameTime());
+					if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.setAlive(true);
+					}
 				}
 			}
-		}
-		// draw props
-		for (auto prop : props)
-		{
-			prop.Render(hero.getWorldPos());
-		}
-		hero.tick(GetFrameTime());
-		if (hero.getWorldPos().x < 0.f || hero.getWorldPos().y < 0.f ||
-			hero.getWorldPos().x + screenWidth > map.width * mapScale ||
-			hero.getWorldPos().y + screenHeight > map.height * mapScale - 30 ||
-			hero.getWorldPos().x >= 2930 && hero.getWorldPos().y > 35 && hero.getWorldPos().y < 345)
-		{	
-			conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y );
-			hero.undoMovement();
-		}
-
-		// check prop collision
-		for (auto prop : props)
-		{
-			if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()),
-								   hero.GetCollisionRec()))
+			// draw props
+			for (auto prop : props)
 			{
+				prop.Render(hero.getWorldPos());
+			}
+			if (hero.getWorldPos().x < 0.f || hero.getWorldPos().y < 0.f ||
+				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
+				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale - 30 ||
+				hero.getWorldPos().x >= 2930 && hero.getWorldPos().y > 35 && hero.getWorldPos().y < 345)
+			{
+				conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y);
 				hero.undoMovement();
 			}
-			for (auto enemy : enemies)
+			// check prop collision
+			for (auto prop : props)
 			{
-				if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), enemy->GetCollisionRec()))
+				if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()),
+									   hero.GetCollisionRec()))
 				{
-					enemy->undoMovement();
+					hero.undoMovement();
+				}
+				for (auto enemy : enemies)
+				{
+					if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), enemy->GetCollisionRec()))
+					{
+						enemy->undoMovement();
+					}
+				}
+				for (auto npc : npcs)
+				{
+					if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), npc->GetCollisionRec()))
+					{
+						npc->undoMovement();
+					}
 				}
 			}
 			for (auto npc : npcs)
 			{
-				if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), npc->GetCollisionRec()))
+				npc->isDay = isDayTime;
+				npc->tick(GetFrameTime());
+				if (IsKeyPressed(KEY_E))
 				{
+					npc->talk();
+					npc->setInteractionCount();
+				}
+				if (CheckCollisionRecs(npc->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
 					npc->undoMovement();
 				}
 			}
-		}
-		for (auto npc : npcs)
-		{
-			npc->isDay = isDayTime;
-			npc->tick(GetFrameTime());
-			if (IsKeyPressed(KEY_E))
+			if (hero.getWorldPos().x >= 2810 && hero.getWorldPos().x <= 2870 &&
+				hero.getWorldPos().y <= 30)
 			{
-				npc->talk();
-				npc->setInteractionCount();
+				DrawText("Press E to enter the house", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+				{
+					isInside = true;
+				}
 			}
-			if (CheckCollisionRecs(npc->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-				npc->undoMovement();
-			}
-
 		}
-
+		else {
+			DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
+		}
+		hero.tick(GetFrameTime());
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
 	}
 
 	// cleanup
-	// unload our texture so it can be cleaned up
-	UnloadTexture(map);
-	UnloadTexture(mapNightTexture);
 
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();

@@ -7,7 +7,8 @@
 class NPC : public BaseCharacter{
     public:
     NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, bool human);
-    void addDialog(const std::string& dialog){ NPCDialog.push_back(dialog);};
+    // void addDialog(const std::string& dialog){ NPCDialog.push_back(dialog);};
+    void addDialog(const std::vector<std::string>& dialogs);
     void talk();
     void setInteractionCount();
     void setTarget(Character* character){hero = character;}
