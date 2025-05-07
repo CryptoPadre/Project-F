@@ -58,14 +58,16 @@ int main()
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
-	Texture2D temple = LoadTexture("temple-interior.png");
-	Texture2D maps[3]{
+	Texture2D house_interior = LoadTexture("house_interior.png");
+	Texture2D temple_interior = LoadTexture("temple_interior.png");
+	Texture2D maps[4]{
 		map,
 		mapNightTexture,
-		temple};
+		house_interior,
+		temple_interior};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
-		static_cast<float>(screenHeight)/ 2 - maps[2].height * 1.5f};
+		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
 	// Render props
 	Prop props[7]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
@@ -106,6 +108,7 @@ int main()
 		bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
+		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		if (!isInside)
 		{
@@ -185,11 +188,35 @@ int main()
 				if (IsKeyPressed(KEY_E))
 				{
 					isInside = true;
+					hero.setWorldPos(-70.f, 320.f);
 				}
 			}
 		}
-		else {
-			DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
+		else
+		{
+			if (hero.getWorldPos().x > 2750)
+			{
+				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
+				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
+					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
+				{
+					conversation("Is anybody here?", hero.getScreenPos().x, hero.getScreenPos().y);
+					hero.undoMovement();
+				}
+				if (hero.getWorldPos().x >= -134 && hero.getWorldPos().x <= -23 &&
+					hero.getWorldPos().y >= 310)
+				{
+					DrawText("Press E to exit the house", 250, 250, 20, WHITE);
+					if (IsKeyPressed(KEY_E))
+					{
+						isInside = false;
+						hero.setWorldPos(2830, 30);
+					}
+				}
+			}
+			if(hero.getWorldPos().x < 2750){
+				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
+			}
 		}
 		hero.tick(GetFrameTime());
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
