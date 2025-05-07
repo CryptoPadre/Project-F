@@ -33,10 +33,28 @@ inline std::vector<std::string> boydDialoguesDayOne = {
 inline std::vector<std::string> boydDialoguesDayTwo = {
     "Who are you?",
     "The monsters returned...",
-    "Listen to me, son!",
+    "Answer me, son!",
     "Who are you?",
     "It is not a coincidence.",
     "It can't be...",
+};
+
+inline std::vector<std::string> boydDialoguesDayThree {
+    "You want me to believe that he was me?",
+    "The yellow man? The one even monsters fear?",
+    "Wait...",
+    "They had many opportunities to kill me.",
+    "Why... why didn’t they?",
+    "So am I him?",
+    "I killed all those people?",
+    "I killed...",
+    "Did I kill my son?",
+    "Oh... I remember...",
+    "Born in dark, bearing the curse...",
+    "Die, forget, be reborn, and return...",
+    "I am the curse, I sacrificed them...",
+    "They are not monsters, they've never been...",
+    "They were... They are my childs..."
 };
 
 inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
@@ -72,4 +90,37 @@ inline std::vector<std::string> saraDialoguesDayOne = {
     "I feel their pain, I hear them screaming...",
     "He tries to get out.",
     "We must stop him."
+};
+
+inline std::vector<std::string> saraDialoguesDayTwo = {
+    "He let us live, because he can't kill us!",
+    "He let us live, because he can't live without us!",
+    "He let us live, because he was one of us!",
+    "He was... He was you before you died!",
+    "He is you - but not now...",
+    "The voices are back again!",
+    "They were waiting for you...",
+    "He was waiting for you",
+    "He will be by the tree"
+};
+
+
+inline std::vector<std::string> yellowDialog = {
+    "So we meet again!",
+    "You don't remember me, do you?",
+    "Born in dark, bearing the curse...",
+    "Die, forget, be reborn, and return...",
+    "One last good fight Charles!",
+    "Be forgotten forever... and escape with pride."
+};
+
+inline std::vector<std::string> yellowDialogAfterFight = {
+    "I don't understand...",
+    "I should be divine...",
+    "How could you defeat me?",
+    "Unless... no, it can't be!",
+    "You are not me!!!",
+    "Who are you?",
+    "Answer me, son!",
+    "Tell me... Who are you?"
 };
