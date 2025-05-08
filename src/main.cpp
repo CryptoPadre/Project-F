@@ -58,13 +58,13 @@ int main()
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
-	Texture2D house_interior = LoadTexture("house_interior.png");
+	Texture2D house_two_interior = LoadTexture("house_two_interior.png");
 	Texture2D temple_interior = LoadTexture("temple_interior.png");
 	Texture2D maps[4]{
 		map,
 		mapNightTexture,
-		house_interior,
-		temple_interior};
+		temple_interior,
+		house_two_interior};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -89,7 +89,26 @@ int main()
 	{
 		enemy->setTarget(&hero);
 	}
+	// Check if character is inside a house
 	bool isInside{};
+	// Positions of the buildings where player can enter
+	int temple_entry_width_min = 1000;
+	int temple_entry_width_max = 1050;
+	int temple_entry_height = 179;
+	int house_one_entry_width_min = 1410;
+	int house_one_entry_width_max = 1455;
+	int house_one_entry_height = 220;
+	int house_two_entry_width_min = 2810;
+	int house_two_entry_width_max = 2870;
+	int house_two_entry_height = 30;
+	enum InteriorType
+	{
+		NONE,
+		HOUSE_ONE,
+		HOUSE_TWO,
+		TEMPLE
+	};
+	InteriorType currentInterior = NONE;
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -181,28 +200,54 @@ int main()
 					npc->undoMovement();
 				}
 			}
-			if (hero.getWorldPos().x >= 2810 && hero.getWorldPos().x <= 2870 &&
-				hero.getWorldPos().y <= 30)
+			if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
+					hero.getWorldPos().y <= house_one_entry_height ||
+				hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
+					hero.getWorldPos().y <= house_two_entry_height ||
+				hero.getWorldPos().x >= temple_entry_width_min &&
+					hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
 			{
 				DrawText("Press E to enter the house", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
+					if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
+						hero.getWorldPos().y <= house_one_entry_height)
+					{
+						currentInterior = HOUSE_ONE;
+					}
+					if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
+						hero.getWorldPos().y <= house_two_entry_height)
+					{
+						currentInterior = HOUSE_TWO;
+						hero.setWorldPos(-70.f, 320.f);
+					}
+					if (hero.getWorldPos().x >= temple_entry_width_min &&
+						hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
+					{
+						currentInterior = TEMPLE;
+						hero.setWorldPos(0.f, 350.f);
+					}
 					isInside = true;
-					hero.setWorldPos(-70.f, 320.f);
 				}
 			}
 		}
 		else
 		{
-			if (hero.getWorldPos().x > 2750)
+			switch (currentInterior)
 			{
+			case HOUSE_ONE:
 				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
+				break;
+			case HOUSE_TWO:
+				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
+
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
 				{
 					conversation("Is anybody here?", hero.getScreenPos().x, hero.getScreenPos().y);
 					hero.undoMovement();
 				}
+
 				if (hero.getWorldPos().x >= -134 && hero.getWorldPos().x <= -23 &&
 					hero.getWorldPos().y >= 310)
 				{
@@ -210,14 +255,20 @@ int main()
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;
+						currentInterior = NONE;
 						hero.setWorldPos(2830, 30);
 					}
 				}
-			}
-			if(hero.getWorldPos().x < 2750){
-				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
+
+				break;
+			case TEMPLE:
+				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
+				break;
+			default:
+				break;
 			}
 		}
+
 		hero.tick(GetFrameTime());
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)

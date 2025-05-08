@@ -9,7 +9,6 @@ public:
 	Character(int winWidth, int winHeight);
 	virtual void tick(float deltaTime) override;
 	virtual Vector2 getScreenPos() override;
-	void setWorldPos(float x, float y) { worldPos = {x, y}; }
 
 private:
 	int windowWidth{};
