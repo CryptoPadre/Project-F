@@ -52,10 +52,10 @@ int main()
 	boyd.addDialog(boydDialoguesDayOne);
 	kid.addDialog(kidDialogues);
 	sara.addDialog(saraDialoguesDayOne);
+	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
 	const float mapScale{2.0};
-	// Create the maps
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
@@ -139,9 +139,18 @@ int main()
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		startPos = Vector2Scale(hero.getWorldPos(), -1.f);
+		// counting the time since gamestart and days survived
+		double time = GetTime();
+		int daysSurvived = 0;
+		if (fmod(GetTime(), 240.0) < 120.0)
+		{
+			daysSurvived++;
+		}
+		// change the map if it night or daytime
+		bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
 		// Beginning of the game
 		if (isGameStart)
-		{   
+		{
 			DrawTextureEx(maps[5], startPos, 0.0, mapScale, WHITE);
 			props[7].Render(hero.getWorldPos());
 			if (
@@ -152,28 +161,20 @@ int main()
 			{
 				hero.undoMovement();
 			}
-			if(hero.getWorldPos().y >= 1410){
+			if (hero.getWorldPos().y >= 1410)
+			{
 				DrawText("Press E to enter the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = false;
-					hero.setWorldPos(230.f,10.f);
-					
+					hero.setWorldPos(230.f, 120.f);
 				}
 			}
 		}
+
 		// World map changing between daytime/nighttime
 		else if (!isInside && !isOutsideTown && !isGameStart)
 		{
-			// counting the time since gamestart and days survived
-			double time = GetTime();
-			int daysSurvived = 0;
-			if (fmod(GetTime(), 240.0) < 120.0)
-			{
-				daysSurvived++;
-			}
-			// change the map if it night or daytime
-			bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
 			if (isDayTime)
 			{
 				// draw the map for daytime
@@ -183,6 +184,7 @@ int main()
 			{
 				// draw the map for nighttime
 				DrawTextureEx(maps[1], mapPos, 0.0, mapScale, WHITE);
+				// Set collision with enemies
 				for (auto enemy : enemies)
 				{
 					enemy->tick(GetFrameTime());
@@ -203,9 +205,9 @@ int main()
 				}
 			}
 			// draw props
-			for (auto prop : props)
+			for (int i = 0; i < 7; i++)
 			{
-				prop.Render(hero.getWorldPos());
+				props[i].Render(hero.getWorldPos());
 			}
 			if (hero.getWorldPos().x < 0.f || hero.getWorldPos().y < 0.f ||
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
