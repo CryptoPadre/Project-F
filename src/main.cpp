@@ -58,16 +58,21 @@ int main()
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
+	Texture2D mapOutsideTown = LoadTexture("fromville_outside_one.png");
 	Texture2D house_two_interior = LoadTexture("house_two_interior.png");
 	Texture2D temple_interior = LoadTexture("temple_interior.png");
-	Texture2D maps[4]{
+	Texture2D maps[5]{
 		map,
 		mapNightTexture,
 		temple_interior,
-		house_two_interior};
+		house_two_interior,
+		mapOutsideTown};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
+	Vector2 outsideTownPos = {
+		screenWidth - maps[4].width * mapScale,
+		screenHeight - maps[4].height * mapScale};
 	// Render props
 	Prop props[7]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
@@ -89,8 +94,9 @@ int main()
 	{
 		enemy->setTarget(&hero);
 	}
-	// Check if character is inside a house
+	// Check if character is inside a house / outside the town
 	bool isInside{};
+	bool isOutsideTown{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 1000;
 	int temple_entry_width_max = 1050;
@@ -101,6 +107,9 @@ int main()
 	int house_two_entry_width_min = 2810;
 	int house_two_entry_width_max = 2870;
 	int house_two_entry_height = 30;
+	int town_exit_width_min = 2100;
+	int town_exit_width_max = 2530;
+	int town_exit_height = 10;
 	enum InteriorType
 	{
 		NONE,
@@ -129,7 +138,8 @@ int main()
 		ClearBackground(WHITE);
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
-		if (!isInside)
+		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);
+		if (!isInside && !isOutsideTown)
 		{
 			if (isDayTime)
 			{
@@ -147,6 +157,16 @@ int main()
 					{
 						hero.setAlive(true);
 					}
+				}
+			}
+			if (hero.getWorldPos().x >= town_exit_width_min && hero.getWorldPos().x <= town_exit_width_max &&
+				hero.getWorldPos().y <= town_exit_height)
+			{
+				DrawText("Press E to leave the town", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+				{	
+					isOutsideTown = true;
+					hero.setWorldPos(300.f, 1442.f);
 				}
 			}
 			// draw props
@@ -231,7 +251,7 @@ int main()
 				}
 			}
 		}
-		else
+		else if(isInside)
 		{
 			switch (currentInterior)
 			{
@@ -267,6 +287,9 @@ int main()
 			default:
 				break;
 			}
+		}
+		else if(isOutsideTown){
+			DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
 		}
 
 		hero.tick(GetFrameTime());
