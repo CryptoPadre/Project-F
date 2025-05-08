@@ -35,6 +35,7 @@ int main()
 	SearchAndSetResourceDir("resources");
 	// draw hero
 	Character hero{screenWidth, screenHeight};
+	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
 	NPC boyd{Vector2{1850.f, 1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
@@ -54,34 +55,40 @@ int main()
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{entryWidth, entryHeight};
 	const float mapScale{2.0};
-	// Create a map for nighttime - same map but with manipulated brightness
+	// Create the maps
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
 	Texture2D mapOutsideTown = LoadTexture("fromville_outside_one.png");
 	Texture2D house_two_interior = LoadTexture("house_two_interior.png");
 	Texture2D temple_interior = LoadTexture("temple_interior.png");
-	Texture2D maps[5]{
+	Texture2D start = LoadTexture("start.png");
+	Texture2D maps[6]{
 		map,
 		mapNightTexture,
 		temple_interior,
 		house_two_interior,
-		mapOutsideTown};
+		mapOutsideTown,
+		start};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
 	Vector2 outsideTownPos = {
 		screenWidth - maps[4].width * mapScale,
 		screenHeight - maps[4].height * mapScale};
+	Vector2 startPos{
+		screenWidth - maps[5].width * mapScale,
+		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[7]{
+	Prop props[8]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true},
-		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5f, false},
-		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5f, true},
+		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5, false},
+		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true},
 		Prop{Vector2{400.f, 600.f}, LoadTexture("gravestone.png"), 2.f, false},
 		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false},
-		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false}};
+		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false},
+		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false}};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
@@ -94,9 +101,10 @@ int main()
 	{
 		enemy->setTarget(&hero);
 	}
-	// Check if character is inside a house / outside the town
+	// Check if character is inside a house / outside the town / starting the game
 	bool isInside{};
 	bool isOutsideTown{};
+	bool isGameStart{true};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 1000;
 	int temple_entry_width_max = 1050;
@@ -125,22 +133,47 @@ int main()
 	{
 		// drawing
 		BeginDrawing();
-		// counting the time since gamestart and days survived
-		double time = GetTime();
-		int daysSurvived = 0;
-		if (fmod(GetTime(), 240.0) < 120.0)
-		{
-			daysSurvived++;
-		}
-		// change the map if it night or daytime
-		bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);
-		if (!isInside && !isOutsideTown)
+		startPos = Vector2Scale(hero.getWorldPos(), -1.f);
+		// Beginning of the game
+		if (isGameStart)
+		{   
+			DrawTextureEx(maps[5], startPos, 0.0, mapScale, WHITE);
+			props[7].Render(hero.getWorldPos());
+			if (
+				hero.getWorldPos().x < 77.f ||
+				hero.getWorldPos().y < 100.f ||
+				hero.getWorldPos().x > 739 ||
+				hero.getWorldPos().y > 1415)
+			{
+				hero.undoMovement();
+			}
+			if(hero.getWorldPos().y >= 1410){
+				DrawText("Press E to enter the town", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+				{
+					isGameStart = false;
+					hero.setWorldPos(230.f,10.f);
+					
+				}
+			}
+		}
+		// World map changing between daytime/nighttime
+		else if (!isInside && !isOutsideTown && !isGameStart)
 		{
+			// counting the time since gamestart and days survived
+			double time = GetTime();
+			int daysSurvived = 0;
+			if (fmod(GetTime(), 240.0) < 120.0)
+			{
+				daysSurvived++;
+			}
+			// change the map if it night or daytime
+			bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
 			if (isDayTime)
 			{
 				// draw the map for daytime
@@ -164,7 +197,7 @@ int main()
 			{
 				DrawText("Press E to leave the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
-				{	
+				{
 					isOutsideTown = true;
 					hero.setWorldPos(300.f, 1442.f);
 				}
@@ -251,7 +284,8 @@ int main()
 				}
 			}
 		}
-		else if(isInside)
+		// Maps if the hero enters into a building
+		else if (isInside)
 		{
 			switch (currentInterior)
 			{
@@ -288,7 +322,9 @@ int main()
 				break;
 			}
 		}
-		else if(isOutsideTown){
+		// Map if hero tries to leave the town
+		else if (isOutsideTown)
+		{
 			DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
 		}
 
