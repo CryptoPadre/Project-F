@@ -280,7 +280,7 @@ int main()
 						hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
 					{
 						currentInterior = TEMPLE;
-						hero.setWorldPos(0.f, 350.f);
+						hero.setWorldPos(0.f, 270.f);
 					}
 					isInside = true;
 				}
@@ -319,6 +319,23 @@ int main()
 				break;
 			case TEMPLE:
 				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
+				if (hero.getWorldPos().x < -390 || hero.getWorldPos().x > 102 ||
+					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200)
+				{
+			
+					hero.undoMovement();
+				}
+				if (hero.getWorldPos().x >= -28 && hero.getWorldPos().x <= 28 &&
+					hero.getWorldPos().y >= 260)
+				{
+					DrawText("Press E to exit the temple", 250, 250, 20, WHITE);
+					if (IsKeyPressed(KEY_E))
+					{
+						isInside = false;
+						currentInterior = NONE;
+						hero.setWorldPos(1020.f, 179.f);
+					}
+				}
 				break;
 			default:
 				break;
@@ -328,6 +345,27 @@ int main()
 		else if (isOutsideTown)
 		{
 			DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
+			if(hero.getWorldPos().x < 0 || hero.getWorldPos().x > 1043 
+				   | hero.getWorldPos().y > 1442 || hero.getWorldPos().y < 0){
+					hero.undoMovement();
+				}
+			if(hero.getWorldPos().y > 1430){
+				DrawText("Press E to return to the town", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+					{
+						isOutsideTown = false;
+						hero.setWorldPos(2330, 30);
+					}
+			}
+			if(hero.getWorldPos().y < 10){
+				DrawText("Press E to exit!", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+					{
+						isOutsideTown = false;
+						isGameStart = true;
+						hero.setWorldPos(400.f, 1330.f);
+					}
+			}
 		}
 
 		hero.tick(GetFrameTime());
