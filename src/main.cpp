@@ -345,11 +345,15 @@ int main()
 		else if (isOutsideTown)
 		{
 			DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
-			if(hero.getWorldPos().x < 0 || hero.getWorldPos().x > 1043 
+			if(hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 
 				   | hero.getWorldPos().y > 1442 || hero.getWorldPos().y < 0){
 					hero.undoMovement();
 				}
-			if(hero.getWorldPos().y > 1430){
+			if(hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 && 
+			hero.getWorldPos().y < 870){
+				conversation("Where does this road lead?", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if(hero.getWorldPos().y > 1430 && hero.getWorldPos().x < 600){
 				DrawText("Press E to return to the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 					{
