@@ -23,9 +23,6 @@ int main()
 	// window size
 	int screenWidth = 1000;
 	int screenHeight = 600;
-	// entry and exit points of the map
-	float entryWidth = -150.0;
-	float entryHeight = -30.0;
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 	// Create the window and OpenGL context
@@ -54,7 +51,7 @@ int main()
 	sara.addDialog(saraDialoguesDayOne);
 	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
-	Vector2 mapPos{entryWidth, entryHeight};
+	Vector2 mapPos{0.f, 0.f};
 	const float mapScale{2.0};
 	Image mapNight = LoadImageFromTexture(map);
 	ImageColorBrightness(&mapNight, -80);
