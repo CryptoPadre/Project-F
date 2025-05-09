@@ -57,16 +57,24 @@ int main()
 	ImageColorBrightness(&mapNight, -80);
 	Texture2D mapNightTexture = LoadTextureFromImage(mapNight);
 	Texture2D mapOutsideTown = LoadTexture("fromville_outside_one.png");
+	Image mapOutside = LoadImageFromTexture(mapOutsideTown);
+	ImageColorBrightness(&mapOutside, -80);
+	Texture2D mapOutsideNight = LoadTextureFromImage(mapOutside);
 	Texture2D house_two_interior = LoadTexture("house_two_interior.png");
 	Texture2D temple_interior = LoadTexture("temple_interior.png");
 	Texture2D start = LoadTexture("start.png");
-	Texture2D maps[6]{
+	Image startNighttime = LoadImageFromTexture(start);
+	ImageColorBrightness(&startNighttime, -80);
+	Texture2D startNight = LoadTextureFromImage(startNighttime);
+	Texture2D maps[8]{
 		map,
 		mapNightTexture,
 		temple_interior,
 		house_two_interior,
 		mapOutsideTown,
-		start};
+		start,
+		mapOutsideNight,
+		startNight};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -144,11 +152,18 @@ int main()
 			daysSurvived++;
 		}
 		// change the map if it night or daytime
-		bool isDayTime = fmod(GetTime(), 240.0) < 120.0;
+		bool isDayTime = fmod(GetTime(), 40.0) < 20.0;
 		// Beginning of the game
 		if (isGameStart)
 		{
-			DrawTextureEx(maps[5], startPos, 0.0, mapScale, WHITE);
+			if (isDayTime)
+			{
+				DrawTextureEx(maps[5], startPos, 0.0, mapScale, WHITE);
+			}
+			else
+			{
+				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
+			}
 			props[7].Render(hero.getWorldPos());
 			if (
 				hero.getWorldPos().x < 77.f ||
@@ -319,7 +334,7 @@ int main()
 				if (hero.getWorldPos().x < -390 || hero.getWorldPos().x > 102 ||
 					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200)
 				{
-			
+
 					hero.undoMovement();
 				}
 				if (hero.getWorldPos().x >= -28 && hero.getWorldPos().x <= 28 &&
@@ -341,31 +356,41 @@ int main()
 		// Map if hero tries to leave the town
 		else if (isOutsideTown)
 		{
-			DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
-			if(hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 
-				   | hero.getWorldPos().y > 1442 || hero.getWorldPos().y < 0){
-					hero.undoMovement();
-				}
-			if(hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 && 
-			hero.getWorldPos().y < 870){
+			if (isDayTime)
+			{
+				DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
+			}
+			else
+			{
+				DrawTextureEx(maps[6], outsideTownPos, 0.0, mapScale, WHITE);
+			}
+			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1442 || hero.getWorldPos().y < 0)
+			{
+				hero.undoMovement();
+			}
+			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
+				hero.getWorldPos().y < 870)
+			{
 				conversation("Where does this road lead?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
-			if(hero.getWorldPos().y > 1430 && hero.getWorldPos().x < 600){
+			if (hero.getWorldPos().y > 1430 && hero.getWorldPos().x < 600)
+			{
 				DrawText("Press E to return to the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
-					{
-						isOutsideTown = false;
-						hero.setWorldPos(2330, 30);
-					}
+				{
+					isOutsideTown = false;
+					hero.setWorldPos(2330, 30);
+				}
 			}
-			if(hero.getWorldPos().y < 10){
+			if (hero.getWorldPos().y < 10)
+			{
 				DrawText("Press E to exit!", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
-					{
-						isOutsideTown = false;
-						isGameStart = true;
-						hero.setWorldPos(400.f, 1330.f);
-					}
+				{
+					isOutsideTown = false;
+					isGameStart = true;
+					hero.setWorldPos(400.f, 1330.f);
+				}
 			}
 		}
 
