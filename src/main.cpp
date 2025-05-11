@@ -310,6 +310,11 @@ int main()
 			{
 			case HOUSE_ONE:
 				DrawTextureEx(maps[8], interiorPos, 0.0, 1.5, WHITE);
+				if (hero.getWorldPos().x < -450 || hero.getWorldPos().x > 156 ||
+					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230)
+					{
+						hero.undoMovement();
+					}
 				break;
 			case HOUSE_TWO:
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
