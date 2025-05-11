@@ -66,7 +66,9 @@ int main()
 	Image startNighttime = LoadImageFromTexture(start);
 	ImageColorBrightness(&startNighttime, -80);
 	Texture2D startNight = LoadTextureFromImage(startNighttime);
-	Texture2D maps[8]{
+	Texture2D house_one_interior = LoadTexture("house_interior.png");
+	Texture2D house_one_interior_floor = LoadTexture("house_interior_floor.png");
+	Texture2D maps[10]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -74,7 +76,9 @@ int main()
 		mapOutsideTown,
 		start,
 		mapOutsideNight,
-		startNight};
+		startNight,
+		house_one_interior,
+		house_one_interior_floor};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -281,6 +285,7 @@ int main()
 						hero.getWorldPos().y <= house_one_entry_height)
 					{
 						currentInterior = HOUSE_ONE;
+						hero.setWorldPos(-387.f, 320.f);
 					}
 					if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
 						hero.getWorldPos().y <= house_two_entry_height)
@@ -304,7 +309,7 @@ int main()
 			switch (currentInterior)
 			{
 			case HOUSE_ONE:
-				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
+				DrawTextureEx(maps[8], interiorPos, 0.0, 1.5, WHITE);
 				break;
 			case HOUSE_TWO:
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
