@@ -114,6 +114,7 @@ int main()
 	bool isInside{};
 	bool isOutsideTown{};
 	bool isGameStart{true};
+	bool isUpstairs{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 1000;
 	int temple_entry_width_max = 1050;
@@ -189,7 +190,7 @@ int main()
 		}
 
 		// World map changing between daytime/nighttime
-		else if (!isInside && !isOutsideTown && !isGameStart)
+		else if (!isInside && !isOutsideTown && !isGameStart && !isUpstairs)
 		{
 			if (isDayTime)
 			{
@@ -304,17 +305,33 @@ int main()
 			}
 		}
 		// Maps if the hero enters into a building
-		else if (isInside)
+		else if (isInside && !isUpstairs)
 		{
 			switch (currentInterior)
 			{
 			case HOUSE_ONE:
 				DrawTextureEx(maps[8], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -450 || hero.getWorldPos().x > 156 ||
-					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230)
+					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230 ||
+					hero.getWorldPos().x > 111 && hero.getWorldPos().y > 180 ||
+					hero.getWorldPos().x > -24 && hero.getWorldPos().x < 105 &&
+						hero.getWorldPos().y > 152 && hero.getWorldPos().y < 284 ||
+					hero.getWorldPos().x < -315 && hero.getWorldPos().x > -411 &&
+						hero.getWorldPos().y > 140 && hero.getWorldPos().y < 40)
+				{
+					hero.undoMovement();
+				}
+				if (hero.getWorldPos().x < -420 && hero.getWorldPos().y < -185)
+				{
+					DrawText("Press E to go upstairs.", 250, 250, 20, BLACK);
+					if (IsKeyPressed(KEY_E))
 					{
-						hero.undoMovement();
+						isUpstairs = true;
+						currentInterior = NONE;
+						isInside = false;
+						hero.setWorldPos(-350.f, -177.f);
 					}
+				}
 				break;
 			case HOUSE_TWO:
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
@@ -361,6 +378,27 @@ int main()
 				break;
 			default:
 				break;
+			}
+		}
+		else if (isUpstairs)
+		{
+			DrawTextureEx(maps[9], interiorPos, 0.0, mapScale, WHITE);
+			if (hero.getWorldPos().x < -439 || hero.getWorldPos().x > -85 ||
+				hero.getWorldPos().y > 54 || hero.getWorldPos().y < -220)
+			{
+				hero.undoMovement();
+			}
+			if (hero.getWorldPos().x < -339 && hero.getWorldPos().y > -201 &&
+				hero.getWorldPos().y < -135)
+			{
+				DrawText("Press E to go downstairs.", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+				{
+					isUpstairs = false;
+					currentInterior = HOUSE_ONE;
+					isInside = true;
+					hero.setWorldPos(-449.f, -198.f);
+				}
 			}
 		}
 		// Map if hero tries to leave the town
