@@ -102,6 +102,7 @@ int main()
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
 	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png")};
+	Enemy monster_he{Vector2{400.f, 100.f}, LoadTexture("monster_he_he.png"), LoadTexture("monster_he_he.png")};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -315,9 +316,12 @@ int main()
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230 ||
 					hero.getWorldPos().x > 111 && hero.getWorldPos().y > 180 ||
 					hero.getWorldPos().x > -24 && hero.getWorldPos().x < 105 &&
-						hero.getWorldPos().y > 152 && hero.getWorldPos().y < 284 ||
-					hero.getWorldPos().x < -315 && hero.getWorldPos().x > -411 &&
-						hero.getWorldPos().y > 140 && hero.getWorldPos().y < 40)
+					hero.getWorldPos().y > 152 && hero.getWorldPos().y < 284 ||
+					hero.getWorldPos().x > - 430 && hero.getWorldPos().x < -310 &&
+					hero.getWorldPos().y > 40 && hero.getWorldPos().y < 145 ||
+					hero.getWorldPos().x > -221 && hero.getWorldPos().x < -116 &&
+					hero.getWorldPos().y < 280
+				)
 				{
 					hero.undoMovement();
 				}
