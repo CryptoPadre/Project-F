@@ -68,7 +68,9 @@ int main()
 	Texture2D startNight = LoadTextureFromImage(startNighttime);
 	Texture2D house_one_interior = LoadTexture("house_interior.png");
 	Texture2D house_one_interior_floor = LoadTexture("house_interior_floor.png");
-	Texture2D maps[10]{
+	Texture2D cave = LoadTexture("cave.png");
+	Texture2D caveEntrance = LoadTexture("cave_entrance.png");
+	Texture2D maps[12]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -78,7 +80,8 @@ int main()
 		mapOutsideNight,
 		startNight,
 		house_one_interior,
-		house_one_interior_floor};
+		house_one_interior_floor,
+		cave, caveEntrance};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -112,10 +115,13 @@ int main()
 		enemy->setTarget(&hero);
 	}
 	// Check if character is inside a house / outside the town / starting the game
+	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
 	bool isGameStart{true};
 	bool isUpstairs{};
+	bool isInCave{};
+	bool isOutsideCave{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 1000;
 	int temple_entry_width_max = 1050;
@@ -185,13 +191,14 @@ int main()
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = false;
+					isInTown = true;
 					hero.setWorldPos(230.f, 120.f);
 				}
 			}
 		}
 
 		// World map changing between daytime/nighttime
-		else if (!isInside && !isOutsideTown && !isGameStart && !isUpstairs)
+		else if (isInTown)
 		{
 			if (isDayTime)
 			{
@@ -212,6 +219,16 @@ int main()
 					}
 				}
 			}
+			if (hero.getWorldPos().x > 14 && hero.getWorldPos().x < 410 &&
+				hero.getWorldPos().y < 120){
+					DrawText("Press E to go back to the car.", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+				{
+					isGameStart = true;
+					isInTown = false;
+					hero.setWorldPos(300.f, 1400.f);
+				}
+				}
 			if (hero.getWorldPos().x >= town_exit_width_min && hero.getWorldPos().x <= town_exit_width_max &&
 				hero.getWorldPos().y <= town_exit_height)
 			{
@@ -219,17 +236,29 @@ int main()
 				if (IsKeyPressed(KEY_E))
 				{
 					isOutsideTown = true;
+					isInTown = false;
 					hero.setWorldPos(300.f, 1442.f);
 				}
 			}
+			if(hero.getWorldPos().x > 2100 && hero.getWorldPos().x < 2520 &&
+			hero.getWorldPos().y > 3400){
+				DrawText("Press E to leave the town", 250, 250, 20, BLACK);
+				if (IsKeyPressed(KEY_E))
+				{
+					isOutsideTown = true;
+					isInTown = false;
+					hero.setWorldPos(340.f, 188.f);
+				}
+			}
+			
 			// draw props
 			for (int i = 0; i < 7; i++)
 			{
 				props[i].Render(hero.getWorldPos());
 			}
-			if (hero.getWorldPos().x < 0.f || hero.getWorldPos().y < 0.f ||
+			if (hero.getWorldPos().x < 50.f || hero.getWorldPos().y < 0.f ||
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
-				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale - 30 ||
+				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale  ||
 				hero.getWorldPos().x >= 2930 && hero.getWorldPos().y > 35 && hero.getWorldPos().y < 345)
 			{
 				conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -302,6 +331,7 @@ int main()
 						hero.setWorldPos(0.f, 270.f);
 					}
 					isInside = true;
+					isInTown = false;
 				}
 			}
 		}
@@ -316,12 +346,11 @@ int main()
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230 ||
 					hero.getWorldPos().x > 111 && hero.getWorldPos().y > 180 ||
 					hero.getWorldPos().x > -24 && hero.getWorldPos().x < 105 &&
-					hero.getWorldPos().y > 152 && hero.getWorldPos().y < 284 ||
-					hero.getWorldPos().x > - 430 && hero.getWorldPos().x < -310 &&
-					hero.getWorldPos().y > 40 && hero.getWorldPos().y < 145 ||
+						hero.getWorldPos().y > 152 && hero.getWorldPos().y < 284 ||
+					hero.getWorldPos().x > -400 && hero.getWorldPos().x < -305 &&
+						hero.getWorldPos().y > 40 && hero.getWorldPos().y < 145 ||
 					hero.getWorldPos().x > -221 && hero.getWorldPos().x < -116 &&
-					hero.getWorldPos().y < 280
-				)
+						hero.getWorldPos().y < 280)
 				{
 					hero.undoMovement();
 				}
@@ -334,6 +363,17 @@ int main()
 						currentInterior = NONE;
 						isInside = false;
 						hero.setWorldPos(-350.f, -177.f);
+					}
+				}
+				if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
+				{
+					DrawText("Press E to exit.", 250, 250, 20, BLACK);
+					if (IsKeyPressed(KEY_E))
+					{
+						isInside = false;
+						currentInterior = NONE;
+						isInTown = true;
+						hero.setWorldPos(1430.f, 235.f);
 					}
 				}
 				break;
@@ -354,6 +394,7 @@ int main()
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;
+						isInTown = true;
 						currentInterior = NONE;
 						hero.setWorldPos(2830, 30);
 					}
@@ -376,6 +417,7 @@ int main()
 					{
 						isInside = false;
 						currentInterior = NONE;
+						isInTown = true;
 						hero.setWorldPos(1020.f, 179.f);
 					}
 				}
@@ -388,7 +430,8 @@ int main()
 		{
 			DrawTextureEx(maps[9], interiorPos, 0.0, mapScale, WHITE);
 			if (hero.getWorldPos().x < -439 || hero.getWorldPos().x > -85 ||
-				hero.getWorldPos().y > 54 || hero.getWorldPos().y < -220)
+				hero.getWorldPos().y > 54 || hero.getWorldPos().y < -220 ||
+				hero.getWorldPos().x > -185 && hero.getWorldPos().y < -90)
 			{
 				hero.undoMovement();
 			}
@@ -424,6 +467,12 @@ int main()
 				hero.getWorldPos().y < 870)
 			{
 				conversation("Where does this road lead?", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					isOutsideCave = true;
+					isOutsideTown = false;
+					hero.setWorldPos(1260.f, 785.f);
+				}
 			}
 			if (hero.getWorldPos().y > 1430 && hero.getWorldPos().x < 600)
 			{
@@ -431,10 +480,11 @@ int main()
 				if (IsKeyPressed(KEY_E))
 				{
 					isOutsideTown = false;
+					isInTown = true;
 					hero.setWorldPos(2330, 30);
 				}
 			}
-			if (hero.getWorldPos().y < 10)
+			if (hero.getWorldPos().y < 10 && hero.getWorldPos().x < 600)
 			{
 				DrawText("Press E to exit!", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
@@ -442,6 +492,31 @@ int main()
 					isOutsideTown = false;
 					isGameStart = true;
 					hero.setWorldPos(400.f, 1330.f);
+				}
+			}
+		}
+		else if (isOutsideCave)
+		{
+			DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
+			if (hero.getWorldPos().x > 1295 ||
+				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
+				hero.getWorldPos().y > 2010)
+			{
+				hero.undoMovement();
+			}
+			if (hero.getWorldPos().x < 690 && hero.getWorldPos().x > 640 &&
+				hero.getWorldPos().y < 435)
+			{
+				conversation("It's too dark in there! Can't see anything!", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
+			{
+				conversation("I should go back to the road.", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					isOutsideCave = false;
+					isOutsideTown = true;
+					hero.setWorldPos(90.f, 750.f);
 				}
 			}
 		}
