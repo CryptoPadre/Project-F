@@ -70,7 +70,10 @@ int main()
 	Texture2D house_one_interior_floor = LoadTexture("house_interior_floor.png");
 	Texture2D cave = LoadTexture("cave.png");
 	Texture2D caveEntrance = LoadTexture("cave_entrance.png");
-	Texture2D maps[12]{
+	Image caveEntranceNight = LoadImageFromTexture(caveEntrance);
+	ImageColorBrightness(&caveEntranceNight, -80);
+	Texture2D caveEntranceNightMap = LoadTextureFromImage(caveEntranceNight);
+	Texture2D maps[13]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -81,7 +84,7 @@ int main()
 		startNight,
 		house_one_interior,
 		house_one_interior_floor,
-		cave, caveEntrance};
+		cave, caveEntrance, caveEntranceNightMap};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -496,8 +499,13 @@ int main()
 			}
 		}
 		else if (isOutsideCave)
-		{
+		{	
+			if(isDayTime){
 			DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
+			}
+			else {
+				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
+			}
 			if (hero.getWorldPos().x > 1295 ||
 				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
 				hero.getWorldPos().y > 2010)
