@@ -30,6 +30,10 @@ int main()
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
+	InitAudioDevice();
+	// music in game
+    // Music intro = LoadMusicStream("rise-up.mp3"); 
+    // PlayMusicStream(intro);
 	// draw hero
 	Character hero{screenWidth, screenHeight};
 	hero.setWorldPos(400.f, 100.f);
@@ -155,6 +159,7 @@ int main()
 		BeginDrawing();
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
+		// UpdateMusicStream(intro);
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);

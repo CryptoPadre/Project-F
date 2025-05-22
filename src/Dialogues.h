@@ -37,6 +37,7 @@ inline std::vector<std::string> boydDialoguesDayTwo = {
     "Who are you?",
     "It is not a coincidence.",
     "It can't be...",
+    "You must have been here before."
 };
 
 inline std::vector<std::string> boydDialoguesDayThree {
@@ -65,6 +66,31 @@ inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
     "You will die again...",
     "You need to find the man in yellow.",
     "He will know you."
+};
+
+inline std::vector<std::string> boydDialoguesAfterFigth = {
+    "What happened?",
+    "Did you kill him?",
+    "Charles?",
+    "I've heard that name before.",
+    "Oh, I remember.",
+    "I was Charles... then Boyd.",
+    "I made those monsters...",
+    "And those monsters made me...",
+    "He hasn't killed anyone.",
+    "It was me.",
+    "I killed my son...",
+    "I killed Tabitha,",
+    "Julie,",
+    "Victor,",
+    "Ethan, Jade, Donna, Fatima, Henry!",
+    "What the hell am I?",
+    "Why is this happening?",
+    "Oh no, I remember...",
+    "I sacrificed those kids...",
+    "And now they are punishing me.",
+    "I'm going to finish this once and for all.",
+    "Go, take Sara and get to the tree."
 };
 
 inline std::vector<std::string> kidDialogues = {
@@ -104,6 +130,17 @@ inline std::vector<std::string> saraDialoguesDayTwo = {
     "He will be by the tree"
 };
 
+inline std::vector<std::string> saraDialoguesDayAfterFight = {
+    "You ?",
+    "Does it mean that...",
+    "That it's over?",
+    "What?",
+    "Oh, I remember...",
+    "They were my kids!",
+    "Our kids!",
+    "All we need is hope.",
+    "And for that, we have each other."
+};
 
 inline std::vector<std::string> yellowDialog = {
     "So we meet again!",
@@ -122,5 +159,5 @@ inline std::vector<std::string> yellowDialogAfterFight = {
     "You are not me!!!",
     "Who are you?",
     "Answer me, son!",
-    "Tell me... Who are you?"
+    "Who are you?"
 };
