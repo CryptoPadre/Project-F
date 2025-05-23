@@ -41,10 +41,12 @@ int main()
 	NPC boyd{Vector2{1850.f, 1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
 	NPC sara{Vector2{1080.f, 2700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
-	NPC *npcs[3]{
+	NPC yellow{Vector2{700.f, 450.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
+	NPC *npcs[4]{
 		&boyd,
 		&kid,
-		&sara};
+		&sara,
+		&yellow};
 	for (auto npc : npcs)
 	{
 		npc->setTarget(&hero);
@@ -88,7 +90,9 @@ int main()
 		startNight,
 		house_one_interior,
 		house_one_interior_floor,
-		cave, caveEntrance, caveEntranceNightMap};
+		cave, 
+		caveEntrance, 
+		caveEntranceNightMap};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -150,6 +154,9 @@ int main()
 		TEMPLE
 	};
 	InteriorType currentInterior = NONE;
+	int daysSurvived = 0;
+	double lastDayTriggerTime = 0.0;
+	
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -160,16 +167,16 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
 		// UpdateMusicStream(intro);
+		
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		startPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		// counting the time since gamestart and days survived
 		double time = GetTime();
-		int daysSurvived = 0;
-		if (fmod(GetTime(), 240.0) < 120.0)
-		{
+		if (time - lastDayTriggerTime >= 40.0) {
 			daysSurvived++;
+			lastDayTriggerTime = time;
 		}
 		// change the map if it night or daytime
 		bool isDayTime = fmod(GetTime(), 40.0) < 20.0;
@@ -536,6 +543,7 @@ int main()
 
 		hero.tick(GetFrameTime());
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
+		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
 	}
