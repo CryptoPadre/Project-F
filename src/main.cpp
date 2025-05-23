@@ -106,7 +106,7 @@ int main()
 	Prop props[9]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true},
-		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5, false},
+		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false},
 		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true},
 		Prop{Vector2{400.f, 600.f}, LoadTexture("gravestone.png"), 2.f, false},
 		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false},
@@ -193,6 +193,7 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
+			props[3].Render(hero.getWorldPos());
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
 			if(CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
@@ -287,23 +288,23 @@ int main()
 				hero.undoMovement();
 			}
 			// check prop collision
-			for (auto prop : props)
+			for (int i = 0; i < 7; i++)
 			{
-				if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()),
+				if (CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()),
 									   hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
 				}
 				for (auto enemy : enemies)
 				{
-					if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), enemy->GetCollisionRec()))
+					if (CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()), enemy->GetCollisionRec()))
 					{
 						enemy->undoMovement();
 					}
 				}
 				for (auto npc : npcs)
 				{
-					if (CheckCollisionRecs(prop.GetCollisionRec(hero.getWorldPos()), npc->GetCollisionRec()))
+					if (CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()), npc->GetCollisionRec()))
 					{
 						npc->undoMovement();
 					}
@@ -525,6 +526,7 @@ int main()
 			else {
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
+			props[2].Render(hero.getWorldPos());
 			if (hero.getWorldPos().x > 1295 ||
 				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
 				hero.getWorldPos().y > 2010)
