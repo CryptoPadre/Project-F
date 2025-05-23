@@ -103,7 +103,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[9]{
+	Prop props[10]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false},
@@ -112,7 +112,8 @@ int main()
 		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false},
 		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false},
-		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false}
+		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false},
+		Prop{Vector2{550.f, 750.f}, LoadTexture("bottle-tree.png"), 1.5, false}
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -193,9 +194,10 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-			props[3].Render(hero.getWorldPos());
+			hero.tick(GetFrameTime());
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
+			props[9].Render(hero.getWorldPos());
 			if(CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
 			hero.GetCollisionRec())){
 				hero.undoMovement();
@@ -222,7 +224,8 @@ int main()
 
 		// World map changing between daytime/nighttime
 		else if (isInTown)
-		{
+		{	
+
 			if (isDayTime)
 			{
 				// draw the map for daytime
@@ -242,6 +245,7 @@ int main()
 					}
 				}
 			}
+			
 			if (hero.getWorldPos().x > 14 && hero.getWorldPos().x < 410 &&
 				hero.getWorldPos().y < 120){
 					DrawText("Press E to go back to the car.", 250, 250, 20, BLACK);
@@ -357,6 +361,7 @@ int main()
 					isInTown = false;
 				}
 			}
+			hero.tick(GetFrameTime());
 		}
 		// Maps if the hero enters into a building
 		else if (isInside && !isUpstairs)
@@ -550,7 +555,7 @@ int main()
 			}
 		}
 
-		hero.tick(GetFrameTime());
+	
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
