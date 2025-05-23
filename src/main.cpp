@@ -103,7 +103,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[8]{
+	Prop props[9]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true},
 		Prop{Vector2{930.f, 2360.f}, LoadTexture("bottle-tree.png"), 1.5, false},
@@ -111,7 +111,9 @@ int main()
 		Prop{Vector2{400.f, 600.f}, LoadTexture("gravestone.png"), 2.f, false},
 		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false},
 		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false},
-		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false}};
+		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false},
+		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false}
+	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
@@ -192,6 +194,11 @@ int main()
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
 			props[7].Render(hero.getWorldPos());
+			props[8].Render(hero.getWorldPos());
+			if(CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
+			hero.GetCollisionRec())){
+				hero.undoMovement();
+			}
 			if (
 				hero.getWorldPos().x < 77.f ||
 				hero.getWorldPos().y < 100.f ||
