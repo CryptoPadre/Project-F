@@ -32,8 +32,8 @@ int main()
 	SearchAndSetResourceDir("resources");
 	InitAudioDevice();
 	// music in game
-    // Music intro = LoadMusicStream("rise-up.mp3"); 
-    // PlayMusicStream(intro);
+	// Music intro = LoadMusicStream("rise-up.mp3");
+	// PlayMusicStream(intro);
 	// draw hero
 	Character hero{screenWidth, screenHeight};
 	hero.setWorldPos(400.f, 100.f);
@@ -90,8 +90,8 @@ int main()
 		startNight,
 		house_one_interior,
 		house_one_interior_floor,
-		cave, 
-		caveEntrance, 
+		cave,
+		caveEntrance,
 		caveEntranceNightMap};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
@@ -104,16 +104,16 @@ int main()
 		screenHeight - maps[5].height * mapScale};
 	// Render props
 	Prop props[10]{
-		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true},
-		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true},
-		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false},
-		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true},
-		Prop{Vector2{400.f, 600.f}, LoadTexture("gravestone.png"), 2.f, false},
-		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false},
-		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false},
-		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false},
-		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false},
-		Prop{Vector2{550.f, 750.f}, LoadTexture("bottle-tree.png"), 1.5, false}
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true,10,0,0},
+		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true,55,0,0},
+		Prop{Vector2{1400.f, 750.f}, LoadTexture("house-4.png"), 1.f, true,55,0,0},
+		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true,55,0,0},
+		Prop{Vector2{700.f, 600.f}, LoadTexture("house-3.png"), 1.f, true,120,0,0},
+		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false,0,0,0},
+		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false,0,0,0},
+		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false,0,0,0},
+		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, true,40,0,0},
+		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false,0,0,0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -159,7 +159,7 @@ int main()
 	InteriorType currentInterior = NONE;
 	int daysSurvived = 0;
 	double lastDayTriggerTime = 0.0;
-	
+
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -170,14 +170,15 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(WHITE);
 		// UpdateMusicStream(intro);
-		
+
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		startPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		// counting the time since gamestart and days survived
 		double time = GetTime();
-		if (time - lastDayTriggerTime >= 40.0) {
+		if (time - lastDayTriggerTime >= 40.0)
+		{
 			daysSurvived++;
 			lastDayTriggerTime = time;
 		}
@@ -194,12 +195,12 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-			hero.tick(GetFrameTime());
+			props[4].Render(hero.getWorldPos());
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
-			props[9].Render(hero.getWorldPos());
-			if(CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
-			hero.GetCollisionRec())){
+			if (CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
+								   hero.GetCollisionRec()))
+			{
 				hero.undoMovement();
 			}
 			if (
@@ -220,11 +221,12 @@ int main()
 					hero.setWorldPos(230.f, 120.f);
 				}
 			}
+			hero.tick(GetFrameTime());
 		}
 
 		// World map changing between daytime/nighttime
 		else if (isInTown)
-		{	
+		{
 
 			if (isDayTime)
 			{
@@ -245,17 +247,18 @@ int main()
 					}
 				}
 			}
-			
+
 			if (hero.getWorldPos().x > 14 && hero.getWorldPos().x < 410 &&
-				hero.getWorldPos().y < 120){
-					DrawText("Press E to go back to the car.", 250, 250, 20, BLACK);
+				hero.getWorldPos().y < 120)
+			{
+				DrawText("Press E to go back to the car.", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = true;
 					isInTown = false;
 					hero.setWorldPos(300.f, 1400.f);
 				}
-				}
+			}
 			if (hero.getWorldPos().x >= town_exit_width_min && hero.getWorldPos().x <= town_exit_width_max &&
 				hero.getWorldPos().y <= town_exit_height)
 			{
@@ -267,8 +270,9 @@ int main()
 					hero.setWorldPos(300.f, 1442.f);
 				}
 			}
-			if(hero.getWorldPos().x > 2100 && hero.getWorldPos().x < 2520 &&
-			hero.getWorldPos().y > 3400){
+			if (hero.getWorldPos().x > 2100 && hero.getWorldPos().x < 2520 &&
+				hero.getWorldPos().y > 3400)
+			{
 				DrawText("Press E to leave the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
@@ -277,7 +281,7 @@ int main()
 					hero.setWorldPos(340.f, 188.f);
 				}
 			}
-			
+
 			// draw props
 			for (int i = 0; i < 7; i++)
 			{
@@ -285,7 +289,7 @@ int main()
 			}
 			if (hero.getWorldPos().x < 50.f || hero.getWorldPos().y < 0.f ||
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
-				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale  ||
+				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale ||
 				hero.getWorldPos().x >= 2930 && hero.getWorldPos().y > 35 && hero.getWorldPos().y < 345)
 			{
 				conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -453,6 +457,7 @@ int main()
 			default:
 				break;
 			}
+			hero.tick(GetFrameTime());
 		}
 		else if (isUpstairs)
 		{
@@ -475,6 +480,7 @@ int main()
 					hero.setWorldPos(-449.f, -198.f);
 				}
 			}
+			hero.tick(GetFrameTime());
 		}
 		// Map if hero tries to leave the town
 		else if (isOutsideTown)
@@ -522,16 +528,25 @@ int main()
 					hero.setWorldPos(400.f, 1330.f);
 				}
 			}
+			hero.tick(GetFrameTime());
 		}
 		else if (isOutsideCave)
-		{	
-			if(isDayTime){
-			DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
+		{
+			if (isDayTime)
+			{
+				DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
 			}
-			else {
+			else
+			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
-			props[2].Render(hero.getWorldPos());
+			hero.tick(GetFrameTime());
+			props[9].Render(hero.getWorldPos());
+			if (CheckCollisionRecs(props[2].GetCollisionRec(hero.getWorldPos()),
+								   hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+			}
 			if (hero.getWorldPos().x > 1295 ||
 				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
 				hero.getWorldPos().y > 2010)
@@ -555,7 +570,6 @@ int main()
 			}
 		}
 
-	
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
