@@ -7,10 +7,10 @@ Prop::Prop(Vector2 pos, Texture2D tex, float scale, bool building, int height, i
                                                                      isBuilding(building),
                                                                      adjustmentHeight(height),
                                                                      adjustmentWidthA(widthA),
-                                                                     adjustmentWidthB(widthB),
+                                                                     adjustmentWidthB(widthB)
 
 {
-}
+};
 
 void Prop::Render(Vector2 heroPos)
 {
@@ -21,19 +21,19 @@ void Prop::Render(Vector2 heroPos)
     if (isBuilding)
     {
         DrawRectangleLines(
-            screenPos.x + 150, // modify width by adding
-            screenPos.y + totalHeight * 0.4f - adjustmentHeight, // lower half
-            totalWidth - 250, // modify width by substracting
-            totalHeight * 0.5f, RED);
+            screenPos.x + adjustmentWidthA, // modify width by adding adjustmentWidthA
+            screenPos.y + totalHeight * 0.6f - adjustmentHeight, // lower half
+            totalWidth - adjustmentWidthB, // modify width by substracting adjustmentWidthB
+            totalHeight * 0.5f / 2.f, RED);
     }
     else
     {
         float trunkWidth = totalWidth * 0.6f;
         float trunkHeight = totalHeight * 0.2f;
         DrawRectangleLines(
-            screenPos.x + (totalWidth - trunkWidth) / 2.0f,
+            screenPos.x + (totalWidth - trunkWidth) / 2.f, // right side
             screenPos.y + totalHeight - trunkHeight,
-            trunkWidth,
+            trunkWidth , // left side
             trunkHeight,
             BLUE);
     }
@@ -47,10 +47,10 @@ Rectangle Prop::GetCollisionRec(Vector2 heroPos)
     if (isBuilding)
     {
         return Rectangle{
-            screenPos.x,
-            screenPos.y + totalHeight * 0.4f - adjustmentHeight, // lower half
-            totalWidth,
-            totalHeight * 0.5f};
+            screenPos.x + adjustmentWidthA,
+            screenPos.y + totalHeight * 0.6f - adjustmentHeight, // lower half
+            totalWidth - adjustmentWidthB,
+            totalHeight * 0.5f / 2.f};
     }
     else
     {

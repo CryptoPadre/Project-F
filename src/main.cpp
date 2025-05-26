@@ -38,7 +38,7 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
-	NPC boyd{Vector2{1850.f, 1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
+	NPC boyd{Vector2{2000.f, 1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
 	NPC sara{Vector2{1080.f, 2700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
 	NPC yellow{Vector2{700.f, 450.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
@@ -103,14 +103,12 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[10]{
-		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true,10,0,0},
-		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true,55,0,0},
-		Prop{Vector2{1400.f, 750.f}, LoadTexture("house-4.png"), 1.f, true,55,0,0},
-		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true,55,0,0},
-		Prop{Vector2{700.f, 600.f}, LoadTexture("house-3.png"), 1.f, true,120,0,0},
-		Prop{Vector2{400.f, 700.f}, LoadTexture("gravestone.png"), 2.f, false,0,0,0},
-		Prop{Vector2{400.f, 800.f}, LoadTexture("gravestone.png"), 2.f, false,0,0,0},
+	Prop props[8]{
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true,-20,10,0},
+		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true,55,50,80},
+		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true,55,40,40},
+		Prop{Vector2{700.f, 600.f}, LoadTexture("house-3.png"), 1.f, true,20,180,350},
+		Prop{Vector2{1400.f, 750.f}, LoadTexture("house-4.png"), 1.f, true,-40,130,255},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false,0,0,0},
 		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, true,40,0,0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false,0,0,0},
@@ -129,10 +127,10 @@ int main()
 		enemy->setTarget(&hero);
 	}
 	// Check if character is inside a house / outside the town / starting the game
-	bool isInTown{};
+	bool isInTown{true};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
@@ -195,10 +193,9 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-			props[4].Render(hero.getWorldPos());
+			props[6].Render(hero.getWorldPos());
 			props[7].Render(hero.getWorldPos());
-			props[8].Render(hero.getWorldPos());
-			if (CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
+			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
@@ -281,9 +278,9 @@ int main()
 					hero.setWorldPos(340.f, 188.f);
 				}
 			}
-
+			
 			// draw props
-			for (int i = 0; i < 7; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				props[i].Render(hero.getWorldPos());
 			}
@@ -295,8 +292,11 @@ int main()
 				conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y);
 				hero.undoMovement();
 			}
+			hero.tick(GetFrameTime());
+			props[3].Render(hero.getWorldPos());
+			props[4].Render(hero.getWorldPos());
 			// check prop collision
-			for (int i = 0; i < 7; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				if (CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()),
 									   hero.GetCollisionRec()))
@@ -365,7 +365,7 @@ int main()
 					isInTown = false;
 				}
 			}
-			hero.tick(GetFrameTime());
+			
 		}
 		// Maps if the hero enters into a building
 		else if (isInside && !isUpstairs)
@@ -541,7 +541,7 @@ int main()
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			hero.tick(GetFrameTime());
-			props[9].Render(hero.getWorldPos());
+			props[7].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[2].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()))
 			{
