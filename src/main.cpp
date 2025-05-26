@@ -38,14 +38,14 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
-	NPC boyd{Vector2{2000.f, 1270.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
-	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
+	NPC boyd{Vector2{1800.f, 1700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1080.f, 2700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
+	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
 	NPC yellow{Vector2{700.f, 450.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
 	NPC *npcs[4]{
 		&boyd,
-		&kid,
 		&sara,
+		&kid,
 		&yellow};
 	for (auto npc : npcs)
 	{
@@ -103,7 +103,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[9]{
+	Prop props[8]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true, 55, 0, 40, 40},
@@ -111,8 +111,7 @@ int main()
 		Prop{Vector2{1400.f, 950.f}, LoadTexture("house-4.png"), 1.f, true, -75, 0, 130, 255},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false, 140, 100, 0, 0},
-		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 0, 0, 0, 0},
-		Prop{Vector2{750.f, 500.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
+		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -135,6 +134,8 @@ int main()
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
+	// used to spawn the monster at some point
+	bool isMonsterOut{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 1000;
 	int temple_entry_width_max = 1050;
@@ -220,12 +221,6 @@ int main()
 				}
 			}
 			hero.tick(GetFrameTime());
-			props[8].Render(hero.getWorldPos());
-			if (CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
-								   hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-			}
 		}
 
 		// World map changing between daytime/nighttime
@@ -303,6 +298,21 @@ int main()
 					}
 				}
 			}
+			for (int i = 0; i < 2; i++)
+			{
+				npcs[i]->tick(GetFrameTime());
+				if (IsKeyPressed(KEY_E))
+				{
+					npcs[i]->talk();
+					npcs[i]->setInteractionCount();
+					
+				}
+				if (CheckCollisionRecs(npcs[i]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+					npcs[i]->undoMovement();
+				}
+			}
 			hero.tick(GetFrameTime());
 			props[3].Render(hero.getWorldPos());
 			props[4].Render(hero.getWorldPos());
@@ -329,21 +339,7 @@ int main()
 					}
 				}
 			}
-			for (auto npc : npcs)
-			{
-				npc->isDay = isDayTime;
-				npc->tick(GetFrameTime());
-				if (IsKeyPressed(KEY_E))
-				{
-					npc->talk();
-					npc->setInteractionCount();
-				}
-				if (CheckCollisionRecs(npc->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-					npc->undoMovement();
-				}
-			}
+			
 			if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
 					hero.getWorldPos().y <= house_one_entry_height ||
 				hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
@@ -507,6 +503,14 @@ int main()
 			{
 				hero.undoMovement();
 			}
+			npcs[2]->setWorldPos(700.f,1000.f);
+			npcs[2]->isDay = isDayTime;
+			npcs[2]->tick(GetFrameTime());
+			if (IsKeyPressed(KEY_E))
+				{
+					npcs[2]->talk();
+					npcs[2]->setInteractionCount();
+				}
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
 			{

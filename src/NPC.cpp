@@ -26,9 +26,10 @@ void NPC::setInteractionCount()
 }
 
 void NPC::talk()
-{   
+{
     isTalking = true;
-    if(Vector2Distance(getScreenPos(), hero->getScreenPos()) > 150.f){
+    if (Vector2Distance(getScreenPos(), hero->getScreenPos()) > 150.f)
+    {
         isTalking = false;
     }
 }
@@ -37,10 +38,17 @@ void NPC::tick(float deltaTime)
 {
     if (isHuman)
     {
-        currentRow = 1;
+        if (hero->getWorldPos().x  > getScreenPos().x)
+        {
+            currentRow = 3;
+        }
+        else
+        {
+            currentRow = 1;
+        }
         if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
-        {   
-                conversation(NPCDialog[interactionCount],  getScreenPos().x, getScreenPos().y);
+        {
+            conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
         }
     }
     if (!isHuman)
@@ -78,7 +86,7 @@ void NPC::tick(float deltaTime)
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
         if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
         {
-            conversation(NPCDialog[interactionCount],  getScreenPos().x, getScreenPos().y);
+            conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
         }
         if (velocity.x > velocity.y)
         {
@@ -106,7 +114,8 @@ Vector2 NPC::getScreenPos()
     return Vector2Subtract(worldPos, hero->getWorldPos());
 }
 
-void NPC::addDialog(const std::vector<std::string>& dialogs){
-    for (const auto& dialog : dialogs)
-            NPCDialog.push_back(dialog);
+void NPC::addDialog(const std::vector<std::string> &dialogs)
+{
+    for (const auto &dialog : dialogs)
+        NPCDialog.push_back(dialog);
 }
