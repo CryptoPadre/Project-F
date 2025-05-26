@@ -1,11 +1,12 @@
 #include "Prop.h"
 #include "raymath.h"
 
-Prop::Prop(Vector2 pos, Texture2D tex, float scale, bool building, int height, int widthA, int widthB) : worldPos(pos),
+Prop::Prop(Vector2 pos, Texture2D tex, float scale, bool building, int heightA,int heightB, int widthA, int widthB) : worldPos(pos),
                                                                      texture(tex),
                                                                      scale(scale),
                                                                      isBuilding(building),
-                                                                     adjustmentHeight(height),
+                                                                     adjustmentHeightA(heightA),
+                                                                     adjustmentHeightB(heightB),
                                                                      adjustmentWidthA(widthA),
                                                                      adjustmentWidthB(widthB)
 
@@ -22,7 +23,7 @@ void Prop::Render(Vector2 heroPos)
     {
         DrawRectangleLines(
             screenPos.x + adjustmentWidthA, // modify width by adding adjustmentWidthA
-            screenPos.y + totalHeight * 0.6f - adjustmentHeight, // lower half
+            screenPos.y + totalHeight * 0.6f - adjustmentHeightA, // lower half
             totalWidth - adjustmentWidthB, // modify width by substracting adjustmentWidthB
             totalHeight * 0.5f / 2.f, RED);
     }
@@ -32,9 +33,9 @@ void Prop::Render(Vector2 heroPos)
         float trunkHeight = totalHeight * 0.2f;
         DrawRectangleLines(
             screenPos.x + (totalWidth - trunkWidth) / 2.f, // right side
-            screenPos.y + totalHeight - trunkHeight,
+            screenPos.y + totalHeight - trunkHeight - adjustmentHeightA,
             trunkWidth , // left side
-            trunkHeight,
+            trunkHeight + adjustmentHeightB,
             BLUE);
     }
 }
@@ -48,7 +49,7 @@ Rectangle Prop::GetCollisionRec(Vector2 heroPos)
     {
         return Rectangle{
             screenPos.x + adjustmentWidthA,
-            screenPos.y + totalHeight * 0.6f - adjustmentHeight, // lower half
+            screenPos.y + totalHeight * 0.6f - adjustmentHeightA, // lower half
             totalWidth - adjustmentWidthB,
             totalHeight * 0.5f / 2.f};
     }
@@ -58,8 +59,8 @@ Rectangle Prop::GetCollisionRec(Vector2 heroPos)
         float trunkHeight = totalHeight * 0.2f;
         return Rectangle{
             screenPos.x + (totalWidth - trunkWidth) / 2.0f,
-            screenPos.y + totalHeight - trunkHeight,
+            screenPos.y + totalHeight - trunkHeight - adjustmentHeightA,
             trunkWidth,
-            trunkHeight};
+            trunkHeight + adjustmentHeightB};
     }
 }

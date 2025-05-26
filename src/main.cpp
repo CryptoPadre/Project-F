@@ -103,15 +103,16 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[8]{
-		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true,-20,10,0},
-		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true,55,50,80},
-		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true,55,40,40},
-		Prop{Vector2{700.f, 600.f}, LoadTexture("house-3.png"), 1.f, true, -10,180,350},
-		Prop{Vector2{1400.f, 750.f}, LoadTexture("house-4.png"), 1.f, true,- 75,130,255},
-		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false,0,0,0},
-		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, true,40,0,0},
-		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false,0,0,0},
+	Prop props[9]{
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
+		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
+		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true, 55, 0, 40, 40},
+		Prop{Vector2{800.f, 800.f}, LoadTexture("house-3.png"), 1.f, true, -10, 0, 180, 350},
+		Prop{Vector2{1400.f, 950.f}, LoadTexture("house-4.png"), 1.f, true, -75, 0, 130, 255},
+		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
+		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false, 140, 100, 0, 0},
+		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 0, 0, 0, 0},
+		Prop{Vector2{750.f, 500.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -127,10 +128,10 @@ int main()
 		enemy->setTarget(&hero);
 	}
 	// Check if character is inside a house / outside the town / starting the game
-	bool isInTown{true};
+	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
@@ -193,9 +194,9 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
+			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
-			props[7].Render(hero.getWorldPos());
-			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
+			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
@@ -219,6 +220,12 @@ int main()
 				}
 			}
 			hero.tick(GetFrameTime());
+			props[8].Render(hero.getWorldPos());
+			if (CheckCollisionRecs(props[8].GetCollisionRec(hero.getWorldPos()),
+								   hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+			}
 		}
 
 		// World map changing between daytime/nighttime
@@ -234,15 +241,6 @@ int main()
 			{
 				// draw the map for nighttime
 				DrawTextureEx(maps[1], mapPos, 0.0, mapScale, WHITE);
-				// Set collision with enemies
-				for (auto enemy : enemies)
-				{
-					enemy->tick(GetFrameTime());
-					if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
-					{
-						hero.setAlive(true);
-					}
-				}
 			}
 
 			if (hero.getWorldPos().x > 14 && hero.getWorldPos().x < 410 &&
@@ -278,7 +276,7 @@ int main()
 					hero.setWorldPos(340.f, 188.f);
 				}
 			}
-			
+
 			// draw props
 			for (int i = 0; i < 3; i++)
 			{
@@ -291,6 +289,19 @@ int main()
 			{
 				conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y);
 				hero.undoMovement();
+			}
+			// render enemies after props to make sure they cannot cross them
+			if (!isDayTime)
+			{
+				// Set collision with enemies
+				for (auto enemy : enemies)
+				{
+					enemy->tick(GetFrameTime());
+					if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.setAlive(true);
+					}
+				}
 			}
 			hero.tick(GetFrameTime());
 			props[3].Render(hero.getWorldPos());
@@ -365,7 +376,6 @@ int main()
 					isInTown = false;
 				}
 			}
-			
 		}
 		// Maps if the hero enters into a building
 		else if (isInside && !isUpstairs)
@@ -542,7 +552,7 @@ int main()
 			}
 			hero.tick(GetFrameTime());
 			props[7].Render(hero.getWorldPos());
-			if (CheckCollisionRecs(props[2].GetCollisionRec(hero.getWorldPos()),
+			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
