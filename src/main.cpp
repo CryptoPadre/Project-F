@@ -40,7 +40,7 @@ int main()
 	// draw NPCs
 	NPC boyd{Vector2{1800.f, 1700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1080.f, 2700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
-	NPC kid{Vector2{3550.f, 480.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
+	NPC kid{Vector2{700.f, 1000.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
 	NPC yellow{Vector2{700.f, 450.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
 	NPC *npcs[4]{
 		&boyd,
@@ -103,7 +103,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[8]{
+	Prop props[10]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true, 55, 0, 40, 40},
@@ -112,6 +112,8 @@ int main()
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false, 140, 100, 0, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
+		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
+		Prop{Vector2{24.f, -25.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -392,6 +394,7 @@ int main()
 				{
 					hero.undoMovement();
 				}
+				props[9].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x < -420 && hero.getWorldPos().y < -185)
 				{
 					DrawText("Press E to go upstairs.", 250, 250, 20, BLACK);
@@ -503,7 +506,6 @@ int main()
 			{
 				hero.undoMovement();
 			}
-			npcs[2]->setWorldPos(700.f,1000.f);
 			npcs[2]->isDay = isDayTime;
 			npcs[2]->tick(GetFrameTime());
 			if (IsKeyPressed(KEY_E))
@@ -556,6 +558,7 @@ int main()
 			}
 			hero.tick(GetFrameTime());
 			props[7].Render(hero.getWorldPos());
+			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()))
 			{
