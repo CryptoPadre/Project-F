@@ -39,7 +39,7 @@ int main()
 	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
 	NPC boyd{Vector2{1800.f, 1700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
-	NPC sara{Vector2{1080.f, 2700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
+	NPC sara{Vector2{1000.f, 700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
 	NPC kid{Vector2{700.f, 1000.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
 	NPC yellow{Vector2{700.f, 450.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
 	NPC *npcs[4]{
@@ -105,15 +105,15 @@ int main()
 	// Render props
 	Prop props[10]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
-		Prop{Vector2{1300.f, 50.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
-		Prop{Vector2{3100.f, 0.f}, LoadTexture("house_type.png"), 0.5, true, 55, 0, 40, 40},
-		Prop{Vector2{800.f, 800.f}, LoadTexture("house-3.png"), 1.f, true, -10, 0, 180, 350},
-		Prop{Vector2{1400.f, 950.f}, LoadTexture("house-4.png"), 1.f, true, -75, 0, 130, 255},
+		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
+		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
+		Prop{Vector2{1250.f, 180.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 40, 40},
+		Prop{Vector2{250.f, 550.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false, 140, 100, 0, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{24.f, -25.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
+		Prop{Vector2{24.f, 40.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -139,18 +139,22 @@ int main()
 	// used to spawn the monster at some point
 	bool isMonsterOut{};
 	// Positions of the buildings where player can enter
-	int temple_entry_width_min = 1000;
-	int temple_entry_width_max = 1050;
-	int temple_entry_height = 179;
+	int temple_entry_width_min = 50;
+	int temple_entry_width_max = 116;
+	int temple_entry_height = 280;
 	int house_one_entry_width_min = 1410;
 	int house_one_entry_width_max = 1455;
 	int house_one_entry_height = 220;
-	int house_two_entry_width_min = 2810;
-	int house_two_entry_width_max = 2870;
-	int house_two_entry_height = 30;
-	int town_exit_width_min = 2100;
-	int town_exit_width_max = 2530;
-	int town_exit_height = 10;
+	int house_two_entry_width_min = 550;
+	int house_two_entry_width_max = 600;
+	int house_two_entry_height = 295;
+	int town_exit_width_min = 1750;
+	int town_exit_height_min = 877;
+	int town_exit_height_max = 1417;
+	int closed_house_width_min = 970;
+	int closed_house_width_max = 1040;
+	int closed_house_height = 355;
+
 	enum InteriorType
 	{
 		NONE,
@@ -219,7 +223,7 @@ int main()
 				{
 					isGameStart = false;
 					isInTown = true;
-					hero.setWorldPos(230.f, 120.f);
+					hero.setWorldPos(90.f, 1100.f);
 				}
 			}
 			hero.tick(GetFrameTime());
@@ -240,8 +244,9 @@ int main()
 				DrawTextureEx(maps[1], mapPos, 0.0, mapScale, WHITE);
 			}
 
-			if (hero.getWorldPos().x > 14 && hero.getWorldPos().x < 410 &&
-				hero.getWorldPos().y < 120)
+			if (hero.getWorldPos().x < 80 &&
+				hero.getWorldPos().y > town_exit_height_min &&
+				hero.getWorldPos().y < town_exit_height_max)
 			{
 				DrawText("Press E to go back to the car.", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
@@ -251,19 +256,8 @@ int main()
 					hero.setWorldPos(300.f, 1400.f);
 				}
 			}
-			if (hero.getWorldPos().x >= town_exit_width_min && hero.getWorldPos().x <= town_exit_width_max &&
-				hero.getWorldPos().y <= town_exit_height)
-			{
-				DrawText("Press E to leave the town", 250, 250, 20, BLACK);
-				if (IsKeyPressed(KEY_E))
-				{
-					isOutsideTown = true;
-					isInTown = false;
-					hero.setWorldPos(300.f, 1442.f);
-				}
-			}
-			if (hero.getWorldPos().x > 2100 && hero.getWorldPos().x < 2520 &&
-				hero.getWorldPos().y > 3400)
+			if (hero.getWorldPos().x > town_exit_width_min &&
+				hero.getWorldPos().y > town_exit_height_min && hero.getWorldPos().y < town_exit_height_max)
 			{
 				DrawText("Press E to leave the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
@@ -275,14 +269,13 @@ int main()
 			}
 
 			// draw props
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				props[i].Render(hero.getWorldPos());
 			}
-			if (hero.getWorldPos().x < 50.f || hero.getWorldPos().y < 0.f ||
+			if (hero.getWorldPos().y < 165 || hero.getWorldPos().y > 1411 || hero.getWorldPos().x < 12 ||
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
-				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale ||
-				hero.getWorldPos().x >= 2930 && hero.getWorldPos().y > 35 && hero.getWorldPos().y < 345)
+				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale)
 			{
 				conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y);
 				hero.undoMovement();
@@ -307,7 +300,6 @@ int main()
 				{
 					npcs[i]->talk();
 					npcs[i]->setInteractionCount();
-					
 				}
 				if (CheckCollisionRecs(npcs[i]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
@@ -316,10 +308,8 @@ int main()
 				}
 			}
 			hero.tick(GetFrameTime());
-			props[3].Render(hero.getWorldPos());
-			props[4].Render(hero.getWorldPos());
 			// check prop collision
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				if (CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()),
 									   hero.GetCollisionRec()))
@@ -341,7 +331,7 @@ int main()
 					}
 				}
 			}
-			
+
 			if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
 					hero.getWorldPos().y <= house_one_entry_height ||
 				hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
@@ -373,6 +363,11 @@ int main()
 					isInside = true;
 					isInTown = false;
 				}
+			}
+			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
+				hero.getWorldPos().y <= closed_house_height)
+			{
+					conversation("Hey! Is anybody in there? Let me in!", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 		}
 		// Maps if the hero enters into a building
@@ -437,7 +432,7 @@ int main()
 						isInside = false;
 						isInTown = true;
 						currentInterior = NONE;
-						hero.setWorldPos(2830, 30);
+						hero.setWorldPos(house_two_entry_width_min, house_two_entry_height);
 					}
 				}
 
@@ -459,7 +454,7 @@ int main()
 						isInside = false;
 						currentInterior = NONE;
 						isInTown = true;
-						hero.setWorldPos(1020.f, 179.f);
+						hero.setWorldPos(temple_entry_width_min, temple_entry_height);
 					}
 				}
 				break;
@@ -509,10 +504,10 @@ int main()
 			npcs[2]->isDay = isDayTime;
 			npcs[2]->tick(GetFrameTime());
 			if (IsKeyPressed(KEY_E))
-				{
-					npcs[2]->talk();
-					npcs[2]->setInteractionCount();
-				}
+			{
+				npcs[2]->talk();
+				npcs[2]->setInteractionCount();
+			}
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
 			{
@@ -531,7 +526,7 @@ int main()
 				{
 					isOutsideTown = false;
 					isInTown = true;
-					hero.setWorldPos(2330, 30);
+					hero.setWorldPos(1700, 1150);
 				}
 			}
 			if (hero.getWorldPos().y < 10 && hero.getWorldPos().x < 600)
