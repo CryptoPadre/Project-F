@@ -38,9 +38,9 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
-	NPC boyd{Vector2{1800.f, 1700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
+	NPC boyd{Vector2{1000.f, 1000.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1000.f, 700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
-	NPC kid{Vector2{700.f, 1000.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
+	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
 	NPC yellow{Vector2{700.f, 450.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
 	NPC *npcs[4]{
 		&boyd,
@@ -107,13 +107,13 @@ int main()
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
-		Prop{Vector2{1250.f, 180.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 40, 40},
-		Prop{Vector2{250.f, 550.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
+		Prop{Vector2{1200.f, 190.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 40, 40},
+		Prop{Vector2{1000.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false, 140, 100, 0, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{24.f, 40.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
+		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
@@ -151,7 +151,7 @@ int main()
 	int town_exit_width_min = 1750;
 	int town_exit_height_min = 877;
 	int town_exit_height_max = 1417;
-	int closed_house_width_min = 970;
+	int closed_house_width_min = 940;
 	int closed_house_width_max = 1040;
 	int closed_house_height = 355;
 
@@ -367,7 +367,7 @@ int main()
 			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
 				hero.getWorldPos().y <= closed_house_height)
 			{
-					conversation("Hey! Is anybody in there? Let me in!", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("Is anybody in there?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 		}
 		// Maps if the hero enters into a building
@@ -503,6 +503,7 @@ int main()
 			}
 			npcs[2]->isDay = isDayTime;
 			npcs[2]->tick(GetFrameTime());
+			props[4].Render(hero.getWorldPos());
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[2]->talk();
@@ -555,20 +556,21 @@ int main()
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
-								   hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-			}
-			if (hero.getWorldPos().x > 1295 ||
-				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
-				hero.getWorldPos().y > 2010)
+								   hero.GetCollisionRec()) || hero.getWorldPos().x > 1295 ||
+								   hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
+								   hero.getWorldPos().y > 2010)
 			{
 				hero.undoMovement();
 			}
 			if (hero.getWorldPos().x < 690 && hero.getWorldPos().x > 640 &&
 				hero.getWorldPos().y < 435)
 			{
-				conversation("It's too dark in there! Can't see anything!", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation("There is no way I will go in there!", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
+				hero.getWorldPos().y < 435)
+			{
+				conversation("Hello Charles! Come here, I know the way out!", 680.f, 60.f);
 			}
 			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
 			{

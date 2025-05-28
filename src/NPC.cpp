@@ -63,13 +63,13 @@ void NPC::tick(float deltaTime)
                 danceFrame++;
                 danceFrameTime = 0.f;
 
-                if (danceFrame >= 5) // 5 columns
+                if (danceFrame >= 5) 
                 {
                     danceFrame = 0;
                     danceRows++;
                 }
 
-                if (danceRows >= 4) // 4 rows
+                if (danceRows >= 4) 
                 {
                     danceRows = 0;
                 }
