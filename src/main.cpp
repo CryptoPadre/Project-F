@@ -107,7 +107,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[10]{
+	Prop props[12]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -118,6 +118,8 @@ int main()
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
+		Prop{Vector2{600.f, 580.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
+		Prop{Vector2{600.f, 580.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
