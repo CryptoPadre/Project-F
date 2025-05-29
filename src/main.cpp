@@ -141,6 +141,7 @@ int main()
 	bool isInCave{};
 	bool isOutsideCave{};
 	bool hasFlashlight{};
+	bool isEndGame{};
 	// used to spawn the monster at some point
 	bool isMonsterOut{};
 	// Positions of the buildings where player can enter
@@ -576,7 +577,7 @@ int main()
 				{
 					isOutsideCave = false;
 					isInCave = true;
-					hero.setWorldPos(1055.f,27.f);
+					hero.setWorldPos(1055.f, 27.f);
 				}
 			}
 			if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
@@ -606,28 +607,45 @@ int main()
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 			}
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
-				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065 ||
-				hero.getWorldPos().y > 2190 && hero.getWorldPos().x < 1000 ||
-				hero.getWorldPos().y > 2190 && hero.getWorldPos().x > 1780
-				)
+				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065)
 			{
 				hero.undoMovement();
 			}
-			if (hero.getWorldPos().y < 25 && hero.getWorldPos().x > 1050 && hero.getWorldPos().x < 1100){
-				if(hasFlashlight){
+			if (hero.getWorldPos().y < 25 && hero.getWorldPos().x > 1050 && hero.getWorldPos().x < 1100)
+			{
+				if (hasFlashlight)
+				{
 					conversation("Let's get out from here", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				else {
+				else
+				{
 					conversation("I can't see anything! I'd a need a flashlight or something!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				if(IsKeyPressed(KEY_E)){
+				if (IsKeyPressed(KEY_E))
+				{
 					isInCave = false;
 					isOutsideCave = true;
 					hero.setWorldPos(650.f, 435.f);
 				}
-
+			}
+			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899){
+				conversation("An exit!!!", hero.getScreenPos().x, hero.getScreenPos().y);
+				if(IsKeyPressed(KEY_E)){
+					isInCave = false;
+					isEndGame = true;
+				}
 			}
 			hero.tick(GetFrameTime());
+		}
+		else {
+			DrawText("You escaped!!!", 250, 250, 20, RED);
+			DrawText("Press E to return!!!", 250, 350, 20, RED);
+			if(IsKeyPressed(KEY_E)){
+				isEndGame = false;
+				isGameStart = true;
+				hero.setWorldPos(400.f, 100.f);
+			}
+
 		}
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
