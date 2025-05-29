@@ -74,12 +74,15 @@ int main()
 	Texture2D startNight = LoadTextureFromImage(startNighttime);
 	Texture2D house_one_interior = LoadTexture("house_interior.png");
 	Texture2D house_one_interior_floor = LoadTexture("house_interior_floor.png");
-	Texture2D cave = LoadTexture("cave.png");
 	Texture2D caveEntrance = LoadTexture("cave_entrance.png");
 	Image caveEntranceNight = LoadImageFromTexture(caveEntrance);
 	ImageColorBrightness(&caveEntranceNight, -80);
 	Texture2D caveEntranceNightMap = LoadTextureFromImage(caveEntranceNight);
-	Texture2D maps[13]{
+	Texture2D cave = LoadTexture("cave.png");
+	Image caveDark = LoadImageFromTexture(cave);
+	ImageColorBrightness(&caveDark, -90);
+	Texture2D caveDarkMap = LoadTextureFromImage(caveDark);
+	Texture2D maps[14]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -92,7 +95,8 @@ int main()
 		house_one_interior_floor,
 		cave,
 		caveEntrance,
-		caveEntranceNightMap};
+		caveEntranceNightMap,
+		caveDarkMap};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -136,6 +140,7 @@ int main()
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
+	bool hasFlashlight{};
 	// used to spawn the monster at some point
 	bool isMonsterOut{};
 	// Positions of the buildings where player can enter
@@ -367,7 +372,7 @@ int main()
 			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
 				hero.getWorldPos().y <= closed_house_height)
 			{
-					conversation("Is anybody in there?", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation("Is anybody in there?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 		}
 		// Maps if the hero enters into a building
@@ -556,9 +561,10 @@ int main()
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
-								   hero.GetCollisionRec()) || hero.getWorldPos().x > 1295 ||
-								   hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
-								   hero.getWorldPos().y > 2010)
+								   hero.GetCollisionRec()) ||
+				hero.getWorldPos().x > 1295 ||
+				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
+				hero.getWorldPos().y > 2010)
 			{
 				hero.undoMovement();
 			}
@@ -566,6 +572,12 @@ int main()
 				hero.getWorldPos().y < 435)
 			{
 				conversation("There is no way I will go in there!", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					isOutsideCave = false;
+					isInCave = true;
+					hero.setWorldPos(1055.f,27.f);
+				}
 			}
 			if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
 				hero.getWorldPos().y < 435)
@@ -582,6 +594,26 @@ int main()
 					hero.setWorldPos(90.f, 750.f);
 				}
 			}
+		}
+		else if (isInCave)
+		{
+			if (hasFlashlight)
+			{
+				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
+			}
+			else
+			{
+				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
+			}
+			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
+				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065 ||
+				hero.getWorldPos().y > 2190 && hero.getWorldPos().x < 1000 ||
+				hero.getWorldPos().y > 2190 && hero.getWorldPos().x > 1780 ||
+				)
+			{
+				hero.undoMovement();
+			}
+			hero.tick(GetFrameTime());
 		}
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
