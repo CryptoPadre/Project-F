@@ -125,11 +125,26 @@ int main()
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
 	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png")};
-	Enemy monster_he{Vector2{400.f, 100.f}, LoadTexture("monster_he_he.png"), LoadTexture("monster_he_he.png")};
+	Enemy caveMonster{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy caveMonster1{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy caveMonster2{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy caveMonster3{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy caveMonster4{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy caveMonster5{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy caveMonster6{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy caveMonster7{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
 	Enemy *enemies[]{
 		&she,
 		&he,
-		&monster};
+		&monster,
+		&caveMonster,
+		&caveMonster1,
+		&caveMonster2,
+		&caveMonster3,
+		&caveMonster4,
+		&caveMonster5,
+		&caveMonster6,
+		&caveMonster7};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -630,24 +645,27 @@ int main()
 					hero.setWorldPos(650.f, 435.f);
 				}
 			}
-			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899){
+			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
+			{
 				conversation("An exit!!!", hero.getScreenPos().x, hero.getScreenPos().y);
-				if(IsKeyPressed(KEY_E)){
+				if (IsKeyPressed(KEY_E))
+				{
 					isInCave = false;
 					isEndGame = true;
 				}
 			}
 			hero.tick(GetFrameTime());
 		}
-		else {
+		else
+		{
 			DrawText("You escaped!!!", 250, 250, 20, RED);
 			DrawText("Press E to return!!!", 250, 350, 20, RED);
-			if(IsKeyPressed(KEY_E)){
+			if (IsKeyPressed(KEY_E))
+			{
 				isEndGame = false;
 				isGameStart = true;
 				hero.setWorldPos(400.f, 100.f);
 			}
-
 		}
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
