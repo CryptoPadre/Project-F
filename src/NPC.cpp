@@ -51,7 +51,7 @@ void NPC::tick(float deltaTime)
             conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
         }
     }
-    if (!isHuman)
+     /* if (!isHuman)
     {
         if (!isDay)
         {
@@ -73,12 +73,12 @@ void NPC::tick(float deltaTime)
                 {
                     danceRows = 0;
                 }
-            }
+
             // Match BaseCharacter expectations
             currentFrame = danceFrame;
             currentRow = danceRows;
         }
-    }
+    } */
 
     if (interactionCount > 0 && !isHuman && isDay)
     {

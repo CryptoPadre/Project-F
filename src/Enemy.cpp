@@ -1,8 +1,8 @@
 #include "Enemy.h"
 #include "raymath.h"
-#include "Character.h"
 
-Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack)
+
+Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type)
 {
     worldPos = pos;
     texture = idle_texture;
@@ -11,10 +11,25 @@ Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack)
     height = (float)texture.height / totalRows;
     speed = 1.0f;
     interact = attack;
+    type = isCaveMonster;
 }
 
 void Enemy::tick(float deltaTime)
 {
+    if(isCaveMonster){
+        texture = interact;
+        if(Vector2Distance(getScreenPos(), target->getScreenPos()) < 50.f && !awakeningAnimDone){
+            if (awakeningFrameTime <= awakeningFrameDuration){
+            awakeningFrameTime --; 
+            awakeningFrameTime = 0.f;
+            if (awakeningFrame <= awakeningTotalFrames)
+                {
+                    awakeningFrame = awakeningTotalFrames - 6;
+                    awakeningAnimDone = true;
+                }
+            }
+        }
+    }
     // get toTarget
     velocity = Vector2Subtract(target->getScreenPos(), getScreenPos());
     if (Vector2Length(velocity) < radius)

@@ -6,13 +6,19 @@
 
 class Enemy : public BaseCharacter{
     public:
-    Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack);
+    Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type);
 	virtual void tick(float deltaTime) override;
     void setTarget(Character* character){target = character;}
     virtual Vector2 getScreenPos() override;
+    bool isCaveMonster{};
     private:
     Character* target;
     float radius{25.f};
+    int awakeningFrame = 5;
+	float awakeningFrameTime = 0.0f;
+	float awakeningFrameDuration = 0.5f;
+	int awakeningTotalFrames = 6;
+	bool awakeningAnimDone = false;
 };
 
 #endif

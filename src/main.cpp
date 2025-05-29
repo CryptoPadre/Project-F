@@ -82,7 +82,8 @@ int main()
 	Image caveDark = LoadImageFromTexture(cave);
 	ImageColorBrightness(&caveDark, -270);
 	Texture2D caveDarkMap = LoadTextureFromImage(caveDark);
-	Texture2D maps[14]{
+	Texture2D endgame = LoadTexture("endgame.png");
+	Texture2D maps[15]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -96,7 +97,8 @@ int main()
 		cave,
 		caveEntrance,
 		caveEntranceNightMap,
-		caveDarkMap};
+		caveDarkMap,
+		endgame};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -118,21 +120,21 @@ int main()
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{600.f, 580.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
-		Prop{Vector2{600.f, 580.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
+		Prop{Vector2{500.f, 600.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
+		Prop{Vector2{1800.f, 1020.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
 	};
 	// render enemy
-	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png")};
-	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png")};
-	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png")};
-	Enemy caveMonster{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
-	Enemy caveMonster1{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
-	Enemy caveMonster2{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
-	Enemy caveMonster3{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
-	Enemy caveMonster4{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
-	Enemy caveMonster5{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
-	Enemy caveMonster6{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
-	Enemy caveMonster7{Vector2{400.f, 100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png")};
+	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
+	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
+	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), false};
+	Enemy caveMonster{Vector2{1890.f, 430.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster1{Vector2{1910.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster2{Vector2{1730.f, 1800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster3{Vector2{1530.f, 1790.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster4{Vector2{1530.f, 1950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster5{Vector2{1720.f, 1990.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster6{Vector2{1600.f, 2030.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster7{Vector2{570.f, 1290.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -307,10 +309,10 @@ int main()
 			if (!isDayTime)
 			{
 				// Set collision with enemies
-				for (auto enemy : enemies)
+				for (int i = 0; i < 3; i++)
 				{
-					enemy->tick(GetFrameTime());
-					if (CheckCollisionRecs(enemy->GetCollisionRec(), hero.GetCollisionRec()))
+					enemies[i]->tick(GetFrameTime());
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
 						hero.setAlive(true);
 					}
@@ -652,20 +654,30 @@ int main()
 				{
 					isInCave = false;
 					isEndGame = true;
+					hero.setWorldPos(282.f, 12.f);
 				}
+			}
+			for (int i = 3; i < 11; i++)
+			{
+				enemies[i]->tick(GetFrameTime());
+			}
+			for (int i = 10; i < 12; i++)
+			{
+				props[i].Render(hero.getWorldPos());
 			}
 			hero.tick(GetFrameTime());
 		}
 		else
 		{
-			DrawText("You escaped!!!", 250, 250, 20, RED);
-			DrawText("Press E to return!!!", 250, 350, 20, RED);
-			if (IsKeyPressed(KEY_E))
+			DrawTextureEx(maps[14], interiorPos, 0.0, 3.f, WHITE);
+			if (hero.getWorldPos().x < 28 || hero.getWorldPos().y < 10 ||
+				hero.getWorldPos().x > 538 || hero.getWorldPos().y > 800 ||
+				hero.getWorldPos().x < 180 && hero.getWorldPos().y < 530 ||
+				hero.getWorldPos().x > 390 && hero.getWorldPos().y < 530)
 			{
-				isEndGame = false;
-				isGameStart = true;
-				hero.setWorldPos(400.f, 100.f);
+				hero.undoMovement();
 			}
+			hero.tick(GetFrameTime());
 		}
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
