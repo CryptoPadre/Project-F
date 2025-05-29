@@ -599,11 +599,11 @@ int main()
 		{
 			if (hasFlashlight)
 			{
-				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
+				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
 			}
 			else
 			{
-				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
+				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 			}
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
 				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065 ||
