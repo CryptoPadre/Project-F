@@ -80,7 +80,7 @@ int main()
 	Texture2D caveEntranceNightMap = LoadTextureFromImage(caveEntranceNight);
 	Texture2D cave = LoadTexture("cave.png");
 	Image caveDark = LoadImageFromTexture(cave);
-	ImageColorBrightness(&caveDark, -90);
+	ImageColorBrightness(&caveDark, -270);
 	Texture2D caveDarkMap = LoadTextureFromImage(caveDark);
 	Texture2D maps[14]{
 		map,
@@ -599,19 +599,33 @@ int main()
 		{
 			if (hasFlashlight)
 			{
-				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
+				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 			}
 			else
 			{
-				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
+				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
 			}
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
 				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065 ||
 				hero.getWorldPos().y > 2190 && hero.getWorldPos().x < 1000 ||
-				hero.getWorldPos().y > 2190 && hero.getWorldPos().x > 1780 ||
+				hero.getWorldPos().y > 2190 && hero.getWorldPos().x > 1780
 				)
 			{
 				hero.undoMovement();
+			}
+			if (hero.getWorldPos().y < 25 && hero.getWorldPos().x > 1050 && hero.getWorldPos().x < 1100){
+				if(hasFlashlight){
+					conversation("Let's get out from here", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else {
+					conversation("I can't see anything! I'd a need a flashlight or something!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				if(IsKeyPressed(KEY_E)){
+					isInCave = false;
+					isOutsideCave = true;
+					hero.setWorldPos(650.f, 435.f);
+				}
+
 			}
 			hero.tick(GetFrameTime());
 		}
