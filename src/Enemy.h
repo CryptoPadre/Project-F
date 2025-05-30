@@ -18,7 +18,6 @@ class Enemy : public BaseCharacter{
 	float awakeningFrameTime = 0.0f;
 	float awakeningFrameDuration = 0.8f;
 	bool awakeningAnimDone = false;
-	int awakeningTotalFrames = 6;
     bool isAwake{};
     int awakeningTrigger = 150;
     

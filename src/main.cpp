@@ -38,10 +38,10 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
-	NPC boyd{Vector2{1000.f, 1000.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
-	NPC sara{Vector2{1000.f, 700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
-	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
-	NPC yellow{Vector2{750.f, 950.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
+	NPC boyd{Vector2{1000.f, 1000.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"),true, false};
+	NPC sara{Vector2{1000.f, 700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"),true, false};
+	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"),  LoadTexture("kid-jump.png"),false, false};
+	NPC yellow{Vector2{750.f, 950.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"),true, true};
 	NPC *npcs[4]{
 		&boyd,
 		&sara,
@@ -682,7 +682,7 @@ int main()
 			}
 			if (hero.getWorldPos().x > 243 && hero.getWorldPos().x < 320 && hero.getWorldPos().y < 40)
 			{
-				conversation("Let's go back to the tree", hero.getWorldPos().x, hero.getWorldPos().y);
+				conversation("Let's go back to the tree", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
 					isEndGame = false;
