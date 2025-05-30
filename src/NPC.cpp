@@ -80,7 +80,7 @@ void NPC::tick(float deltaTime)
         }
     } */
 
-    if (interactionCount > 0 && !isHuman && isDay)
+    if (interactionCount > 0 && !isHuman)
     {
         texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());

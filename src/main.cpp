@@ -120,7 +120,7 @@ int main()
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{500.f, 600.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
+		Prop{Vector2{2500.f, 600.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
 		Prop{Vector2{1800.f, 1020.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
 	};
 	// render enemy
@@ -128,13 +128,14 @@ int main()
 	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
 	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), false};
 	Enemy caveMonster{Vector2{1890.f, 430.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster1{Vector2{1910.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster2{Vector2{1730.f, 1800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster3{Vector2{1530.f, 1790.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster4{Vector2{1530.f, 1950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster5{Vector2{1720.f, 1990.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster6{Vector2{1600.f, 2030.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster7{Vector2{570.f, 1290.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster1{Vector2{1250.f, 1120.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster2{Vector2{2230.f, 2200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster3{Vector2{1930.f, 2190.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster4{Vector2{2030.f, 2250.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster5{Vector2{2220.f, 2290.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster6{Vector2{2100.f, 2130.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster7{Vector2{500.f, 1390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster8{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -146,7 +147,8 @@ int main()
 		&caveMonster4,
 		&caveMonster5,
 		&caveMonster6,
-		&caveMonster7};
+		&caveMonster7,
+	&caveMonster8};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -657,7 +659,7 @@ int main()
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
-			for (int i = 3; i < 11; i++)
+			for (int i = 3; i < 12; i++)
 			{
 				enemies[i]->tick(GetFrameTime());
 			}

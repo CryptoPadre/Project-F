@@ -1,7 +1,6 @@
 #include "Enemy.h"
 #include "raymath.h"
 
-
 Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type)
 {
     worldPos = pos;
@@ -11,52 +10,67 @@ Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type)
     height = (float)texture.height / totalRows;
     speed = 1.0f;
     interact = attack;
-    type = isCaveMonster;
+    isCaveMonster = type;
 }
 
 void Enemy::tick(float deltaTime)
 {
-    if(isCaveMonster){
+    if (isCaveMonster && !isAwake)
+    {
         texture = interact;
-        if(Vector2Distance(getScreenPos(), target->getScreenPos()) < 50.f && !awakeningAnimDone){
-            if (awakeningFrameTime <= awakeningFrameDuration){
-            awakeningFrameTime --; 
-            awakeningFrameTime = 0.f;
-            if (awakeningFrame <= awakeningTotalFrames)
+
+        if (Vector2Distance(getScreenPos(), target->getScreenPos()) < awakeningTrigger && !awakeningAnimDone)
+        {
+            awakeningTrigger = 1500;
+            awakeningFrameTime += deltaTime;
+            if (awakeningFrameTime >= awakeningFrameDuration)
+            {
+                awakeningFrame--;
+                awakeningFrameTime = 0.f;
+                if (awakeningFrame < 0)
                 {
-                    awakeningFrame = awakeningTotalFrames - 6;
                     awakeningAnimDone = true;
+                    awakeningFrame = 0;
+                    isAwake = true;
                 }
             }
         }
+
+        Rectangle source{width * awakeningFrame, 0, width, height};
+        Rectangle dest{getScreenPos().x, getScreenPos().y, width * scale, height * scale};
+        DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+        return;
     }
-    // get toTarget
+
+    // Set movement and animation direction
     velocity = Vector2Subtract(target->getScreenPos(), getScreenPos());
-    if (Vector2Length(velocity) < radius)
+
+    // Choose texture and direction row
+    if (isCaveMonster && isAwake)
+    {
+        texture = walk;
+    }
+    else if (!isCaveMonster && Vector2Length(velocity) < radius)
     {
         velocity = {};
         texture = interact;
-    } else {
-        texture = walk;
-    }
-    if (velocity.x > velocity.y)
-    {
-        // Horizontal movement dominates
-        if (velocity.x > 0)
-            currentRow = 3; // Right
-        else
-            currentRow = 1; // Left
     }
     else
     {
-        // Vertical movement dominates
-        if (velocity.y > 0)
-            currentRow = 2; // Down
-        else
-            currentRow = 0; // Up
+        texture = walk;
     }
 
-    // move the Enemy
+    // Determine animation row based on direction
+    if (fabs(velocity.x) > fabs(velocity.y))
+    {
+        currentRow = (velocity.x > 0) ? 3 : 1; // Right or Left
+    }
+    else
+    {
+        currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
+    }
+
+    // Move the enemy
     BaseCharacter::tick(deltaTime);
 }
 
