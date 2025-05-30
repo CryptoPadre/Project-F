@@ -41,7 +41,7 @@ int main()
 	NPC boyd{Vector2{1000.f, 1000.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1000.f, 700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), true};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), false};
-	NPC yellow{Vector2{700.f, 450.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
+	NPC yellow{Vector2{750.f, 950.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), true};
 	NPC *npcs[4]{
 		&boyd,
 		&sara,
@@ -55,6 +55,7 @@ int main()
 	boyd.addDialog(boydDialoguesDayOne);
 	kid.addDialog(kidDialogues);
 	sara.addDialog(saraDialoguesDayOne);
+	yellow.addDialog(yellowDialog);
 	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{0.f, 0.f};
@@ -148,7 +149,7 @@ int main()
 		&caveMonster5,
 		&caveMonster6,
 		&caveMonster7,
-	&caveMonster8};
+		&caveMonster8};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -524,7 +525,7 @@ int main()
 			{
 				DrawTextureEx(maps[6], outsideTownPos, 0.0, mapScale, WHITE);
 			}
-			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1442 || hero.getWorldPos().y < 0)
+			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0)
 			{
 				hero.undoMovement();
 			}
@@ -678,6 +679,27 @@ int main()
 				hero.getWorldPos().x > 390 && hero.getWorldPos().y < 530)
 			{
 				hero.undoMovement();
+			}
+			if (hero.getWorldPos().x > 243 && hero.getWorldPos().x < 320 && hero.getWorldPos().y < 40)
+			{
+				conversation("Let's go back to the tree", hero.getWorldPos().x, hero.getWorldPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					isEndGame = false;
+					isInCave = true;
+					hero.setWorldPos(850.f, 2350.f);
+				}
+			}
+			npcs[3]->tick(GetFrameTime());
+			if (IsKeyPressed(KEY_E))
+			{
+				npcs[3]->talk();
+				npcs[3]->setInteractionCount();
+			}
+			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+				npcs[3]->undoMovement();
 			}
 			hero.tick(GetFrameTime());
 		}
