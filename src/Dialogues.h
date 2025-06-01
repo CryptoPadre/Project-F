@@ -162,7 +162,9 @@ inline std::vector<std::string> yellowDialogAfterFight = {
     "Who are you?"
 };
 
-inline std::vector<std::string> heroText = {
-    "This damn tree. Of course I am low on gas now.", 
-    "Let's go back to that town for gas"
+inline std::vector<std::string> heroTextStartMap = { 
+    "What the hell ?",
+    "The gas was leaking ?",
+    "This town just few minutes away.",
+    "If I'm hurry I will get back before sunset"
 };

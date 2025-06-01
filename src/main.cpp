@@ -194,7 +194,7 @@ int main()
 	int daysSurvived = 0;
 	double lastDayTriggerTime = 0.0;
 
-	int textCounter = 0;
+	int heroStartMapCounter = 0;
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -257,13 +257,13 @@ int main()
 			}
 			if (hero.getWorldPos().x > 145 && hero.getWorldPos().x < 300 && hero.getWorldPos().y < 285)
 			{
-				if (textCounter < heroText.size())
+				if (heroStartMapCounter < heroTextStartMap.size())
 				{
-					conversation(heroText[textCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation(heroTextStartMap[heroStartMapCounter], hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 
-						textCounter++;
+						heroStartMapCounter++;
 					}
 				}
 			}
