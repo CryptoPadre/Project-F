@@ -16,15 +16,15 @@ Rectangle BaseCharacter::GetCollisionRec()
         getScreenPos().x + 50,
         getScreenPos().y + 50,
         width / scale,
-        height / scale };
+        height / scale + 70};
 }
 
 void BaseCharacter::tick(float deltaTime)
 {   
     DrawRectangleLines(getScreenPos().x + 50,
     getScreenPos().y + 50,
-    width / scale,
-    height / scale, RED);
+    width / scale ,
+    height / scale + 70, RED);
 
     worldPosLastFrame = worldPos;
 
