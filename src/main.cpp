@@ -115,7 +115,7 @@ int main()
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
 		Prop{Vector2{1200.f, 190.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 100, 200},
-		Prop{Vector2{1000.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
+		Prop{Vector2{1050.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false, 140, 100, 0, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
@@ -137,6 +137,8 @@ int main()
 	Enemy caveMonster6{Vector2{2100.f, 2130.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster7{Vector2{500.f, 1390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster8{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster9{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster10{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -149,7 +151,9 @@ int main()
 		&caveMonster5,
 		&caveMonster6,
 		&caveMonster7,
-		&caveMonster8};
+		&caveMonster8,
+		&caveMonster9,
+		&caveMonster10};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -165,7 +169,10 @@ int main()
 	bool hasFlashlight{};
 	bool isEndGame{};
 	// used to spawn the monster at some point
+	bool hasStarted{};
 	bool isMonsterOut{};
+	bool wasInCaveWithoutFlashlight{};
+	bool isDayTime = true;
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -218,7 +225,10 @@ int main()
 			lastDayTriggerTime = time;
 		}
 		// change the map if it night or daytime
-		bool isDayTime = fmod(GetTime(), 40.0) < 20.0;
+		if (hasStarted)
+		{
+			isDayTime = fmod(GetTime(), 40.0) < 20.0;
+		}
 		// Beginning of the game
 		if (isGameStart)
 		{
@@ -266,6 +276,11 @@ int main()
 						heroStartMapCounter++;
 					}
 				}
+			}
+			if (wasInCaveWithoutFlashlight)
+			{
+				npcs[3]->setWorldPos(750.f, 800.f);
+				npcs[3]->tick(GetFrameTime());
 			}
 			hero.tick(GetFrameTime());
 		}
@@ -334,19 +349,20 @@ int main()
 					}
 				}
 			}
-			for (int i = 0; i < 2; i++)
+			npcs[0]->tick(GetFrameTime());
+			if (IsKeyPressed(KEY_E))
 			{
-				npcs[i]->tick(GetFrameTime());
-				if (IsKeyPressed(KEY_E))
-				{
-					npcs[i]->talk();
-					npcs[i]->setInteractionCount();
-				}
-				if (CheckCollisionRecs(npcs[i]->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-					npcs[i]->undoMovement();
-				}
+				npcs[0]->talk();
+				npcs[0]->setInteractionCount();
+			}
+			if (boydDialoguesDayOne.size() <= npcs[0]->getInteractionCount())
+			{
+				hasStarted = true;
+			}
+			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+				npcs[0]->undoMovement();
 			}
 			hero.tick(GetFrameTime());
 			// check prop collision
@@ -538,11 +554,11 @@ int main()
 			{
 				DrawTextureEx(maps[6], outsideTownPos, 0.0, mapScale, WHITE);
 			}
-			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0)
+			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0 ||
+				hero.getWorldPos().x > 675 && hero.getWorldPos().y < 235)
 			{
 				hero.undoMovement();
 			}
-			npcs[2]->isDay = isDayTime;
 			npcs[2]->tick(GetFrameTime());
 			props[4].Render(hero.getWorldPos());
 			if (IsKeyPressed(KEY_E))
@@ -593,6 +609,17 @@ int main()
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
+			npcs[1]->tick(GetFrameTime());
+			if (IsKeyPressed(KEY_E))
+			{
+				npcs[1]->talk();
+				npcs[1]->setInteractionCount();
+			}
+			if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+				npcs[1]->undoMovement();
+			}
 			hero.tick(GetFrameTime());
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
@@ -640,6 +667,7 @@ int main()
 			else
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
+				wasInCaveWithoutFlashlight = true;
 			}
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
 				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065)
@@ -661,6 +689,7 @@ int main()
 					isInCave = false;
 					isOutsideCave = true;
 					hero.setWorldPos(650.f, 435.f);
+					npcs[1]->setWorldPos(1200.f, 2100.f);
 				}
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
@@ -673,8 +702,12 @@ int main()
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
-			for (int i = 3; i < 12; i++)
+			for (int i = 3; i < 14; i++)
 			{
+	
+				if(CheckCollisionRecs(enemies[i]->GetCollisionRec(),hero.GetCollisionRec()) && enemies[i]->hasAwaken()){
+					hero.setAlive(false);
+				}
 				enemies[i]->tick(GetFrameTime());
 			}
 			for (int i = 10; i < 12; i++)
@@ -710,15 +743,10 @@ int main()
 				npcs[3]->talk();
 				npcs[3]->setInteractionCount();
 			}
-			if(Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && yellowDialog.size() <= npcs[3]->getInteractionCount()){
+			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && yellowDialog.size() <= npcs[3]->getInteractionCount())
+			{
 				npcs[3]->setAttack();
 			}
-			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-				npcs[3]->undoMovement();
-			}
-			
 		}
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);

@@ -8,7 +8,7 @@ Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type)
     walk = idle_texture;
     width = (float)texture.width / totalColumns;
     height = (float)texture.height / totalRows;
-    speed = 1.0f;
+    speed = 2.0f;
     interact = attack;
     isCaveMonster = type;
 }

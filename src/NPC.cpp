@@ -67,7 +67,11 @@ void NPC::tick(float deltaTime)
             {
                 velocity = {};
                 texture = die;
-            };
+                
+            }
+            else {
+                texture = walk;
+            }
             if (fabs(velocity.x) > fabs(velocity.y))
             {
                 currentRow = (velocity.x > 0) ? 3 : 1; // Right or Left
