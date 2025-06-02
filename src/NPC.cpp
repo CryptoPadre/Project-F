@@ -63,8 +63,10 @@ void NPC::tick(float deltaTime)
         if (willAttack)
         {
             velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
-            if(Vector2Length(velocity) < radius){
-            texture = die;
+            if (Vector2Length(velocity) < radius)
+            {
+                velocity = {};
+                texture = die;
             };
             if (fabs(velocity.x) > fabs(velocity.y))
             {

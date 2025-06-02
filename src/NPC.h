@@ -17,6 +17,7 @@ class NPC : public BaseCharacter{
     virtual void tick(float deltaTime) override;
     virtual Vector2 getScreenPos() override;
     bool isDay{};
+    int getInteractionCount(){return interactionCount;}
     private:
     bool isHuman{};
     bool canAttack{};

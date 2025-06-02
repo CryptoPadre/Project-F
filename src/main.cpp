@@ -703,18 +703,22 @@ int main()
 					hero.setWorldPos(850.f, 2350.f);
 				}
 			}
+			hero.tick(GetFrameTime());
 			npcs[3]->tick(GetFrameTime());
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[3]->talk();
 				npcs[3]->setInteractionCount();
 			}
+			if(Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && yellowDialog.size() <= npcs[3]->getInteractionCount()){
+				npcs[3]->setAttack();
+			}
 			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
 				npcs[3]->undoMovement();
 			}
-			hero.tick(GetFrameTime());
+			
 		}
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
