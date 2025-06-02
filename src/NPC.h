@@ -24,7 +24,7 @@ class NPC : public BaseCharacter{
     bool isTalking{}; 
     std::vector<std::string> NPCDialog;
     float radius{50.f};
-    int interactionCount{0};
+    int interactionCount{-1};
     Character* hero;
     int danceFrame = 0;
 	float danceFrameTime = 0.0f;

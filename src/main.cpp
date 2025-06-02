@@ -38,7 +38,7 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
-	NPC boyd{Vector2{1000.f, 1000.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
+	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1000.f, 700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
 	NPC yellow{Vector2{750.f, 950.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
@@ -110,7 +110,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[12]{
+	Prop props[13]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -123,6 +123,7 @@ int main()
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{2500.f, 600.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
 		Prop{Vector2{1800.f, 1020.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
@@ -168,11 +169,11 @@ int main()
 	bool isOutsideCave{};
 	bool hasFlashlight{};
 	bool isEndGame{};
-	// used to spawn the monster at some point
 	bool hasStarted{};
 	bool isMonsterOut{};
 	bool wasInCaveWithoutFlashlight{};
 	bool isDayTime = true;
+	bool hasTalisman{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -355,9 +356,10 @@ int main()
 				npcs[0]->talk();
 				npcs[0]->setInteractionCount();
 			}
-			if (boydDialoguesDayOne.size() <= npcs[0]->getInteractionCount())
+			if (boydDialoguesDayOne.size() -1 == npcs[0]->getInteractionCount())
 			{
 				hasStarted = true;
+				hasTalisman = true;
 			}
 			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
@@ -751,6 +753,9 @@ int main()
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
+		if(hasTalisman){
+			props[12].Render(hero.getScreenPos());
+		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
 	}
