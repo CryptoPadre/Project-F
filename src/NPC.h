@@ -13,6 +13,7 @@ class NPC : public BaseCharacter{
     void setInteractionCount();
     void setTarget(Character* character){hero = character;}
     void setAttack(){ willAttack = true;}
+    void setCurrentRow(){currentRow = 2;}
     const std::vector<std::string>& getDialogues() const { return NPCDialog; }
     virtual void tick(float deltaTime) override;
     virtual Vector2 getScreenPos() override;

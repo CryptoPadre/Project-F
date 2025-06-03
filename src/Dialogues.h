@@ -26,8 +26,7 @@ inline std::vector<std::string> boydDialoguesDayTwo = {
     "You may speak to her.",
     "But let me tell you something...",
     "Only one woman ever got out, and...",
-    "She died here."
-};
+    "She died here."};
 
 inline std::vector<std::string> boydDialoguesDayThree{
     "You want me to believe that he was me?",
@@ -53,8 +52,7 @@ inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
     "You died, you returned...",
     "You will die again...",
     "You need to find the man in yellow.",
-    "He will know you."
-};
+    "He will know you."};
 
 inline std::vector<std::string> boydDialoguesAfterFigth = {
     "What happened?",
@@ -125,6 +123,12 @@ inline std::vector<std::string> saraDialoguesDayAfterFight = {
     "Our kids!",
     "All we need is hope.",
     "And for that, we have each other."};
+
+inline std::vector<std::string> yellowDialogStartMap = {
+    "Well, well, well...",
+    "Who do we have here?",
+    "You don't remember me, do you?",
+    "Of course not — no one ever does."};
 
 inline std::vector<std::string> yellowDialog = {
     "So we meet again!",

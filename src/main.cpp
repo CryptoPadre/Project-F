@@ -55,7 +55,6 @@ int main()
 	boyd.addDialog(boydDialoguesDayOne);
 	kid.addDialog(kidDialogues);
 	sara.addDialog(saraDialoguesDayOne);
-	yellow.addDialog(yellowDialog);
 	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{0.f, 0.f};
@@ -140,6 +139,8 @@ int main()
 	Enemy caveMonster8{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster9{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster10{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster11{Vector2{1550.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster12{Vector2{1750.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -154,7 +155,9 @@ int main()
 		&caveMonster7,
 		&caveMonster8,
 		&caveMonster9,
-		&caveMonster10};
+		&caveMonster10,
+		&caveMonster11,
+		&caveMonster12};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -174,6 +177,7 @@ int main()
 	bool wasInCaveWithoutFlashlight{};
 	bool isDayTime = true;
 	bool hasTalisman{};
+	bool talkedToKid{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -283,6 +287,18 @@ int main()
 				npcs[3]->setWorldPos(750.f, 800.f);
 				npcs[3]->tick(GetFrameTime());
 			}
+			if (talkedToKid)
+			{
+				npcs[3]->tick(GetFrameTime());
+				npcs[3]->addDialog(yellowDialogStartMap);
+				npcs[3]->setWorldPos(850.f, 750.f);
+				npcs[3]->setCurrentRow();
+				if (IsKeyPressed(KEY_E))
+				{
+					npcs[3]->talk();
+					npcs[3]->setInteractionCount();
+				}
+			}
 			hero.tick(GetFrameTime());
 		}
 
@@ -350,23 +366,23 @@ int main()
 					}
 				}
 			}
-			npcs[0]->tick(GetFrameTime());
-			if (IsKeyPressed(KEY_E))
-			{
-				npcs[0]->talk();
-				npcs[0]->setInteractionCount();
-			}
-			if (boydDialoguesDayOne.size() -1 == npcs[0]->getInteractionCount())
-			{
-				hasStarted = true;
-				hasTalisman = true;
-			}
 			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
 				npcs[0]->undoMovement();
 			}
 			hero.tick(GetFrameTime());
+			npcs[0]->tick(GetFrameTime());
+			if (IsKeyPressed(KEY_E))
+			{
+				npcs[0]->talk();
+				npcs[0]->setInteractionCount();
+			}
+			if (boydDialoguesDayOne.size() - 2 == npcs[0]->getInteractionCount())
+			{
+				hasStarted = true;
+				hasTalisman = true;
+			}
 			// check prop collision
 			for (int i = 0; i < 4; i++)
 			{
@@ -567,6 +583,8 @@ int main()
 			{
 				npcs[2]->talk();
 				npcs[2]->setInteractionCount();
+				npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
+				talkedToKid = true;
 			}
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
@@ -579,7 +597,8 @@ int main()
 					hero.setWorldPos(1260.f, 785.f);
 				}
 			}
-			if (hero.getWorldPos().y > 1430 && hero.getWorldPos().x < 600)
+			if (
+				hero.getWorldPos().x < 560 && hero.getWorldPos().y > 1350)
 			{
 				DrawText("Press E to return to the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
@@ -701,13 +720,15 @@ int main()
 				{
 					isInCave = false;
 					isEndGame = true;
+					yellow.addDialog(yellowDialog);
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
 			for (int i = 3; i < 14; i++)
 			{
-	
-				if(CheckCollisionRecs(enemies[i]->GetCollisionRec(),hero.GetCollisionRec()) && enemies[i]->hasAwaken()){
+
+				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken())
+				{
 					hero.setAlive(false);
 				}
 				enemies[i]->tick(GetFrameTime());
@@ -753,8 +774,9 @@ int main()
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
-		if(hasTalisman){
-			props[12].Render(hero.getScreenPos());
+		if (hasTalisman)
+		{
+			props[12].Render(hero.getWorldPos());
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
