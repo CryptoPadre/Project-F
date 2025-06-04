@@ -207,6 +207,7 @@ int main()
 	double lastDayTriggerTime = 0.0;
 
 	int heroStartMapCounter = 0;
+
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -576,14 +577,22 @@ int main()
 				hero.undoMovement();
 			}
 			npcs[2]->tick(GetFrameTime());
+			if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+				npcs[2]->undoMovement();
+			}
 			props[4].Render(hero.getWorldPos());
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[2]->talk();
 				npcs[2]->setInteractionCount();
-				npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
-				npcs[3]->addDialog(yellowDialogStartMap);
-				talkedToKid = true;
+				if (npcs[2]->getInteractionCount() == 1)
+				{
+					talkedToKid = true;
+					npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
+					npcs[3]->addDialog(yellowDialogStartMap);
+				}
 			}
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
@@ -776,7 +785,10 @@ int main()
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
 		if (hasTalisman)
 		{
-			props[12].Render(hero.getScreenPos());
+			Texture2D tex = props[12].GetTexture();
+			float scale = props[12].GetScale();
+			Vector2 talismanScreenPos = {20.f, (float)GetScreenHeight() - tex.height * scale - 20.f};
+			DrawTextureEx(tex, talismanScreenPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();

@@ -30,7 +30,7 @@ void NPC::setInteractionCount()
 void NPC::talk()
 {
     if (finishedTalking)
-        return; 
+        return;
 
     if (Vector2Distance(getScreenPos(), hero->getScreenPos()) > 150.f)
     {
@@ -38,17 +38,12 @@ void NPC::talk()
         return;
     }
 
-    isTalking = true;
-
-    if (currentDialogIndex < NPCDialog.size())
-    {
-        DrawText(NPCDialog[currentDialogIndex].c_str(), 50, 50, 20, WHITE); 
-    }
     else
     {
         isTalking = false;
         finishedTalking = true;
     }
+    isTalking = true;
 }
 
 void NPC::tick(float deltaTime)
@@ -63,7 +58,7 @@ void NPC::tick(float deltaTime)
         {
             currentRow = 1;
         }
-        if (isTalking && interactionCount < NPCDialog.size() - 1 && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
+        if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
         {
             conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
         }

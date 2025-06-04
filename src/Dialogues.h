@@ -128,7 +128,7 @@ inline std::vector<std::string> yellowDialogStartMap = {
     "Well, well, well...",
     "Who do we have here?",
     "You don't remember me, do you?",
-    "Of course not — no one ever does."};
+    "Of course not! No one ever does."};
 
 inline std::vector<std::string> yellowDialog = {
     "So we meet again!",

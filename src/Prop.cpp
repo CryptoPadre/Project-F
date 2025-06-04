@@ -64,3 +64,10 @@ Rectangle Prop::GetCollisionRec(Vector2 heroPos)
             trunkHeight + adjustmentHeightB};
     }
 }
+
+void Prop::RenderOnScreen(Vector2 screenPos)
+{
+    float totalWidth = texture.width * scale;
+    float totalHeight = texture.height * scale;
+    DrawTextureEx(texture, screenPos, 0.f, scale, WHITE);
+}
