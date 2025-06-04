@@ -290,9 +290,8 @@ int main()
 			if (talkedToKid)
 			{
 				npcs[3]->tick(GetFrameTime());
-				npcs[3]->addDialog(yellowDialogStartMap);
 				npcs[3]->setWorldPos(850.f, 750.f);
-				npcs[3]->setCurrentRow();
+				npcs[3]->setCurrentRow(2);
 				if (IsKeyPressed(KEY_E))
 				{
 					npcs[3]->talk();
@@ -301,7 +300,6 @@ int main()
 			}
 			hero.tick(GetFrameTime());
 		}
-
 		// World map changing between daytime/nighttime
 		else if (isInTown)
 		{
@@ -378,7 +376,7 @@ int main()
 				npcs[0]->talk();
 				npcs[0]->setInteractionCount();
 			}
-			if (boydDialoguesDayOne.size() - 2 == npcs[0]->getInteractionCount())
+			if (boydDialoguesDayOne.size() - 1 == npcs[0]->getInteractionCount())
 			{
 				hasStarted = true;
 				hasTalisman = true;
@@ -584,6 +582,7 @@ int main()
 				npcs[2]->talk();
 				npcs[2]->setInteractionCount();
 				npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
+				npcs[3]->addDialog(yellowDialogStartMap);
 				talkedToKid = true;
 			}
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
@@ -761,6 +760,7 @@ int main()
 			}
 			hero.tick(GetFrameTime());
 			npcs[3]->tick(GetFrameTime());
+			npcs[3]->setCurrentRow(0);
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[3]->talk();
@@ -776,7 +776,7 @@ int main()
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
 		if (hasTalisman)
 		{
-			props[12].Render(hero.getWorldPos());
+			props[12].Render(hero.getScreenPos());
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();

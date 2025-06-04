@@ -29,10 +29,25 @@ void NPC::setInteractionCount()
 
 void NPC::talk()
 {
-    isTalking = true;
+    if (finishedTalking)
+        return; 
+
     if (Vector2Distance(getScreenPos(), hero->getScreenPos()) > 150.f)
     {
         isTalking = false;
+        return;
+    }
+
+    isTalking = true;
+
+    if (currentDialogIndex < NPCDialog.size())
+    {
+        DrawText(NPCDialog[currentDialogIndex].c_str(), 50, 50, 20, WHITE); 
+    }
+    else
+    {
+        isTalking = false;
+        finishedTalking = true;
     }
 }
 
@@ -55,7 +70,6 @@ void NPC::tick(float deltaTime)
     }
     if (canAttack)
     {
-        currentRow = 0;
         if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
         {
             conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
@@ -67,9 +81,9 @@ void NPC::tick(float deltaTime)
             {
                 velocity = {};
                 texture = die;
-                
             }
-            else {
+            else
+            {
                 texture = walk;
             }
             if (fabs(velocity.x) > fabs(velocity.y))
@@ -149,4 +163,19 @@ void NPC::addDialog(const std::vector<std::string> &dialogs)
 {
     for (const auto &dialog : dialogs)
         NPCDialog.push_back(dialog);
+}
+
+void NPC::advanceDialogue()
+{
+    if (!finishedTalking && isTalking)
+    {
+        currentDialogIndex++;
+    }
+}
+
+void NPC::resetDialogue()
+{
+    currentDialogIndex = 0;
+    finishedTalking = false;
+    interactionCount = -1;
 }

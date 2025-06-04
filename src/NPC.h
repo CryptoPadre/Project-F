@@ -11,15 +11,20 @@ class NPC : public BaseCharacter{
     void addDialog(const std::vector<std::string>& dialogs);
     void talk();
     void setInteractionCount();
+    void clearInteractionCount(){interactionCount = 0;}
     void setTarget(Character* character){hero = character;}
     void setAttack(){ willAttack = true;}
-    void setCurrentRow(){currentRow = 2;}
+    void setCurrentRow(int row){currentRow = row;}
+    void advanceDialogue();
+    void resetDialogue();
     const std::vector<std::string>& getDialogues() const { return NPCDialog; }
     virtual void tick(float deltaTime) override;
     virtual Vector2 getScreenPos() override;
     bool isDay{};
     int getInteractionCount(){return interactionCount;}
     private:
+    int currentDialogIndex = 0;
+bool finishedTalking = false;
     bool isHuman{};
     bool canAttack{};
     bool isTalking{}; 
