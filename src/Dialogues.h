@@ -75,14 +75,13 @@ inline std::vector<std::string> boydDialoguesAfterFigth = {
     "I sacrificed those kids...",
     "And now they are punishing me.",
     "I'm going to finish this once and for all.",
-    "Go, take Sara and get to the tree."};
+    "Go. Take Sara and get to the tree.",
+    "That's your only chance to leave!"};
 
 inline std::vector<std::string> kidDialogues = {
-    "You always come back. You just don't remember.",
-    "Anghkooey",
-    "It's not your first goodbye.",
-    "The tree opens a way, but not a way out."
-
+    "Sha'val nethi ur'kaan do'marra.",
+    "Thal'ven tri'ek uth, na val'dor uth'kaan.",
+    "Anghkooey"
 };
 
 inline std::vector<std::string> saraDialoguesDayOne = {
@@ -106,7 +105,7 @@ inline std::vector<std::string> saraDialoguesDayTwo = {
     "He let us live, because he can't live without us!",
     "He let us live, because he was one of us!",
     "He was... He was you before you died!",
-    "He is you - but not now...",
+    "He is you, but not now...",
     "The voices are back again!",
     "They were waiting for you...",
     "He was waiting for you",
@@ -129,7 +128,7 @@ inline std::vector<std::string> yellowDialogStartMap = {
     "You don't remember me, do you?",
     "Of course not! No one ever does."};
 
-inline std::vector<std::string> yellowDialog = {
+inline std::vector<std::string> yellowDialogBeforeFight = {
     "So we meet again!",
     "You don't remember me, do you?",
     "Born in dark, bearing the curse...",
@@ -152,5 +151,3 @@ inline std::vector<std::string> heroTextStartMap = {
     "The gas was leaking ?",
     "This town just few minutes away.",
     "If I'm hurry I will get back before sunset"};
-
-    

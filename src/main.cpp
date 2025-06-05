@@ -183,6 +183,7 @@ int main()
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
 	bool byTheTree{};
+	bool isYellowDead{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -428,20 +429,28 @@ int main()
 				hero.getWorldPos().x >= temple_entry_width_min &&
 					hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
 			{
-				DrawText("Press E to enter the house", 250, 250, 20, BLACK);
+				conversation("I should check what's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
 					if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
 						hero.getWorldPos().y <= house_one_entry_height)
 					{
+
 						currentInterior = HOUSE_ONE;
 						hero.setWorldPos(-387.f, 320.f);
 					}
 					if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
 						hero.getWorldPos().y <= house_two_entry_height)
 					{
-						currentInterior = HOUSE_TWO;
-						hero.setWorldPos(-70.f, 320.f);
+						if (hasKey)
+						{
+							currentInterior = HOUSE_TWO;
+							hero.setWorldPos(-70.f, 320.f);
+						}
+						else
+						{
+							conversation("It's closed!", hero.getScreenPos().x, hero.getScreenPos().y);
+						}
 					}
 					if (hero.getWorldPos().x >= temple_entry_width_min &&
 						hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
@@ -479,10 +488,12 @@ int main()
 					hero.undoMovement();
 				}
 				props[9].Render(hero.getWorldPos());
-				if(CheckCollisionRecs(props[9].GetCollisionRec(hero.getWorldPos()),hero.GetCollisionRec())){
+				if (CheckCollisionRecs(props[9].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
+				{
 					hero.undoMovement();
 				}
-				if(hero.getWorldPos().x > 4 && hero.getWorldPos().x < 76 && hero.getWorldPos().y > -150 && hero.getWorldPos().y < -140){
+				if (hero.getWorldPos().x > 90 && hero.getWorldPos().x < -8 && hero.getWorldPos().y > -160)
+				{
 					hero.undoMovement();
 					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -586,9 +597,19 @@ int main()
 					hero.setWorldPos(-449.f, -198.f);
 				}
 			}
-			if(hero.getWorldPos().x > -400 && hero.getWorldPos().x < -340 && hero.getWorldPos().y < -205){
-				conversation("What? A flashlight! Just at the right time!", hero.getScreenPos().x,hero.getScreenPos().y);
-				if(IsKeyPressed(KEY_E)){
+			if (hero.getWorldPos().x > -125 && hero.getWorldPos().y > 15)
+			{
+				conversation("What is it? A purse? It's a key", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					hasKey = true;
+				}
+			}
+			if (hero.getWorldPos().x > -400 && hero.getWorldPos().x < -340 && hero.getWorldPos().y < -205)
+			{
+				conversation("What? A flashlight! Just at the right time!", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
 					hasFlashlight = true;
 				}
 			}
@@ -764,7 +785,7 @@ int main()
 				{
 					isInCave = false;
 					isEndGame = true;
-					yellow.addDialog(yellowDialog);
+					yellow.addDialog(yellowDialogBeforeFight);
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
@@ -811,7 +832,7 @@ int main()
 				npcs[3]->talk();
 				npcs[3]->setInteractionCount();
 			}
-			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && yellowDialog.size() <= npcs[3]->getInteractionCount())
+			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && yellowDialogBeforeFight.size() <= npcs[3]->getInteractionCount())
 			{
 				npcs[3]->setAttack();
 			}
@@ -826,13 +847,15 @@ int main()
 			Vector2 talismanScreenPos = {20.f, (float)GetScreenHeight() - tex.height * scale - 20.f};
 			DrawTextureEx(tex, talismanScreenPos, 0.f, scale, WHITE);
 		}
-		if(hasFlashlight){
+		if (hasFlashlight)
+		{
 			Texture2D tex = props[13].GetTexture();
 			float scale = props[13].GetScale();
 			Vector2 flashlightScreenPos = {50.f, (float)GetScreenHeight() - tex.height * scale - 5.f};
 			DrawTextureEx(tex, flashlightScreenPos, 0.f, scale, WHITE);
 		}
-		if(hasKey){
+		if (hasKey)
+		{
 			Texture2D tex = props[14].GetTexture();
 			float scale = props[14].GetScale();
 			Vector2 keyScreenPos = {100.f, (float)GetScreenHeight() - tex.height * scale + 5.f};
