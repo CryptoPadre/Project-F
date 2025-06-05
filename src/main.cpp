@@ -109,7 +109,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[14]{
+	Prop props[15]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -124,6 +124,7 @@ int main()
 		Prop{Vector2{1800.f, 1020.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25f, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4f, false, 0, 0, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
@@ -177,6 +178,7 @@ int main()
 	bool wasInCaveWithoutFlashlight{};
 	bool isDayTime = true;
 	bool hasTalisman{};
+	bool hasKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
@@ -829,6 +831,12 @@ int main()
 			float scale = props[13].GetScale();
 			Vector2 flashlightScreenPos = {50.f, (float)GetScreenHeight() - tex.height * scale - 5.f};
 			DrawTextureEx(tex, flashlightScreenPos, 0.f, scale, WHITE);
+		}
+		if(hasKey){
+			Texture2D tex = props[14].GetTexture();
+			float scale = props[14].GetScale();
+			Vector2 keyScreenPos = {100.f, (float)GetScreenHeight() - tex.height * scale + 5.f};
+			DrawTextureEx(tex, keyScreenPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
