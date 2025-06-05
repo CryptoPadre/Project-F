@@ -152,3 +152,5 @@ inline std::vector<std::string> heroTextStartMap = {
     "The gas was leaking ?",
     "This town just few minutes away.",
     "If I'm hurry I will get back before sunset"};
+
+    

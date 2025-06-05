@@ -109,7 +109,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[13]{
+	Prop props[14]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -123,6 +123,7 @@ int main()
 		Prop{Vector2{2500.f, 600.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
 		Prop{Vector2{1800.f, 1020.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25f, false, 0, 0, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
@@ -173,13 +174,13 @@ int main()
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
-	bool isMonsterOut{};
 	bool wasInCaveWithoutFlashlight{};
 	bool isDayTime = true;
 	bool hasTalisman{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
+	bool byTheTree{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -583,6 +584,12 @@ int main()
 					hero.setWorldPos(-449.f, -198.f);
 				}
 			}
+			if(hero.getWorldPos().x > -400 && hero.getWorldPos().x < -340 && hero.getWorldPos().y < -205){
+				conversation("What? A flashlight! Just at the right time!", hero.getScreenPos().x,hero.getScreenPos().y);
+				if(IsKeyPressed(KEY_E)){
+					hasFlashlight = true;
+				}
+			}
 			hero.tick(GetFrameTime());
 		}
 		// Map if hero tries to leave the town
@@ -664,6 +671,7 @@ int main()
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			npcs[1]->tick(GetFrameTime());
+			hero.tick(GetFrameTime());
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[1]->talk();
@@ -674,7 +682,6 @@ int main()
 				hero.undoMovement();
 				npcs[1]->undoMovement();
 			}
-			hero.tick(GetFrameTime());
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
@@ -744,6 +751,8 @@ int main()
 					isOutsideCave = true;
 					hero.setWorldPos(650.f, 435.f);
 					npcs[1]->setWorldPos(1200.f, 2100.f);
+					npcs[1]->addDialog(saraDialoguesDayTwo);
+					byTheTree = true;
 				}
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
@@ -814,6 +823,12 @@ int main()
 			float scale = props[12].GetScale();
 			Vector2 talismanScreenPos = {20.f, (float)GetScreenHeight() - tex.height * scale - 20.f};
 			DrawTextureEx(tex, talismanScreenPos, 0.f, scale, WHITE);
+		}
+		if(hasFlashlight){
+			Texture2D tex = props[13].GetTexture();
+			float scale = props[13].GetScale();
+			Vector2 flashlightScreenPos = {50.f, (float)GetScreenHeight() - tex.height * scale - 5.f};
+			DrawTextureEx(tex, flashlightScreenPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
