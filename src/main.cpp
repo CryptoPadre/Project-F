@@ -125,8 +125,8 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 	};
 	// render enemy
-	Enemy she{Vector2{0.f, 1080.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
-	Enemy he{Vector2{3100.f, 1080.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
+	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
+	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
 	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), false};
 	Enemy caveMonster{Vector2{1890.f, 430.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster1{Vector2{1250.f, 1120.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
@@ -178,6 +178,8 @@ int main()
 	bool isDayTime = true;
 	bool hasTalisman{};
 	bool talkedToKid{};
+	bool boydDialogDayTwo{};
+	bool boydDialogDayThree{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -234,6 +236,16 @@ int main()
 		if (hasStarted)
 		{
 			isDayTime = fmod(GetTime(), 40.0) < 20.0;
+		}
+		if (daysSurvived == 2 && !boydDialogDayTwo)
+		{
+			npcs[0]->addDialog(boydDialoguesDayTwo);
+			boydDialogDayTwo = true;
+		}
+		if (daysSurvived > 2 && !boydDialogDayThree)
+		{
+			npcs[0]->addDialog(boydDialoguesDayThree);
+			boydDialogDayThree = true;
 		}
 		// Beginning of the game
 		if (isGameStart)
@@ -464,6 +476,20 @@ int main()
 					hero.undoMovement();
 				}
 				props[9].Render(hero.getWorldPos());
+				if(CheckCollisionRecs(props[9].GetCollisionRec(hero.getWorldPos()),hero.GetCollisionRec())){
+					hero.undoMovement();
+				}
+				if(hero.getWorldPos().x > 4 && hero.getWorldPos().x < 76 && hero.getWorldPos().y > -150 && hero.getWorldPos().y < -140){
+					hero.undoMovement();
+					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						currentInterior = NONE;
+						isInside = false;
+						isInCave = true;
+						hero.setWorldPos(70.f, 2040.f);
+					}
+				}
 				if (hero.getWorldPos().x < -420 && hero.getWorldPos().y < -185)
 				{
 					DrawText("Press E to go upstairs.", 250, 250, 20, BLACK);
@@ -516,7 +542,6 @@ int main()
 				if (hero.getWorldPos().x < -390 || hero.getWorldPos().x > 102 ||
 					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200)
 				{
-
 					hero.undoMovement();
 				}
 				if (hero.getWorldPos().x >= -28 && hero.getWorldPos().x <= 28 &&

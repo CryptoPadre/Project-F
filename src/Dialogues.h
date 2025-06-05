@@ -4,7 +4,6 @@
 
 // Dialogs for Boyd
 inline std::vector<std::string> boydDialoguesDayOne = {
-    "......",
     "Some thought he scared them off...",
     "Others thought he was one of them.",
     "I didn't know what was scarier...",
