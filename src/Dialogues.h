@@ -85,22 +85,6 @@ inline std::vector<std::string> kidDialogues = {
 };
 
 inline std::vector<std::string> saraDialoguesDayOne = {
-    "Isn't it sad?",
-    "Those bottles, and the...",
-    "And the many sad endings!",
-    "Have you met Boyd?",
-    "He buried his son.",
-    "He hasn't moved since.",
-    "He has been waiting for them since that day...",
-    "But they are not coming, they will not.",
-    "They are afraid of him.",
-    "He said we are safe.",
-    "I thought I was safe... but then I remembered.",
-    "I feel their pain, I hear them screaming...",
-    "He tries to get out.",
-    "We must stop him."};
-
-inline std::vector<std::string> saraDialoguesDayTwo = {
     "He let us live, because he can't kill us!",
     "He let us live, because he can't live without us!",
     "He let us live, because he was one of us!",
@@ -110,6 +94,20 @@ inline std::vector<std::string> saraDialoguesDayTwo = {
     "They were waiting for you...",
     "He was waiting for you",
     "He will be by the tree"};
+
+inline std::vector<std::string> saraDialoguesDayTwo = {
+    "Isn't it sad?",
+    "Those bottles, and the...",
+    "And the many sad endings!",
+    "Have you met Boyd?",
+    "He buried his son.",
+    "He hasn't moved since.",
+    "He has been waiting for them since that day...",
+    "But they are not taking him, they will not.",
+    "I thought I was safe... but then I remembered.",
+    "I feel their pain, I hear them screaming...",
+    "He tries to get out.",
+    "We must stop him."};
 
 inline std::vector<std::string> saraDialoguesDayAfterFight = {
     "You ?",
@@ -128,6 +126,17 @@ inline std::vector<std::string> yellowDialogStartMap = {
     "You don't remember me, do you?",
     "Of course not! No one ever does."};
 
+inline std::vector<std::string> yellowDialogByTree = {
+    "Beautiful, isn't it?",
+    "All these bottles, each with its own story.",
+    "Don't be afraid.",
+    "I'm not gonna hurt you!",
+    "That hasn't happened yet.",
+    "That's not happening now.",
+    "Find me where it all started.",
+    "Then we finish this once and for all!"
+};
+ 
 inline std::vector<std::string> yellowDialogBeforeFight = {
     "So we meet again!",
     "You don't remember me, do you?",

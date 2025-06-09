@@ -39,9 +39,9 @@ int main()
 	hero.setWorldPos(400.f, 100.f);
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
-	NPC sara{Vector2{1000.f, 700.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
+	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
-	NPC yellow{Vector2{750.f, 950.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
+	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
 	NPC *npcs[4]{
 		&boyd,
 		&sara,
@@ -55,6 +55,7 @@ int main()
 	boyd.addDialog(boydDialoguesDayOne);
 	kid.addDialog(kidDialogues);
 	sara.addDialog(saraDialoguesDayOne);
+	yellow.addDialog(yellowDialogByTree);
 	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{0.f, 0.f};
@@ -213,6 +214,7 @@ int main()
 	double lastDayTriggerTime = 0.0;
 
 	int heroStartMapCounter = 0;
+	int endGameConvo = 0;
 
 	// set target fps
 	SetTargetFPS(60);
@@ -437,6 +439,8 @@ int main()
 					{
 
 						currentInterior = HOUSE_ONE;
+						isInside = true;
+						isInTown = false;
 						hero.setWorldPos(-387.f, 320.f);
 					}
 					if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
@@ -445,21 +449,25 @@ int main()
 						if (hasKey)
 						{
 							currentInterior = HOUSE_TWO;
+							isInside = true;
+							isInTown = false;
 							hero.setWorldPos(-70.f, 320.f);
 						}
 						else
 						{
-							conversation("It's closed!", hero.getScreenPos().x, hero.getScreenPos().y);
+							conversation("Arrrrggghhh!", hero.getScreenPos().x, hero.getScreenPos().y - 50);
+							isInside = false;
+							isInTown = true;
 						}
 					}
 					if (hero.getWorldPos().x >= temple_entry_width_min &&
 						hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
 					{
 						currentInterior = TEMPLE;
+						isInside = true;
+						isInTown = false;
 						hero.setWorldPos(0.f, 270.f);
 					}
-					isInside = true;
-					isInTown = false;
 				}
 			}
 			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
@@ -637,6 +645,17 @@ int main()
 				hero.undoMovement();
 				npcs[2]->undoMovement();
 			}
+			npcs[1]->tick(GetFrameTime());
+			if (IsKeyPressed(KEY_E))
+			{
+				npcs[1]->talk();
+				npcs[1]->setInteractionCount();
+			}
+			if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+				npcs[1]->undoMovement();
+			}
 			props[4].Render(hero.getWorldPos());
 			if (IsKeyPressed(KEY_E))
 			{
@@ -693,18 +712,32 @@ int main()
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
-			npcs[1]->tick(GetFrameTime());
-			hero.tick(GetFrameTime());
+			if (byTheTree)
+			{
+				npcs[1]->tick(GetFrameTime());
+				if (IsKeyPressed(KEY_E))
+				{
+					npcs[1]->talk();
+					npcs[1]->setInteractionCount();
+				}
+				if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+					npcs[1]->undoMovement();
+				}
+			}
+			npcs[3]->tick(GetFrameTime());
 			if (IsKeyPressed(KEY_E))
 			{
-				npcs[1]->talk();
-				npcs[1]->setInteractionCount();
+				npcs[3]->talk();
+				npcs[3]->setInteractionCount();
 			}
-			if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
+			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
-				npcs[1]->undoMovement();
+				npcs[3]->undoMovement();
 			}
+			hero.tick(GetFrameTime());
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
@@ -773,9 +806,10 @@ int main()
 					isInCave = false;
 					isOutsideCave = true;
 					hero.setWorldPos(650.f, 435.f);
+					byTheTree = true;
 					npcs[1]->setWorldPos(1200.f, 2100.f);
 					npcs[1]->addDialog(saraDialoguesDayTwo);
-					byTheTree = true;
+					npcs[3]->setWorldPos(5000.f, 5000.f);
 				}
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
@@ -785,6 +819,7 @@ int main()
 				{
 					isInCave = false;
 					isEndGame = true;
+					npcs[3]->setWorldPos(750.f, 900.f);
 					yellow.addDialog(yellowDialogBeforeFight);
 					hero.setWorldPos(282.f, 12.f);
 				}
@@ -831,8 +866,9 @@ int main()
 			{
 				npcs[3]->talk();
 				npcs[3]->setInteractionCount();
+				endGameConvo++;
 			}
-			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && yellowDialogBeforeFight.size() <= npcs[3]->getInteractionCount())
+			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && endGameConvo <= yellowDialogBeforeFight.size()-1)
 			{
 				npcs[3]->setAttack();
 			}
