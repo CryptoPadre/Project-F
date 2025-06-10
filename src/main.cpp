@@ -110,7 +110,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[15]{
+	Prop props[16]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -126,6 +126,7 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4f, false, 0, 0, 0, 0},
+		Prop{Vector2{600.f, 2340.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 	};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
@@ -138,12 +139,12 @@ int main()
 	Enemy caveMonster4{Vector2{2030.f, 2250.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster5{Vector2{2220.f, 2290.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster6{Vector2{2100.f, 2130.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster7{Vector2{500.f, 1390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster8{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster9{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster10{Vector2{650.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster11{Vector2{1550.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster12{Vector2{1750.f, 600.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster7{Vector2{1000.f, 1390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster8{Vector2{1250.f, 800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster9{Vector2{1350.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster10{Vector2{1050.f, 950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster11{Vector2{1550.f, 1100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster12{Vector2{1750.f, 1000.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -185,6 +186,7 @@ int main()
 	bool boydDialogDayThree{};
 	bool byTheTree{};
 	bool isYellowDead{};
+	bool metYellow{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -243,12 +245,12 @@ int main()
 		{
 			isDayTime = fmod(GetTime(), 40.0) < 20.0;
 		}
-		if (daysSurvived == 2 && !boydDialogDayTwo)
+		if (daysSurvived > 3 && !boydDialogDayTwo)
 		{
 			npcs[0]->addDialog(boydDialoguesDayTwo);
 			boydDialogDayTwo = true;
 		}
-		if (daysSurvived > 2 && !boydDialogDayThree)
+		if (daysSurvived > 5 && !boydDialogDayThree)
 		{
 			npcs[0]->addDialog(boydDialoguesDayThree);
 			boydDialogDayThree = true;
@@ -315,6 +317,14 @@ int main()
 				{
 					npcs[3]->talk();
 					npcs[3]->setInteractionCount();
+				}
+				if (hero.getWorldPos().y < 450.f && hero.getWorldPos().y > 520.f)
+				{
+					conversation("I'd turn back!!!", npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
+				}
+				if (hero.getWorldPos().y < 400.f)
+				{
+					npcs[3]->setAttack();
 				}
 			}
 			hero.tick(GetFrameTime());
@@ -496,11 +506,7 @@ int main()
 					hero.undoMovement();
 				}
 				props[9].Render(hero.getWorldPos());
-				if (CheckCollisionRecs(props[9].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-				}
-				if (hero.getWorldPos().x > 90 && hero.getWorldPos().x < -8 && hero.getWorldPos().y > -160)
+				if (hero.getWorldPos().x < 100 && hero.getWorldPos().x > -8 && hero.getWorldPos().y > -160 && hero.getWorldPos().y < 10)
 				{
 					hero.undoMovement();
 					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -639,11 +645,25 @@ int main()
 			{
 				hero.undoMovement();
 			}
-			npcs[2]->tick(GetFrameTime());
-			if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
+			if (metYellow)
 			{
-				hero.undoMovement();
-				npcs[2]->undoMovement();
+				npcs[2]->tick(GetFrameTime());
+				if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+					npcs[2]->undoMovement();
+				}
+				if (IsKeyPressed(KEY_E))
+				{
+					npcs[2]->talk();
+					npcs[2]->setInteractionCount();
+					if (npcs[2]->getInteractionCount() == 1)
+					{
+						talkedToKid = true;
+						npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
+						npcs[3]->addDialog(yellowDialogStartMap);
+					}
+				}
 			}
 			npcs[1]->tick(GetFrameTime());
 			if (IsKeyPressed(KEY_E))
@@ -657,17 +677,6 @@ int main()
 				npcs[1]->undoMovement();
 			}
 			props[4].Render(hero.getWorldPos());
-			if (IsKeyPressed(KEY_E))
-			{
-				npcs[2]->talk();
-				npcs[2]->setInteractionCount();
-				if (npcs[2]->getInteractionCount() == 1)
-				{
-					talkedToKid = true;
-					npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
-					npcs[3]->addDialog(yellowDialogStartMap);
-				}
-			}
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
 			{
@@ -726,18 +735,26 @@ int main()
 					npcs[1]->undoMovement();
 				}
 			}
-			npcs[3]->tick(GetFrameTime());
-			if (IsKeyPressed(KEY_E))
+			hero.tick(GetFrameTime());
+			if (!talkedToKid)
 			{
-				npcs[3]->talk();
-				npcs[3]->setInteractionCount();
+				npcs[3]->tick(GetFrameTime());
+				npcs[3]->setCurrentRow(3);
+				if (IsKeyPressed(KEY_E))
+				{
+					npcs[3]->talk();
+					npcs[3]->setInteractionCount();
+					if (npcs[3]->getInteractionCount() == 1)
+					{
+						metYellow = true;
+					}
+				}
 			}
 			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
 				hero.undoMovement();
 				npcs[3]->undoMovement();
 			}
-			hero.tick(GetFrameTime());
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
@@ -780,18 +797,29 @@ int main()
 			if (hasFlashlight)
 			{
 				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
+				if(hero.getWorldPos().x > 73 && hero.getWorldPos().x < 217 && hero.getWorldPos().y < 2102 && hero.getWorldPos().y > 1970){
+					hero.undoMovement();
+					conversation("A hole. Might be an exit?", hero.getScreenPos().x, hero.getScreenPos().y);
+					if(IsKeyPressed(KEY_E)){
+						isInCave = false;
+						isInside = true;
+						currentInterior = HOUSE_ONE;
+						hero.setWorldPos(100.f,-160.f);
+					}
+				}
 			}
 			else
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 				wasInCaveWithoutFlashlight = true;
 			}
+			props[15].Render(hero.getWorldPos());
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
 				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065)
 			{
 				hero.undoMovement();
 			}
-			if (hero.getWorldPos().y < 25 && hero.getWorldPos().x > 1050 && hero.getWorldPos().x < 1100)
+			if (hero.getWorldPos().y < 25 && hero.getWorldPos().x > 1025 && hero.getWorldPos().x < 1100)
 			{
 				if (hasFlashlight)
 				{
@@ -809,7 +837,6 @@ int main()
 					byTheTree = true;
 					npcs[1]->setWorldPos(1200.f, 2100.f);
 					npcs[1]->addDialog(saraDialoguesDayTwo);
-					npcs[3]->setWorldPos(5000.f, 5000.f);
 				}
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
@@ -868,7 +895,7 @@ int main()
 				npcs[3]->setInteractionCount();
 				endGameConvo++;
 			}
-			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && endGameConvo <= yellowDialogBeforeFight.size()-1)
+			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && endGameConvo <= 15)
 			{
 				npcs[3]->setAttack();
 			}

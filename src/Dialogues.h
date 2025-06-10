@@ -10,7 +10,7 @@ inline std::vector<std::string> boydDialoguesDayOne = {
     "Him, walking around in daylight like one of them,",
     "or the fact that the monsters seemed scared of him.",
     "I couldn't have imagined how bad it would get.",
-    "He killed them all. Everyone — except me and Sara.",
+    "He killed them all. Everyone...except me and Sara.",
     "He stood there, smiling, covered in blood.",
     "Listen to me carefully now...",
     "It'll get dark soon!",
