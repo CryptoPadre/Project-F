@@ -81,8 +81,7 @@ inline std::vector<std::string> boydDialoguesAfterFigth = {
 inline std::vector<std::string> kidDialogues = {
     "Sha'val nethi ur'kaan do'marra.",
     "Thal'ven tri'ek uth, na val'dor uth'kaan.",
-    "Anghkooey"
-};
+    "Anghkooey"};
 
 inline std::vector<std::string> saraDialoguesDayOne = {
     "He let us live, because he can't kill us!",
@@ -134,9 +133,8 @@ inline std::vector<std::string> yellowDialogByTree = {
     "That hasn't happened yet.",
     "That's not happening now.",
     "Find me where it all started.",
-    "Then we finish this once and for all!"
-};
- 
+    "Then we finish this once and for all!"};
+
 inline std::vector<std::string> yellowDialogBeforeFight = {
     "So we meet again!",
     "You don't remember me, do you?",
@@ -160,3 +158,13 @@ inline std::vector<std::string> heroTextStartMap = {
     "The gas was leaking ?",
     "This town just few minutes away.",
     "If I'm hurry I will get back before sunset"};
+
+inline std::vector<std::string> heroInCave = {
+    "A hole. Might be an exit?",
+    "I can't go back this way!!!",
+    "There must be another way out!!!"};
+
+    inline std::vector<std::string> heroInteractionWithDoors = {
+        "I should check what's inside!!!", 
+        "Arrrrgh"
+    };

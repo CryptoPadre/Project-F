@@ -187,6 +187,7 @@ int main()
 	bool byTheTree{};
 	bool isYellowDead{};
 	bool metYellow{};
+	bool talkedBeforeFight{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -215,8 +216,14 @@ int main()
 	int daysSurvived = 0;
 	double lastDayTriggerTime = 0.0;
 
+	// counting the conversation of the hero on the start map
 	int heroStartMapCounter = 0;
+	// counting the end game converstaion with yellow man prefigth
 	int endGameConvo = 0;
+	// counting the conversation of the hero if interacts with props
+	int inCaveCounter = 0;
+	// interaction with doors
+	int interactionWithDoors = 0;
 
 	// set target fps
 	SetTargetFPS(60);
@@ -311,18 +318,16 @@ int main()
 			if (talkedToKid)
 			{
 				npcs[3]->tick(GetFrameTime());
-				npcs[3]->setWorldPos(850.f, 750.f);
-				npcs[3]->setCurrentRow(2);
 				if (IsKeyPressed(KEY_E))
 				{
 					npcs[3]->talk();
 					npcs[3]->setInteractionCount();
 				}
-				if (hero.getWorldPos().y < 450.f && hero.getWorldPos().y > 520.f)
+				if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f)
 				{
 					conversation("I'd turn back!!!", npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 				}
-				if (hero.getWorldPos().y < 400.f)
+				if (hero.getWorldPos().y < 370.f)
 				{
 					npcs[3]->setAttack();
 				}
@@ -441,7 +446,7 @@ int main()
 				hero.getWorldPos().x >= temple_entry_width_min &&
 					hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
 			{
-				conversation("I should check what's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
 					if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
@@ -465,9 +470,9 @@ int main()
 						}
 						else
 						{
-							conversation("Arrrrggghhh!", hero.getScreenPos().x, hero.getScreenPos().y - 50);
 							isInside = false;
 							isInTown = true;
+							interactionWithDoors = 1;
 						}
 					}
 					if (hero.getWorldPos().x >= temple_entry_width_min &&
@@ -515,6 +520,7 @@ int main()
 						currentInterior = NONE;
 						isInside = false;
 						isInCave = true;
+						inCaveCounter++;
 						hero.setWorldPos(70.f, 2040.f);
 					}
 				}
@@ -662,6 +668,8 @@ int main()
 						talkedToKid = true;
 						npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
 						npcs[3]->addDialog(yellowDialogStartMap);
+						npcs[3]->setWorldPos(850.f, 750.f);
+						npcs[3]->setCurrentRow(2);
 					}
 				}
 			}
@@ -797,21 +805,24 @@ int main()
 			if (hasFlashlight)
 			{
 				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
-				if(hero.getWorldPos().x > 73 && hero.getWorldPos().x < 217 && hero.getWorldPos().y < 2102 && hero.getWorldPos().y > 1970){
-					hero.undoMovement();
-					conversation("A hole. Might be an exit?", hero.getScreenPos().x, hero.getScreenPos().y);
-					if(IsKeyPressed(KEY_E)){
-						isInCave = false;
-						isInside = true;
-						currentInterior = HOUSE_ONE;
-						hero.setWorldPos(100.f,-160.f);
-					}
-				}
 			}
 			else
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 				wasInCaveWithoutFlashlight = true;
+			}
+			if (hero.getWorldPos().x > 55 && hero.getWorldPos().x < 240 && hero.getWorldPos().y < 2150 && hero.getWorldPos().y > 1920 && inCaveCounter < heroInCave.size())
+			{
+				conversation(heroInCave[inCaveCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E) && inCaveCounter < heroInCave.size())
+				{
+					inCaveCounter++;
+				}
+			}
+			if (hero.getWorldPos().x > 73 && hero.getWorldPos().x < 217 && hero.getWorldPos().y < 2102 && hero.getWorldPos().y > 1970)
+			{
+
+				hero.undoMovement();
 			}
 			props[15].Render(hero.getWorldPos());
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
@@ -846,7 +857,7 @@ int main()
 				{
 					isInCave = false;
 					isEndGame = true;
-					npcs[3]->setWorldPos(750.f, 900.f);
+					npcs[3]->setWorldPos(750.f, 1000.f);
 					yellow.addDialog(yellowDialogBeforeFight);
 					hero.setWorldPos(282.f, 12.f);
 				}
@@ -895,9 +906,16 @@ int main()
 				npcs[3]->setInteractionCount();
 				endGameConvo++;
 			}
-			if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f && endGameConvo <= 15)
+			if (endGameConvo == yellowDialogBeforeFight.size() - 1)
 			{
-				npcs[3]->setAttack();
+				talkedBeforeFight = true;
+			}
+			if (talkedBeforeFight)
+			{
+				if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f)
+				{
+					npcs[3]->setAttack();
+				}
 			}
 		}
 

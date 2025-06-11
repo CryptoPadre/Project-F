@@ -124,25 +124,18 @@ void NPC::tick(float deltaTime)
     {
         texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
-        if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 250.f)
+        if (isTalking && interactionCount - 1 < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 250.f)
         {
-            conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
+            conversation(NPCDialog[interactionCount - 1], getScreenPos().x, getScreenPos().y);
         }
-        if (velocity.x > velocity.y)
+        // Determine animation row based on direction
+        if (fabs(velocity.x) > fabs(velocity.y))
         {
-            // Horizontal movement dominates
-            if (velocity.x > 0)
-                currentRow = 3; // Right
-            else
-                currentRow = 1; // Left
+            currentRow = (velocity.x > 0) ? 3 : 1; // Right or Left
         }
         else
         {
-            // Vertical movement dominates
-            if (velocity.y > 0)
-                currentRow = 2; // Down
-            else
-                currentRow = 0; // Up
+            currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
         }
     }
     // move the NPC
