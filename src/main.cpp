@@ -188,6 +188,7 @@ int main()
 	bool isYellowDead{};
 	bool metYellow{};
 	bool talkedBeforeFight{};
+	bool metYellowAtCar{};
 	bool putTalismanInTheHouseOne{};
 	bool putTalismanInTheHouseTwo{};
 	bool putTalismanInTheTemple{};
@@ -329,10 +330,16 @@ int main()
 				if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f)
 				{
 					conversation("I'd turn back!!!", npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
+					metYellowAtCar = true;
+					enemies[1]->setWorldPos(600.f, 1700.f);
 				}
 				if (hero.getWorldPos().y < 370.f)
 				{
 					npcs[3]->setAttack();
+				}
+				if (!isDayTime && metYellowAtCar)
+				{
+					enemies[1]->tick(GetFrameTime());
 				}
 			}
 			hero.tick(GetFrameTime());
@@ -395,6 +402,10 @@ int main()
 				for (int i = 0; i < 3; i++)
 				{
 					enemies[i]->tick(GetFrameTime());
+					if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 150.f)
+					{
+						conversation("Don't run sweetey!", enemies[i]->getScreenPos().x, enemies[i]->getScreenPos().y);
+					}
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
 						hero.setAlive(true);
@@ -408,6 +419,7 @@ int main()
 			}
 			hero.tick(GetFrameTime());
 			npcs[0]->tick(GetFrameTime());
+			npcs[0]->isDay = isDayTime;
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[0]->talk();
@@ -441,15 +453,32 @@ int main()
 					}
 				}
 			}
-
+			if(hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
+			hero.getWorldPos().y <= house_two_entry_height ){
+				conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E)){
+					if (hasKey)
+					{
+						currentInterior = HOUSE_TWO;
+						isInside = true;
+						isInTown = false;
+						hero.setWorldPos(-70.f, 320.f);
+						interactionWithDoors = 0;
+					}
+					else
+					{
+						isInside = false;
+						isInTown = true;
+						interactionWithDoors = 1;
+					}
+				}
+			}
 			if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
 					hero.getWorldPos().y <= house_one_entry_height ||
-				hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
-					hero.getWorldPos().y <= house_two_entry_height ||
 				hero.getWorldPos().x >= temple_entry_width_min &&
 					hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
 			{
-				conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation("Let's see what's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
 					if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
@@ -461,24 +490,6 @@ int main()
 						isInTown = false;
 						hero.setWorldPos(-387.f, 320.f);
 						interactionWithDoors = 0;
-					}
-					if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
-						hero.getWorldPos().y <= house_two_entry_height)
-					{
-						if (hasKey)
-						{
-							currentInterior = HOUSE_TWO;
-							isInside = true;
-							isInTown = false;
-							hero.setWorldPos(-70.f, 320.f);
-							interactionWithDoors = 2;
-						}
-						else
-						{
-							isInside = false;
-							isInTown = true;
-							interactionWithDoors = 1;
-						}
 					}
 					if (hero.getWorldPos().x >= temple_entry_width_min &&
 						hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
@@ -494,7 +505,7 @@ int main()
 			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
 				hero.getWorldPos().y <= closed_house_height)
 			{
-				conversation("Is anybody in there?", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation("Is anybody inside?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 		}
 		// Maps if the hero enters into a building

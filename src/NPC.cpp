@@ -50,6 +50,19 @@ void NPC::tick(float deltaTime)
 {
     if (isHuman && !canAttack)
     {
+        /*
+        if(!isDay){
+            velocity = Vector2Add(hero->getScreenPos(), getScreenPos());
+            if (fabs(velocity.x) > fabs(velocity.y))
+            {
+                currentRow = (velocity.x > 0) ? 3 : 1; // Right or Left
+            }
+            else
+            {
+                currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
+            }
+                
+        } */
         if (hero->getWorldPos().x > getScreenPos().x)
         {
             currentRow = 3;

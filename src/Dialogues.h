@@ -14,15 +14,15 @@ inline std::vector<std::string> boydDialoguesDayOne = {
     "He stood there, smiling, covered in blood.",
     "Listen to me carefully now...",
     "It'll get dark soon!",
-    "Take this talisman!",
+    "Take this talisman and hang it on the door!",
     "And stay inside a house at night...",
+    "But stay away from the house next to the temple!",
     "They are coming!"};
 
 inline std::vector<std::string> boydDialoguesDayTwo = {
     "I'm glad you're alive.",
-    "Have you met Sara?",
+    "Find Sara?",
     "She still thinks there's a way out.",
-    "You may speak to her.",
     "But let me tell you something...",
     "Only one woman ever got out, and...",
     "She died here."};
@@ -38,19 +38,18 @@ inline std::vector<std::string> boydDialoguesDayThree{
     "I killed...",
     "Did I kill my son?",
     "Oh... I remember...",
-    "Born in dark, bearing the curse...",
+    "Born in darkness, bearing the curse...",
     "Die, forget, be reborn, and return...",
     "I am the curse, I sacrificed them...",
     "They are not monsters, they've never been...",
-    "They were...They are my childs..."};
+    "They were... they are my children..."};
 
 inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
     "Have you seen a kid?",
-    "What did she tell you?",
     "You've been here before...",
-    "You died, you returned...",
+    "You died. You returned...",
     "You will die again...",
-    "You need to find the man in yellow.",
+    "You need to find the Man in Yellow.",
     "He will know you."};
 
 inline std::vector<std::string> boydDialoguesAfterFigth = {
@@ -73,7 +72,7 @@ inline std::vector<std::string> boydDialoguesAfterFigth = {
     "Why is this happening?",
     "Oh no, I remember...",
     "I sacrificed those kids...",
-    "And now they are punishing me.",
+    "And now they're punishing me.",
     "I'm going to finish this once and for all.",
     "Go. Take Sara and get to the tree.",
     "That's your only chance to leave!"};
@@ -87,21 +86,20 @@ inline std::vector<std::string> saraDialoguesDayOne = {
     "He let us live, because he can't kill us!",
     "He let us live, because he can't live without us!",
     "He let us live, because he was one of us!",
-    "He was... He was you before you died!",
+    "He was... he was you, before you died!",
     "He is you, but not now...",
     "The voices are back again!",
     "They were waiting for you...",
-    "He was waiting for you",
-    "He will be by the tree"};
+    "He was waiting for you.",
+    "He will be by the tree."};
 
 inline std::vector<std::string> saraDialoguesDayTwo = {
-    "Isn't it sad?",
-    "Those bottles, and the...",
-    "And the many sad endings!",
+    "Isn't it sad? The bottles... and the endings.",
+    "The many, many sad endings...",
     "Have you met Boyd?",
     "He buried his son.",
     "He hasn't moved since.",
-    "He has been waiting for them since that day...",
+    "He's been waiting for them since that day...",
     "But they are not taking him, they will not.",
     "I thought I was safe... but then I remembered.",
     "I feel their pain, I hear them screaming...",
@@ -109,38 +107,39 @@ inline std::vector<std::string> saraDialoguesDayTwo = {
     "We must stop him."};
 
 inline std::vector<std::string> saraDialoguesDayAfterFight = {
-    "You ?",
+    "You?",
     "Does it mean that...",
     "That it's over?",
     "What?",
-    "Oh, I remember...",
+    "Oh... I remember...",
     "They were my kids!",
     "Our kids!",
     "All we need is hope.",
-    "And for that, we have each other."};
+    "And for that... we have each other.",
+    "We leave together!"};
 
 inline std::vector<std::string> yellowDialogStartMap = {
     "Well, well, well...",
-    "Who do we have here?",
+    "What do we have here?",
     "You don't remember me, do you?",
-    "Of course not! No one ever does."};
+    "Of course not. No one ever does."};
 
 inline std::vector<std::string> yellowDialogByTree = {
     "Beautiful, isn't it?",
-    "All these bottles, each with its own story.",
+    "All these bottles... each with its own story.",
     "Don't be afraid.",
-    "I'm not gonna hurt you!",
+    "I'm not going to hurt you!",
     "That hasn't happened yet.",
-    "That's not happening now.",
+    "And it's not happening now.",
     "Find me where it all started.",
     "Then we finish this once and for all!"};
 
 inline std::vector<std::string> yellowDialogBeforeFight = {
     "So we meet again!",
     "You don't remember me, do you?",
-    "Born in dark, bearing the curse...",
+    "Born in darkness, bearing the curse...",
     "Die, forget, be reborn, and return...",
-    "One last good fight Charles!",
+    "One last good fight, Charles!",
     "Be forgotten forever... and escape with pride."};
 
 inline std::vector<std::string> yellowDialogAfterFight = {
@@ -148,24 +147,23 @@ inline std::vector<std::string> yellowDialogAfterFight = {
     "I should be divine...",
     "How could you defeat me?",
     "Unless... no, it can't be!",
-    "You are not me!!!",
+    "You are not me!",
     "Who are you?",
     "Answer me, son!",
     "Who are you?"};
 
 inline std::vector<std::string> heroTextStartMap = {
-    "What the hell ?",
-    "The gas was leaking ?",
-    "This town just few minutes away.",
-    "If I'm hurry I will get back before sunset"};
+    "What the hell?",
+    "Was the gas leaking?",
+    "This town is just a few minutes away.",
+    "If I hurry, I'll get back before sunset."};
 
 inline std::vector<std::string> heroInCave = {
-    "A hole. Might be an exit?",
-    "I can't go back this way!!!",
-    "There must be another way out!!!"};
+    "A hole... could it be an exit?",
+    "I can't go back that way!",
+    "There has to be another way out!"};
 
-    inline std::vector<std::string> heroInteractionWithDoors = {
-        "I should check what's inside!!!", 
-        "Arrrrgh",
-        "Let's see what is inside!"
-    };
+inline std::vector<std::string> heroInteractionWithDoors = {
+    "Let's see what's inside!",
+    "Arrrgh!",
+};
