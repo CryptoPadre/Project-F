@@ -188,6 +188,9 @@ int main()
 	bool isYellowDead{};
 	bool metYellow{};
 	bool talkedBeforeFight{};
+	bool putTalismanInTheHouseOne{};
+	bool putTalismanInTheHouseTwo{};
+	bool putTalismanInTheTemple{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -457,6 +460,7 @@ int main()
 						isInside = true;
 						isInTown = false;
 						hero.setWorldPos(-387.f, 320.f);
+						interactionWithDoors = 0;
 					}
 					if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
 						hero.getWorldPos().y <= house_two_entry_height)
@@ -467,6 +471,7 @@ int main()
 							isInside = true;
 							isInTown = false;
 							hero.setWorldPos(-70.f, 320.f);
+							interactionWithDoors = 2;
 						}
 						else
 						{
@@ -482,6 +487,7 @@ int main()
 						isInside = true;
 						isInTown = false;
 						hero.setWorldPos(0.f, 270.f);
+						interactionWithDoors = 0;
 					}
 				}
 			}
@@ -535,9 +541,25 @@ int main()
 						hero.setWorldPos(-350.f, -177.f);
 					}
 				}
-				if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
+				if (isDayTime && !putTalismanInTheHouseOne && hasTalisman)
 				{
-					DrawText("Press E to exit.", 250, 250, 20, BLACK);
+					if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
+					{
+						conversation("The guy said the talisman keep them away!", hero.getScreenPos().x, hero.getScreenPos().y);
+						if (IsKeyPressed(KEY_E))
+						{
+							putTalismanInTheHouseOne = true;
+							hasTalisman = false;
+						}
+					}
+				}
+				else if (!isDayTime && hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
+				{
+					conversation("It's still dark. Better to wait till sunries", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
+				{
+					conversation("Let's get the hell out of here!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;

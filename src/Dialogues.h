@@ -166,5 +166,6 @@ inline std::vector<std::string> heroInCave = {
 
     inline std::vector<std::string> heroInteractionWithDoors = {
         "I should check what's inside!!!", 
-        "Arrrrgh"
+        "Arrrrgh",
+        "Let's see what is inside!"
     };
