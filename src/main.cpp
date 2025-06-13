@@ -235,11 +235,13 @@ int main()
 
 	int outsideHouseCounter = 0;
 
+	int randomValue = GetRandomValue(1,3);
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
 	while (!WindowShouldClose()) // run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
+
 		// drawing
 		BeginDrawing();
 		// Setup the back buffer for drawing (clear color and depth buffers)
@@ -970,6 +972,7 @@ int main()
 
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
+		DrawText(TextFormat("Random value: %d", randomValue), 190, 200, 20, RED);
 		if (hasTalisman)
 		{
 			Texture2D tex = props[12].GetTexture();
