@@ -124,6 +124,10 @@ inline std::vector<std::string> yellowDialogStartMap = {
     "You don't remember me, do you?",
     "Of course not. No one ever does."};
 
+
+inline std::vector<std::string> yellowWarning = {
+   "I'd turn back!"};
+
 inline std::vector<std::string> yellowDialogByTree = {
     "Beautiful, isn't it?",
     "All these bottles... each with its own story.",

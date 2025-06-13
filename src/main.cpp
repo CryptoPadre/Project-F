@@ -229,6 +229,8 @@ int main()
 	// interaction with doors
 	int interactionWithDoors = 0;
 
+	int yellowWarningCounter = 0;
+
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -327,15 +329,16 @@ int main()
 					npcs[3]->talk();
 					npcs[3]->setInteractionCount();
 				}
-				if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f)
+				if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f && yellowWarningCounter <= yellowWarning.size())
 				{
-					conversation("I'd turn back!!!", npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
+					conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 					metYellowAtCar = true;
 					enemies[1]->setWorldPos(600.f, 1700.f);
 				}
 				if (hero.getWorldPos().y < 370.f)
 				{
 					npcs[3]->setAttack();
+					yellowWarningCounter++;
 				}
 				if (!isDayTime && metYellowAtCar)
 				{
