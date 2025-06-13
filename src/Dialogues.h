@@ -171,3 +171,19 @@ inline std::vector<std::string> heroInteractionWithDoors = {
     "Let's see what's inside!",
     "Arrrgh!",
 };
+
+inline std::vector<std::string> heroInteractionWithDoor2 = {
+    "It's locked from inside!",
+    "Is anybody inside?",
+    "I need to find another way in."
+};
+
+inline std::vector<std::string> interactionWithHouseOutsideTown ={
+    "It's my home!",
+    "I used to live here with my brother.",
+    "They tricked me...",
+    "They said I could leave with him.",
+    "But it didn't end well.",
+    "Tabitha escaped once.",
+    "You may escape too!"
+};

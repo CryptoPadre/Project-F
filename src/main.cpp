@@ -231,6 +231,10 @@ int main()
 
 	int yellowWarningCounter = 0;
 
+	int lockedHouseCounter = 0;
+
+	int outsideHouseCounter = 0;
+
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -506,9 +510,12 @@ int main()
 				}
 			}
 			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
-				hero.getWorldPos().y <= closed_house_height)
+				hero.getWorldPos().y <= closed_house_height && lockedHouseCounter <= heroInteractionWithDoor2.size() -1)
 			{
-				conversation("Is anybody inside?", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+				if(IsKeyPressed(KEY_E)){
+					lockedHouseCounter++;
+				}
 			}
 		}
 		// Maps if the hero enters into a building
@@ -751,6 +758,12 @@ int main()
 					isOutsideTown = false;
 					isGameStart = true;
 					hero.setWorldPos(400.f, 1330.f);
+				}
+			}
+			if(hero.getWorldPos().x > 840 && hero.getWorldPos().x < 920 && hero.getWorldPos().y < 270 && outsideHouseCounter <= interactionWithHouseOutsideTown.size()-1){
+				conversation(interactionWithHouseOutsideTown[outsideHouseCounter], npcs[1]->getScreenPos().x, npcs[1]->getScreenPos().y);
+				if(IsKeyPressed(KEY_E)){
+					outsideHouseCounter++;
 				}
 			}
 			hero.tick(GetFrameTime());
