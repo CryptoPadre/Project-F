@@ -187,3 +187,11 @@ inline std::vector<std::string> interactionWithHouseOutsideTown ={
     "Tabitha escaped once.",
     "You may escape too!"
 };
+
+inline std::vector<std::string> womanInTheHouse ={ 
+    "Arrrgh...",
+    "Please help me...",
+    "My meds... They're in the medkit!",
+    "It's under... my bed.",
+    "Please,hurry!"
+};

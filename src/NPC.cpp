@@ -48,34 +48,25 @@ void NPC::talk()
 
 void NPC::tick(float deltaTime)
 {
-    if (isHuman && !canAttack)
+    if (isHuman && isInHouse)
     {
-        /*
-        if(!isDay){
-            velocity = Vector2Add(hero->getScreenPos(), getScreenPos());
-            if (fabs(velocity.x) > fabs(velocity.y))
-            {
-                currentRow = (velocity.x > 0) ? 3 : 1; // Right or Left
-            }
-            else
-            {
-                currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
-            }
-                
-        } */
-        if (hero->getWorldPos().x > getScreenPos().x)
-        {
-            currentRow = 3;
-        }
-        else
-        {
-            currentRow = 1;
-        }
-        if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
-        {
-            conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
-        }
+
+        currentRow = 0;
+        currentFrame = 2;
     }
+    if (hero->getWorldPos().x > getScreenPos().x)
+    {
+        currentRow = 3;
+    }
+    else
+    {
+        currentRow = 1;
+    }
+    if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
+    {
+        conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
+    }
+
     if (canAttack)
     {
         if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
@@ -105,7 +96,7 @@ void NPC::tick(float deltaTime)
         }
     }
     /* if (!isHuman)
-   {
+    {
        if (!isDay)
        {
            texture = interact; // Set texture to dance
@@ -131,7 +122,7 @@ void NPC::tick(float deltaTime)
            currentFrame = danceFrame;
            currentRow = danceRows;
        }
-   } */
+    } */
 
     if (interactionCount > 0 && !isHuman)
     {

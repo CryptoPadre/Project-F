@@ -42,11 +42,13 @@ int main()
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
 	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
-	NPC *npcs[4]{
+	NPC woman{Vector2{150.f, 150.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
+	NPC *npcs[5]{
 		&boyd,
 		&sara,
 		&kid,
-		&yellow};
+		&yellow,
+	    &woman};
 	for (auto npc : npcs)
 	{
 		npc->setTarget(&hero);
@@ -56,6 +58,7 @@ int main()
 	kid.addDialog(kidDialogues);
 	sara.addDialog(saraDialoguesDayOne);
 	yellow.addDialog(yellowDialogByTree);
+	woman.addDialog(womanInTheHouse);
 	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{0.f, 0.f};
@@ -110,7 +113,7 @@ int main()
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
 	// Render props
-	Prop props[16]{
+	Prop props[17]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -127,6 +130,7 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 2340.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0}
 	};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
@@ -177,14 +181,14 @@ int main()
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
-	bool wasInCaveWithoutFlashlight{};
 	bool isDayTime = true;
 	bool hasTalisman{};
+	bool hasMedkit{};
 	bool hasKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
-	bool byTheTree{};
+	bool wasInCave{};
 	bool isYellowDead{};
 	bool metYellow{};
 	bool talkedBeforeFight{};
@@ -235,7 +239,7 @@ int main()
 
 	int outsideHouseCounter = 0;
 
-	int randomValue = GetRandomValue(1,3);
+	int randomValue = GetRandomValue(1, 3);
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -322,7 +326,7 @@ int main()
 					}
 				}
 			}
-			if (wasInCaveWithoutFlashlight)
+			if (wasInCave)
 			{
 				npcs[3]->setWorldPos(750.f, 800.f);
 				npcs[3]->tick(GetFrameTime());
@@ -462,10 +466,12 @@ int main()
 					}
 				}
 			}
-			if(hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
-			hero.getWorldPos().y <= house_two_entry_height ){
+			if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
+				hero.getWorldPos().y <= house_two_entry_height)
+			{
 				conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E)){
+				if (IsKeyPressed(KEY_E))
+				{
 					if (hasKey)
 					{
 						currentInterior = HOUSE_TWO;
@@ -473,6 +479,7 @@ int main()
 						isInTown = false;
 						hero.setWorldPos(-70.f, 320.f);
 						interactionWithDoors = 0;
+						npcs[4]->isInHouse = isInside;
 					}
 					else
 					{
@@ -512,10 +519,11 @@ int main()
 				}
 			}
 			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
-				hero.getWorldPos().y <= closed_house_height && lockedHouseCounter <= heroInteractionWithDoor2.size() -1)
+				hero.getWorldPos().y <= closed_house_height && lockedHouseCounter <= heroInteractionWithDoor2.size() - 1)
 			{
 				conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
-				if(IsKeyPressed(KEY_E)){
+				if (IsKeyPressed(KEY_E))
+				{
 					lockedHouseCounter++;
 				}
 			}
@@ -614,6 +622,11 @@ int main()
 						hero.setWorldPos(house_two_entry_width_min, house_two_entry_height);
 					}
 				}
+				npcs[4]->tick(GetFrameTime());
+				if (IsKeyPressed(KEY_E)){
+					npcs[4]->talk();
+					npcs[4]->setInteractionCount();
+				}
 
 				break;
 			case TEMPLE:
@@ -676,6 +689,13 @@ int main()
 				if (IsKeyPressed(KEY_E))
 				{
 					hasFlashlight = true;
+				}
+			}
+			if(hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75){
+				conversation("There is something under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					hasMedkit = true;
 				}
 			}
 			hero.tick(GetFrameTime());
@@ -762,9 +782,11 @@ int main()
 					hero.setWorldPos(400.f, 1330.f);
 				}
 			}
-			if(hero.getWorldPos().x > 840 && hero.getWorldPos().x < 920 && hero.getWorldPos().y < 270 && outsideHouseCounter <= interactionWithHouseOutsideTown.size()-1){
+			if (hero.getWorldPos().x > 840 && hero.getWorldPos().x < 920 && hero.getWorldPos().y < 270 && outsideHouseCounter <= interactionWithHouseOutsideTown.size() - 1)
+			{
 				conversation(interactionWithHouseOutsideTown[outsideHouseCounter], npcs[1]->getScreenPos().x, npcs[1]->getScreenPos().y);
-				if(IsKeyPressed(KEY_E)){
+				if (IsKeyPressed(KEY_E))
+				{
 					outsideHouseCounter++;
 				}
 			}
@@ -780,7 +802,7 @@ int main()
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
-			if (byTheTree)
+			if (wasInCave)
 			{
 				npcs[1]->tick(GetFrameTime());
 				if (IsKeyPressed(KEY_E))
@@ -795,7 +817,7 @@ int main()
 				}
 			}
 			hero.tick(GetFrameTime());
-			if (!talkedToKid)
+			if (!talkedToKid && !wasInCave)
 			{
 				npcs[3]->tick(GetFrameTime());
 				npcs[3]->setCurrentRow(3);
@@ -808,11 +830,11 @@ int main()
 						metYellow = true;
 					}
 				}
-			}
-			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-				npcs[3]->undoMovement();
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+					npcs[3]->undoMovement();
+				}
 			}
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
@@ -832,6 +854,7 @@ int main()
 				{
 					isOutsideCave = false;
 					isInCave = true;
+					wasInCave = true;
 					hero.setWorldPos(1055.f, 27.f);
 				}
 			}
@@ -860,7 +883,6 @@ int main()
 			else
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
-				wasInCaveWithoutFlashlight = true;
 			}
 			if (hero.getWorldPos().x > 55 && hero.getWorldPos().x < 240 && hero.getWorldPos().y < 2150 && hero.getWorldPos().y > 1920 && inCaveCounter < heroInCave.size())
 			{
@@ -896,7 +918,7 @@ int main()
 					isInCave = false;
 					isOutsideCave = true;
 					hero.setWorldPos(650.f, 435.f);
-					byTheTree = true;
+					wasInCave = true;
 					npcs[1]->setWorldPos(1200.f, 2100.f);
 					npcs[1]->addDialog(saraDialoguesDayTwo);
 				}
@@ -992,6 +1014,12 @@ int main()
 			Texture2D tex = props[14].GetTexture();
 			float scale = props[14].GetScale();
 			Vector2 keyScreenPos = {100.f, (float)GetScreenHeight() - tex.height * scale + 5.f};
+			DrawTextureEx(tex, keyScreenPos, 0.f, scale, WHITE);
+		}
+		if (hasMedkit){
+			Texture2D tex = props[16].GetTexture();
+			float scale = props[16].GetScale();
+			Vector2 keyScreenPos = {185.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
 			DrawTextureEx(tex, keyScreenPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
