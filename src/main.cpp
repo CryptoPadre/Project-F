@@ -42,13 +42,13 @@ int main()
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
 	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
-	NPC woman{Vector2{850.f, 750.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
+	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
 	NPC *npcs[5]{
 		&boyd,
 		&sara,
 		&kid,
 		&yellow,
-	    &woman};
+		&woman};
 	for (auto npc : npcs)
 	{
 		npc->setTarget(&hero);
@@ -131,8 +131,7 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 2340.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0}
-	};
+		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
@@ -185,7 +184,7 @@ int main()
 	bool isDayTime = true;
 	bool hasTalisman{};
 	bool hasMedkit{};
-	bool hasKey = true;
+	bool hasKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
@@ -290,8 +289,7 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-			
-			npcs[4]->tick(GetFrameTime());
+
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
@@ -358,6 +356,7 @@ int main()
 					enemies[1]->tick(GetFrameTime());
 				}
 			}
+
 			hero.tick(GetFrameTime());
 		}
 		// World map changing between daytime/nighttime
@@ -482,7 +481,7 @@ int main()
 						isInTown = false;
 						hero.setWorldPos(-70.f, 320.f);
 						interactionWithDoors = 0;
-						npcs[4]->isInHouse = true;
+						
 					}
 					else
 					{
@@ -605,7 +604,7 @@ int main()
 				break;
 			case HOUSE_TWO:
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
-				npcs[4]->tick(GetFrameTime());
+				
 
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
@@ -626,10 +625,17 @@ int main()
 						hero.setWorldPos(house_two_entry_width_min, house_two_entry_height);
 					}
 				}
-				if (IsKeyPressed(KEY_E)){
+				npcs[4]->tick(GetFrameTime());
+				if (IsKeyPressed(KEY_E))
+				{
 					npcs[4]->talk();
 					npcs[4]->setInteractionCount();
 				}
+				if (CheckCollisionRecs(npcs[4]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+				
+			}
 
 				break;
 			case TEMPLE:
@@ -694,7 +700,8 @@ int main()
 					hasFlashlight = true;
 				}
 			}
-			if(hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75){
+			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
+			{
 				conversation("There is something under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
@@ -1019,7 +1026,8 @@ int main()
 			Vector2 keyScreenPos = {100.f, (float)GetScreenHeight() - tex.height * scale + 5.f};
 			DrawTextureEx(tex, keyScreenPos, 0.f, scale, WHITE);
 		}
-		if (hasMedkit){
+		if (hasMedkit)
+		{
 			Texture2D tex = props[16].GetTexture();
 			float scale = props[16].GetScale();
 			Vector2 keyScreenPos = {185.f, (float)GetScreenHeight() - tex.height * scale - 10.f};

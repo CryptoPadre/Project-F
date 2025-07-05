@@ -48,17 +48,6 @@ void NPC::talk()
 
 void NPC::tick(float deltaTime)
 {
-    if (isHuman && isInHouse)
-    {
-
-        texture = die;
-       
-
-        Rectangle source{width * deathFrame, 0, width, height};
-        Rectangle dest{getScreenPos().x, getScreenPos().y, width * scale, height * scale};
-        DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
-        return;
-    }
     if (hero->getWorldPos().x > getScreenPos().x)
     {
         currentRow = 3;
@@ -147,8 +136,23 @@ void NPC::tick(float deltaTime)
             currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
         }
     }
-    // move the NPC
-    BaseCharacter::tick(deltaTime);
+    if (isInHouse && isHuman)
+    {
+
+        texture = interact;
+        float frameWidth = (float)texture.width / 6;
+        float frameHeight = (float)texture.height;
+        int currentFrame = 2;
+
+        Rectangle source{frameWidth * currentFrame, 0, frameWidth, frameHeight};
+        Rectangle dest{getScreenPos().x, getScreenPos().y, frameWidth * scale, frameHeight * scale};
+        DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+    }
+    else
+    {
+        // move the NPC
+        BaseCharacter::tick(deltaTime);
+    }
 }
 
 Vector2 NPC::getScreenPos()
