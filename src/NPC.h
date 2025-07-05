@@ -47,6 +47,5 @@ private:
     int yellowAttackColumns = 6;
     int yellowAttackRows = 4;
     bool willAttack{};
-    int womanHurtFrame = 5;
    
 };

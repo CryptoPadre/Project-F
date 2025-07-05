@@ -51,8 +51,13 @@ void NPC::tick(float deltaTime)
     if (isHuman && isInHouse)
     {
 
-        currentRow = 0;
-        currentFrame = 2;
+        texture = die;
+       
+
+        Rectangle source{width * deathFrame, 0, width, height};
+        Rectangle dest{getScreenPos().x, getScreenPos().y, width * scale, height * scale};
+        DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+        return;
     }
     if (hero->getWorldPos().x > getScreenPos().x)
     {

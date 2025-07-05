@@ -42,7 +42,7 @@ int main()
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
 	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
-	NPC woman{Vector2{150.f, 150.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
+	NPC woman{Vector2{850.f, 750.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
 	NPC *npcs[5]{
 		&boyd,
 		&sara,
@@ -53,6 +53,7 @@ int main()
 	{
 		npc->setTarget(&hero);
 	}
+	npcs[4]->isInHouse = true;
 	// Add the dialogues to npcs dialogue vector for the first day in the game
 	boyd.addDialog(boydDialoguesDayOne);
 	kid.addDialog(kidDialogues);
@@ -184,7 +185,7 @@ int main()
 	bool isDayTime = true;
 	bool hasTalisman{};
 	bool hasMedkit{};
-	bool hasKey{};
+	bool hasKey = true;
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
@@ -289,6 +290,8 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
+			
+			npcs[4]->tick(GetFrameTime());
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
@@ -479,7 +482,7 @@ int main()
 						isInTown = false;
 						hero.setWorldPos(-70.f, 320.f);
 						interactionWithDoors = 0;
-						npcs[4]->isInHouse = isInside;
+						npcs[4]->isInHouse = true;
 					}
 					else
 					{
@@ -602,6 +605,7 @@ int main()
 				break;
 			case HOUSE_TWO:
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
+				npcs[4]->tick(GetFrameTime());
 
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
@@ -622,7 +626,6 @@ int main()
 						hero.setWorldPos(house_two_entry_width_min, house_two_entry_height);
 					}
 				}
-				npcs[4]->tick(GetFrameTime());
 				if (IsKeyPressed(KEY_E)){
 					npcs[4]->talk();
 					npcs[4]->setInteractionCount();
