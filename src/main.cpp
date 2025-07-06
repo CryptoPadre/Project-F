@@ -89,7 +89,8 @@ int main()
 	Texture2D caveDarkMap = LoadTextureFromImage(caveDark);
 	Texture2D endgame = LoadTexture("endgame.png");
 	Texture2D gameOver = LoadTexture("game_over.png");
-	Texture2D maps[16]{
+	Texture2D end = LoadTexture("end.png");
+	Texture2D maps[17]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -105,7 +106,8 @@ int main()
 		caveEntranceNightMap,
 		caveDarkMap,
 		endgame,
-		gameOver};
+		gameOver,
+		end};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -118,6 +120,8 @@ int main()
 	Vector2 gameOverScreenPos{
 		screenWidth - maps[15].width * mapScale,
 		screenHeight - maps[15].height * mapScale};
+	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
+	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
 	Prop props[17]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
@@ -256,7 +260,7 @@ int main()
 		// drawing
 		BeginDrawing();
 		// Setup the back buffer for drawing (clear color and depth buffers)
-		ClearBackground(WHITE);
+		ClearBackground(BLACK);
 		// UpdateMusicStream(intro);
 
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
@@ -904,7 +908,7 @@ int main()
 				{
 					isOutsideCave = false;
 					isGameOver = true;
-					hero.setWorldPos(0.f, 0.f); 
+					hero.setWorldPos(0.f, 0.f);
 				}
 			}
 		}
@@ -984,22 +988,22 @@ int main()
 			}
 			hero.tick(GetFrameTime());
 		}
-		else if(isGameOver){
+		else if (isGameOver)
+		{
 			if (randomValue == 1)
-					{
-						DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
-						
-					}
-					else if (randomValue == 2)
-					{
-						DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
-						
-					}
-					else
-					{
-						DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 1.5f, WHITE);
-						
-					}
+			{
+				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
+			}
+			else if (randomValue == 2)
+			{
+
+				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
+			}
+			else
+			{
+
+				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
+			}
 		}
 		else
 		{
