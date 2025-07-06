@@ -88,7 +88,8 @@ int main()
 	ImageColorBrightness(&caveDark, -270);
 	Texture2D caveDarkMap = LoadTextureFromImage(caveDark);
 	Texture2D endgame = LoadTexture("endgame.png");
-	Texture2D maps[15]{
+	Texture2D gameOver = LoadTexture("game_over.png");
+	Texture2D maps[16]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -103,7 +104,8 @@ int main()
 		caveEntrance,
 		caveEntranceNightMap,
 		caveDarkMap,
-		endgame};
+		endgame,
+		gameOver};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -113,6 +115,9 @@ int main()
 	Vector2 startPos{
 		screenWidth - maps[5].width * mapScale,
 		screenHeight - maps[5].height * mapScale};
+	Vector2 gameOverScreenPos{
+		screenWidth - maps[15].width * mapScale,
+		screenHeight - maps[15].height * mapScale};
 	// Render props
 	Prop props[17]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
@@ -175,6 +180,7 @@ int main()
 	bool isInside{};
 	bool isOutsideTown{};
 	bool isGameStart{true};
+	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
@@ -193,6 +199,7 @@ int main()
 	bool metYellow{};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
+	bool talkedToWoman{};
 	bool putTalismanInTheHouseOne{};
 	bool putTalismanInTheHouseTwo{};
 	bool putTalismanInTheTemple{};
@@ -481,7 +488,6 @@ int main()
 						isInTown = false;
 						hero.setWorldPos(-70.f, 320.f);
 						interactionWithDoors = 0;
-						
 					}
 					else
 					{
@@ -550,10 +556,13 @@ int main()
 					hero.undoMovement();
 				}
 				props[9].Render(hero.getWorldPos());
+				if (hero.getWorldPos().x < 130 && hero.getWorldPos().x > -38 && hero.getWorldPos().y > -190 && hero.getWorldPos().y < -20)
+				{
+					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				if (hero.getWorldPos().x < 100 && hero.getWorldPos().x > -8 && hero.getWorldPos().y > -160 && hero.getWorldPos().y < 10)
 				{
 					hero.undoMovement();
-					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						currentInterior = NONE;
@@ -604,7 +613,6 @@ int main()
 				break;
 			case HOUSE_TWO:
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
-				
 
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
@@ -631,11 +639,14 @@ int main()
 					npcs[4]->talk();
 					npcs[4]->setInteractionCount();
 				}
+				if (npcs[4]->getInteractionCount() >= womanInTheHouse.size() - 1)
+				{
+					talkedToWoman = true;
+				}
 				if (CheckCollisionRecs(npcs[4]->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-				
-			}
+				{
+					hero.undoMovement();
+				}
 
 				break;
 			case TEMPLE:
@@ -686,7 +697,7 @@ int main()
 			}
 			if (hero.getWorldPos().x > -125 && hero.getWorldPos().y > 15)
 			{
-				conversation("What is it? A purse? It's a key", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation("Huh? A purse? Something's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
 					hasKey = true;
@@ -694,18 +705,21 @@ int main()
 			}
 			if (hero.getWorldPos().x > -400 && hero.getWorldPos().x < -340 && hero.getWorldPos().y < -205)
 			{
-				conversation("What? A flashlight! Just at the right time!", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation("A flashlight! That might come in handy!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
 					hasFlashlight = true;
 				}
 			}
-			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
+			if (talkedToWoman)
 			{
-				conversation("There is something under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
 				{
-					hasMedkit = true;
+					conversation("There is something under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						hasMedkit = true;
+					}
 				}
 			}
 			hero.tick(GetFrameTime());
@@ -883,6 +897,16 @@ int main()
 					hero.setWorldPos(90.f, 750.f);
 				}
 			}
+			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1915 && hero.getWorldPos().y < 1950)
+			{
+				conversation("Would it be the exit?", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					isOutsideCave = false;
+					isGameOver = true;
+					hero.setWorldPos(0.f, 0.f); 
+				}
+			}
 		}
 		else if (isInCave)
 		{
@@ -959,6 +983,23 @@ int main()
 				props[i].Render(hero.getWorldPos());
 			}
 			hero.tick(GetFrameTime());
+		}
+		else if(isGameOver){
+			if (randomValue == 1)
+					{
+						DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
+						
+					}
+					else if (randomValue == 2)
+					{
+						DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
+						
+					}
+					else
+					{
+						DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 1.5f, WHITE);
+						
+					}
 		}
 		else
 		{
