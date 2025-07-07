@@ -124,9 +124,8 @@ inline std::vector<std::string> yellowDialogStartMap = {
     "You don't remember me, do you?",
     "Of course not. No one ever does."};
 
-
 inline std::vector<std::string> yellowWarning = {
-   "I'd turn back!"};
+    "I'd turn back!"};
 
 inline std::vector<std::string> yellowDialogByTree = {
     "Beautiful, isn't it?",
@@ -167,31 +166,33 @@ inline std::vector<std::string> heroInCave = {
     "I can't go back that way!",
     "There has to be another way out!"};
 
+inline std::vector<std::string> heroScroll = {
+    "What is it?",
+    "A scroll with some gibberish text?",
+    "Let's take it!",
+    "Someone might know what is written on it!"};
+
 inline std::vector<std::string> heroInteractionWithDoors = {
-    "Let's see what's inside!",
-    "Arrrgh!",
-};
+    "Heeeelp!",
+    "It's locked!"};
 
 inline std::vector<std::string> heroInteractionWithDoor2 = {
     "It's locked from inside!",
     "Is anybody inside?",
-    "I need to find another way in."
-};
+    "I need to find another way in."};
 
-inline std::vector<std::string> interactionWithHouseOutsideTown ={
+inline std::vector<std::string> interactionWithHouseOutsideTown = {
     "It's my home!",
     "I used to live here with my brother.",
     "They tricked me...",
     "They said I could leave with him.",
     "But it didn't end well.",
     "Tabitha escaped once.",
-    "You may escape too!"
-};
+    "You may escape too!"};
 
-inline std::vector<std::string> womanInTheHouse ={ 
+inline std::vector<std::string> womanInTheHouse = {
     "Arrrgh...",
     "Please help me...",
     "My meds... They're in the medkit!",
     "It's under... my bed.",
-    "Please,hurry!"
-};
+    "Please,hurry!"};

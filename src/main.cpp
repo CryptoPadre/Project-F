@@ -123,7 +123,7 @@ int main()
 	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
-	Prop props[17]{
+	Prop props[19]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -140,7 +140,9 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4f, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 2340.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0}};
+		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("scroll.png"), 0.2f, false, 0, 0, 0, 0},
+		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1f, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
@@ -183,10 +185,10 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
-	bool isInCave{};
+	bool isInCave{true};
 	bool isOutsideCave{};
 	bool hasFlashlight{};
 	bool isEndGame{};
@@ -195,6 +197,7 @@ int main()
 	bool hasTalisman{};
 	bool hasMedkit{};
 	bool hasKey{};
+	bool hasScroll{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
@@ -249,6 +252,8 @@ int main()
 	int lockedHouseCounter = 0;
 
 	int outsideHouseCounter = 0;
+
+	int interactionWithScroll = 0;
 
 	int randomValue = GetRandomValue(1, 3);
 	// set target fps
@@ -922,20 +927,30 @@ int main()
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 			}
-			if (hero.getWorldPos().x > 55 && hero.getWorldPos().x < 240 && hero.getWorldPos().y < 2150 && hero.getWorldPos().y > 1920 && inCaveCounter < heroInCave.size())
-			{
-				conversation(heroInCave[inCaveCounter], hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E) && inCaveCounter < heroInCave.size())
-				{
-					inCaveCounter++;
-				}
-			}
+			
 			if (hero.getWorldPos().x > 73 && hero.getWorldPos().x < 217 && hero.getWorldPos().y < 2102 && hero.getWorldPos().y > 1970)
 			{
 
 				hero.undoMovement();
 			}
 			props[15].Render(hero.getWorldPos());
+			if (!hasScroll)
+			{
+				
+				props[18].Render(hero.getWorldPos());
+				if (hero.getWorldPos().x > 1775 && hero.getWorldPos().x < 1900 && hero.getWorldPos().y < 530 && hero.getWorldPos().y > 370)
+				{
+					conversation(heroScroll[interactionWithScroll], hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						interactionWithScroll++;
+						if (interactionWithScroll == heroScroll.size())
+						{
+							hasScroll = true;
+						}
+					}
+				}
+			}
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
 				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065)
 			{
@@ -982,9 +997,19 @@ int main()
 				}
 				enemies[i]->tick(GetFrameTime());
 			}
+
 			for (int i = 10; i < 12; i++)
 			{
 				props[i].Render(hero.getWorldPos());
+			}
+
+			if (hero.getWorldPos().x > 55 && hero.getWorldPos().x < 240 && hero.getWorldPos().y < 2150 && hero.getWorldPos().y > 1920 && inCaveCounter < heroInCave.size())
+			{
+				conversation(heroInCave[inCaveCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E) && inCaveCounter < heroInCave.size())
+				{
+					inCaveCounter++;
+				}
 			}
 			hero.tick(GetFrameTime());
 		}
@@ -1075,8 +1100,15 @@ int main()
 		{
 			Texture2D tex = props[16].GetTexture();
 			float scale = props[16].GetScale();
-			Vector2 keyScreenPos = {185.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
-			DrawTextureEx(tex, keyScreenPos, 0.f, scale, WHITE);
+			Vector2 medkitScreenPos = {185.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
+			DrawTextureEx(tex, medkitScreenPos, 0.f, scale, WHITE);
+		}
+		if (hasScroll)
+		{
+			Texture2D tex = props[17].GetTexture();
+			float scale = props[17].GetScale();
+			Vector2 scrollScreenPos = {240.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
+			DrawTextureEx(tex, scrollScreenPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
