@@ -118,11 +118,27 @@ inline std::vector<std::string> saraDialoguesDayAfterFight = {
     "And for that... we have each other.",
     "We leave together!"};
 
-inline std::vector<std::string> yellowDialogStartMap = {
-    "Well, well, well...",
-    "What do we have here?",
-    "You don't remember me, do you?",
-    "Of course not. No one ever does."};
+inline std::vector<std::string> saraDialoguesDayAfterFight = {
+    "You?",
+    "Does it mean that...",
+    "That it's over?",
+    "What?",
+    "Oh... I remember...",
+    "They were my kids!",
+    "Our kids!",
+    "All we need is hope.",
+    "And for that... we have each other.",
+    "We leave together!"};
+
+inline std::vector<std::string> kidDialogScroll = {
+    "Remember!",
+    "Remember!!",
+    "Remember!!!",
+    "Remember...",
+    "Padre, you need to remember!",
+    "I'm your daughter. We are...",
+    "You die. You leave. You return. Always...",
+    "The only true escape is through the tree!"};
 
 inline std::vector<std::string> yellowWarning = {
     "I'd turn back!"};
@@ -154,6 +170,18 @@ inline std::vector<std::string> yellowDialogAfterFight = {
     "Who are you?",
     "Answer me, son!",
     "Who are you?"};
+
+inline std::vector<std::string> yellowDialogScroll = {
+    "You did this to yourself.",
+    "You arrived early.",
+    "Boyd knows... but he doesn't remember.",
+    "No one does.",
+    "That's the real curse!",
+    "Not me... not them...",
+    "...not even this town.",
+    "Forgetting who we were...",
+    "Destroying who we could be...",
+    "Blaming who we'll become..."};
 
 inline std::vector<std::string> heroTextStartMap = {
     "What the hell?",
