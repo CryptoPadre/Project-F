@@ -869,6 +869,15 @@ int main()
 					npcs[3]->undoMovement();
 				}
 			}
+			if (hasScroll)
+			{
+				npcs[3]->addDialog(yellowDialogScroll);
+				if (IsKeyPressed(KEY_E))
+				{
+					npcs[3]->talk();
+					npcs[3]->setInteractionCount();
+				}
+			}
 			props[7].Render(hero.getWorldPos());
 			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
@@ -927,7 +936,7 @@ int main()
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 			}
-			
+
 			if (hero.getWorldPos().x > 73 && hero.getWorldPos().x < 217 && hero.getWorldPos().y < 2102 && hero.getWorldPos().y > 1970)
 			{
 
@@ -936,7 +945,7 @@ int main()
 			props[15].Render(hero.getWorldPos());
 			if (!hasScroll)
 			{
-				
+
 				props[18].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x > 1775 && hero.getWorldPos().x < 1900 && hero.getWorldPos().y < 530 && hero.getWorldPos().y > 370)
 				{
