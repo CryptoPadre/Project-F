@@ -185,10 +185,10 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isGameOver{};
 	bool isUpstairs{};
-	bool isInCave{true};
+	bool isInCave{};
 	bool isOutsideCave{};
 	bool hasFlashlight{};
 	bool isEndGame{};
@@ -210,6 +210,7 @@ int main()
 	bool putTalismanInTheHouseOne{};
 	bool putTalismanInTheHouseTwo{};
 	bool putTalismanInTheTemple{};
+	bool scrollDialogAdded{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -751,6 +752,7 @@ int main()
 			}
 			if (metYellow)
 			{
+			
 				npcs[2]->tick(GetFrameTime());
 				if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
@@ -871,7 +873,6 @@ int main()
 			}
 			if (hasScroll)
 			{
-				npcs[3]->addDialog(yellowDialogScroll);
 				if (IsKeyPressed(KEY_E))
 				{
 					npcs[3]->talk();
@@ -891,13 +892,20 @@ int main()
 			if (hero.getWorldPos().x < 690 && hero.getWorldPos().x > 640 &&
 				hero.getWorldPos().y < 435)
 			{
-				conversation("There is no way I will go in there!", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (!metYellow)
 				{
-					isOutsideCave = false;
-					isInCave = true;
-					wasInCave = true;
-					hero.setWorldPos(1055.f, 27.f);
+					conversation("There is no way I will go in there!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else
+				{
+					conversation("Let's see what is inside!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isOutsideCave = false;
+						isInCave = true;
+						wasInCave = true;
+						hero.setWorldPos(1055.f, 27.f);
+					}
 				}
 			}
 			if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
@@ -953,9 +961,12 @@ int main()
 					if (IsKeyPressed(KEY_E))
 					{
 						interactionWithScroll++;
-						if (interactionWithScroll == heroScroll.size())
+						if (interactionWithScroll == heroScroll.size() && !scrollDialogAdded)
 						{
 							hasScroll = true;
+							npcs[2]->addDialog(kidDialogScroll);
+							npcs[3]->addDialog(yellowDialogScroll);
+							scrollDialogAdded = true;
 						}
 					}
 				}

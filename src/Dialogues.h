@@ -127,6 +127,7 @@ inline std::vector<std::string> kidDialogScroll = {
     "I'm your daugther, we are!",
     "You die, you left, you return!",
     "The only real end is thru the tree"};
+    
 inline std::vector<std::string> yellowDialogScroll = {
     "You did this to yourself.",
     "You arrived early.",
@@ -138,6 +139,7 @@ inline std::vector<std::string> yellowDialogScroll = {
     "Forgetting who we were...",
     "Destroying who we could be...",
     "Blaming who we'll become..."};
+
 inline std::vector<std::string> yellowDialogStartMap = {
     "Well, well, well...",
     "What do we have here?",
