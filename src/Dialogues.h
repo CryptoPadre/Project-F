@@ -123,7 +123,7 @@ inline std::vector<std::string> kidDialogScroll = {
     "Remember!!",
     "Remember!!!",
     "Remember...",
-    "Padre you need to remember!!!",
+    "You need to remember!!!",
     "I'm your daugther, we are!",
     "You die, you left, you return!",
     "The only real end is thru the tree"};
@@ -141,8 +141,6 @@ inline std::vector<std::string> yellowDialogScroll = {
     "Blaming who we'll become..."};
 
 inline std::vector<std::string> yellowDialogStartMap = {
-    "Well, well, well...",
-    "What do we have here?",
     "You don't remember me, do you?",
     "Of course not. No one ever does."};
 

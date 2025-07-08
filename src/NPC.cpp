@@ -142,7 +142,7 @@ void NPC::tick(float deltaTime)
         texture = interact;
         float frameWidth = (float)texture.width / 6;
         float frameHeight = (float)texture.height;
-        int currentFrame = 2;
+        
 
         Rectangle source{frameWidth * currentFrame, 0, frameWidth, frameHeight};
         Rectangle dest{getScreenPos().x, getScreenPos().y, frameWidth * scale, frameHeight * scale};

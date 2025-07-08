@@ -54,6 +54,7 @@ int main()
 		npc->setTarget(&hero);
 	}
 	npcs[4]->isInHouse = true;
+	npcs[4]->setCurrentFrame(2);
 	// Add the dialogues to npcs dialogue vector for the first day in the game
 	boyd.addDialog(boydDialoguesDayOne);
 	kid.addDialog(kidDialogues);
@@ -344,14 +345,9 @@ int main()
 					}
 				}
 			}
-			if (wasInCave)
-			{
-				npcs[3]->setWorldPos(750.f, 800.f);
-				npcs[3]->tick(GetFrameTime());
-			}
 			if (talkedToKid)
 			{
-				npcs[3]->tick(GetFrameTime());
+			
 				if (IsKeyPressed(KEY_E))
 				{
 					npcs[3]->talk();
@@ -373,7 +369,7 @@ int main()
 					enemies[1]->tick(GetFrameTime());
 				}
 			}
-
+			npcs[3]->tick(GetFrameTime());
 			hero.tick(GetFrameTime());
 		}
 		// World map changing between daytime/nighttime
@@ -729,6 +725,7 @@ int main()
 					if (IsKeyPressed(KEY_E))
 					{
 						hasMedkit = true;
+						npcs[4]->setCurrentFrame(5);
 					}
 				}
 			}
@@ -750,7 +747,7 @@ int main()
 			{
 				hero.undoMovement();
 			}
-			if (metYellow)
+			if (metYellow || hasScroll)
 			{
 			
 				npcs[2]->tick(GetFrameTime());
@@ -904,6 +901,7 @@ int main()
 						isOutsideCave = false;
 						isInCave = true;
 						wasInCave = true;
+						npcs[3]->setWorldPos(750.f, 800.f);
 						hero.setWorldPos(1055.f, 27.f);
 					}
 				}

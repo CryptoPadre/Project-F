@@ -15,6 +15,7 @@ public:
     void setTarget(Character *character) { hero = character; }
     void setAttack() { willAttack = true; }
     void setCurrentRow(int row) { currentRow = row; }
+    void setCurrentFrame(int frame) {currentFrame = frame; }
     void advanceDialogue();
     void resetDialogue();
     const std::vector<std::string> &getDialogues() const { return NPCDialog; }
