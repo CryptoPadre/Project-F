@@ -160,7 +160,13 @@ int main()
 	Enemy caveMonster9{Vector2{1350.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster10{Vector2{1050.f, 950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster11{Vector2{1550.f, 1100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster12{Vector2{1750.f, 1000.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster12{Vector2{1650.f, 700.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster13{Vector2{1450.f, 650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster14{Vector2{1350.f, 800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster15{Vector2{1050.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster16{Vector2{1850.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster17{Vector2{1750.f, 2000.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster18{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -177,7 +183,14 @@ int main()
 		&caveMonster9,
 		&caveMonster10,
 		&caveMonster11,
-		&caveMonster12};
+		&caveMonster12,
+		&caveMonster13,
+		&caveMonster14,
+		&caveMonster15,
+		&caveMonster16,
+		&caveMonster17,
+		&caveMonster18
+	};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -1006,7 +1019,7 @@ int main()
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
-			for (int i = 3; i < 14; i++)
+			for (int i = 3; i < 22; i++)
 			{
 
 				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken())
