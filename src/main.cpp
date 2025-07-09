@@ -36,7 +36,7 @@ int main()
 	// PlayMusicStream(intro);
 	// draw hero
 	Character hero{screenWidth, screenHeight};
-	hero.setWorldPos(400.f, 100.f);
+	hero.setWorldPos(400.f, 200.f);
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
@@ -124,7 +124,7 @@ int main()
 	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
-	Prop props[19]{
+	Prop props[20]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -143,7 +143,8 @@ int main()
 		Prop{Vector2{600.f, 2340.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("scroll.png"), 0.2f, false, 0, 0, 0, 0},
-		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1f, false, 0, 0, 0, 0}};
+		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1f, false, 0, 0, 0, 0},
+		Prop{Vector2{260.f, 250.f}, LoadTexture("old-house.png"), 1.f, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
@@ -224,6 +225,7 @@ int main()
 	bool putTalismanInTheHouseTwo{};
 	bool putTalismanInTheTemple{};
 	bool scrollDialogAdded{};
+	bool renderEnemy{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -950,7 +952,7 @@ int main()
 				{
 					isOutsideCave = false;
 					isGameOver = true;
-					hero.setWorldPos(0.f, 0.f);
+					hero.setWorldPos(17.f, 640.f);
 				}
 			}
 		}
@@ -1067,7 +1069,31 @@ int main()
 			else
 			{
 
-				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
+				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, BLACK);
+				props[19].Render(hero.getWorldPos());
+				hero.tick(GetFrameTime());
+				if (hero.getWorldPos().y < 500)
+				{
+					hero.undoMovement();
+				}
+				if (hero.getWorldPos().y < 550)
+				{
+					conversation("Come in. We were waiting for you!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isGameOver = false;
+						isOutsideCave = true;
+						hero.setWorldPos(400.f, 400.f);
+					}
+				}
+				if (hero.getWorldPos().y > 1500 || hero.getWorldPos().x > 1500 || hero.getWorldPos().x < -1500)
+				{
+					renderEnemy = true;
+					
+				}
+				if(renderEnemy){
+					enemies[1]->tick(GetFrameTime());
+				}
 			}
 		}
 		else
