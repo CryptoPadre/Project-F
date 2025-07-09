@@ -189,8 +189,7 @@ int main()
 		&caveMonster15,
 		&caveMonster16,
 		&caveMonster17,
-		&caveMonster18
-	};
+		&caveMonster18};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -360,7 +359,7 @@ int main()
 			}
 			if (talkedToKid)
 			{
-			
+
 				if (IsKeyPressed(KEY_E))
 				{
 					npcs[3]->talk();
@@ -415,12 +414,19 @@ int main()
 			if (hero.getWorldPos().x > town_exit_width_min &&
 				hero.getWorldPos().y > town_exit_height_min && hero.getWorldPos().y < town_exit_height_max)
 			{
-				DrawText("Press E to leave the town", 250, 250, 20, BLACK);
-				if (IsKeyPressed(KEY_E))
+				if (!hasStarted)
 				{
-					isOutsideTown = true;
-					isInTown = false;
-					hero.setWorldPos(340.f, 188.f);
+					conversation("I shoud look around in town.", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else
+				{
+					conversation("This way I might get back to the car.", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isOutsideTown = true;
+						isInTown = false;
+						hero.setWorldPos(340.f, 188.f);
+					}
 				}
 			}
 
@@ -433,7 +439,6 @@ int main()
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
 				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale)
 			{
-				conversation("There must be a way out.", hero.getScreenPos().x, hero.getScreenPos().y);
 				hero.undoMovement();
 			}
 			// render enemies after props to make sure they cannot cross them
@@ -577,18 +582,22 @@ int main()
 				props[9].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x < 130 && hero.getWorldPos().x > -38 && hero.getWorldPos().y > -190 && hero.getWorldPos().y < -20)
 				{
+
 					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 				if (hero.getWorldPos().x < 100 && hero.getWorldPos().x > -8 && hero.getWorldPos().y > -160 && hero.getWorldPos().y < 10)
 				{
 					hero.undoMovement();
-					if (IsKeyPressed(KEY_E))
+					if (metYellow)
 					{
-						currentInterior = NONE;
-						isInside = false;
-						isInCave = true;
-						inCaveCounter++;
-						hero.setWorldPos(70.f, 2040.f);
+						if (IsKeyPressed(KEY_E))
+						{
+							currentInterior = NONE;
+							isInside = false;
+							isInCave = true;
+							inCaveCounter++;
+							hero.setWorldPos(70.f, 2040.f);
+						}
 					}
 				}
 				if (hero.getWorldPos().x < -420 && hero.getWorldPos().y < -185)
@@ -762,7 +771,7 @@ int main()
 			}
 			if (metYellow || hasScroll)
 			{
-			
+
 				npcs[2]->tick(GetFrameTime());
 				if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
