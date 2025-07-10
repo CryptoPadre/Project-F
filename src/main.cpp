@@ -1076,7 +1076,7 @@ int main()
 			if (randomValue == 1)
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
-				DrawText("You may exit in another life.", screenWidth/2, screenHeight/2, 40, RED);
+				DrawText("You may exit in another life.", screenWidth/6, screenHeight/2, 40, RED);
 			}
 			else if (randomValue == 2)
 			{
