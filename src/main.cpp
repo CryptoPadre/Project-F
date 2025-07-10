@@ -126,7 +126,7 @@ int main()
 	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
-	Prop props[20]{
+	Prop props[22]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -146,7 +146,9 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("scroll.png"), 0.2f, false, 0, 0, 0, 0},
 		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1f, false, 0, 0, 0, 0},
-		Prop{Vector2{260.f, 250.f}, LoadTexture("old-house.png"), 1.f, false, 0, 0, 0, 0}};
+		Prop{Vector2{260.f, 250.f}, LoadTexture("old-house.png"), 1.f, false, 0, 0, 0, 0},
+		Prop{Vector2{130.f, -120.f}, LoadTexture("wardrobe.png"), 0.5f, false, 0, 0, 0, 0},
+		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5f, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
@@ -326,6 +328,8 @@ int main()
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
 
+			
+			
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
@@ -714,6 +718,7 @@ int main()
 						hero.setWorldPos(temple_entry_width_min, temple_entry_height);
 					}
 				}
+				props[21].Render(hero.getWorldPos());
 				break;
 			default:
 				break;
@@ -1073,12 +1078,12 @@ int main()
 		}
 		else if (isGameOver)
 		{
-			if (randomValue == 1)
+			if (randomValue == 5)
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
-				DrawText("You may exit in another life.", screenWidth/6, screenHeight/2, 40, RED);
+				DrawText("You may escape in another life.", screenWidth/6, screenHeight/2, 40, RED);
 			}
-			else if (randomValue == 2)
+			else if (randomValue == 6)
 			{
 
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
@@ -1115,6 +1120,7 @@ int main()
 		else if (isInSecretRoom)
 		{
 			DrawTextureEx(maps[17], interiorPos, 0.0, 1.5, WHITE);
+			props[20].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
 			if (hero.getWorldPos().y < -352 || hero.getWorldPos().x > -90 || hero.getWorldPos().x < -491 || hero.getWorldPos().y > 71)
 			{
