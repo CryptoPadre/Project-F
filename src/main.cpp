@@ -91,7 +91,8 @@ int main()
 	Texture2D endgame = LoadTexture("endgame.png");
 	Texture2D gameOver = LoadTexture("game_over.png");
 	Texture2D end = LoadTexture("end.png");
-	Texture2D maps[17]{
+	Texture2D secretRoom = LoadTexture("secret_room.png");
+	Texture2D maps[18]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -108,7 +109,8 @@ int main()
 		caveDarkMap,
 		endgame,
 		gameOver,
-		end};
+		end,
+		secretRoom};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -204,6 +206,7 @@ int main()
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
+	bool isInSecretRoom{};
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
@@ -226,6 +229,7 @@ int main()
 	bool putTalismanInTheTemple{};
 	bool scrollDialogAdded{};
 	bool renderEnemy{};
+	bool doorUnlocked{};
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -555,10 +559,22 @@ int main()
 			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
 				hero.getWorldPos().y <= closed_house_height && lockedHouseCounter <= heroInteractionWithDoor2.size() - 1)
 			{
-				conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (!doorUnlocked)
 				{
-					lockedHouseCounter++;
+					conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						lockedHouseCounter++;
+					}
+				}
+				else
+				{
+					if (IsKeyPressed(KEY_E))
+					{
+						isInTown = false;
+						isInSecretRoom = true;
+						hero.setWorldPos(-294.f, 56.f);
+					}
 				}
 			}
 		}
@@ -1060,16 +1076,16 @@ int main()
 			if (randomValue == 1)
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
+				DrawText("You may exit in another life.", screenWidth/2, screenHeight/2, 40, RED);
 			}
 			else if (randomValue == 2)
 			{
 
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
+				DrawText("Oh you woke up! You are very lucky!", screenWidth/6, screenHeight/2, 40, RED);
 			}
 			else
 			{
-
-				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, BLACK);
 				props[19].Render(hero.getWorldPos());
 				hero.tick(GetFrameTime());
 				if (hero.getWorldPos().y < 500)
@@ -1082,17 +1098,40 @@ int main()
 					if (IsKeyPressed(KEY_E))
 					{
 						isGameOver = false;
-						isOutsideCave = true;
-						hero.setWorldPos(400.f, 400.f);
+						isInSecretRoom = true;
+						hero.setWorldPos(-316.f, -220.f);
 					}
 				}
 				if (hero.getWorldPos().y > 1500 || hero.getWorldPos().x > 1500 || hero.getWorldPos().x < -1500)
 				{
 					renderEnemy = true;
-					
 				}
-				if(renderEnemy){
+				if (renderEnemy)
+				{
 					enemies[1]->tick(GetFrameTime());
+				}
+			}
+		}
+		else if (isInSecretRoom)
+		{
+			DrawTextureEx(maps[17], interiorPos, 0.0, 1.5, WHITE);
+			hero.tick(GetFrameTime());
+			if (hero.getWorldPos().y < -352 || hero.getWorldPos().x > -90 || hero.getWorldPos().x < -491 || hero.getWorldPos().y > 71)
+			{
+				hero.undoMovement();
+			}
+			if (hero.getWorldPos().x > -322 && hero.getWorldPos().x < -260 && hero.getWorldPos().y > 51)
+			{
+				if (!doorUnlocked)
+				{
+					conversation("Who locked this door?", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				if (IsKeyPressed(KEY_E))
+				{
+					isInSecretRoom = false;
+					isInTown = true;
+					doorUnlocked = true;
+					hero.setWorldPos(962.f, 346.f);
 				}
 			}
 		}
