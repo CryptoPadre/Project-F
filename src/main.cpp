@@ -92,7 +92,8 @@ int main()
 	Texture2D gameOver = LoadTexture("game_over.png");
 	Texture2D end = LoadTexture("end.png");
 	Texture2D secretRoom = LoadTexture("secret_room.png");
-	Texture2D maps[18]{
+	Texture2D sarasHouse = LoadTexture("saras-house.png");
+	Texture2D maps[19]{
 		map,
 		mapNightTexture,
 		temple_interior,
@@ -110,7 +111,8 @@ int main()
 		endgame,
 		gameOver,
 		end,
-		secretRoom};
+		secretRoom,
+		sarasHouse};
 	Vector2 interiorPos = {
 		static_cast<float>(screenWidth) / 2 - maps[2].width * 1.5f,
 		static_cast<float>(screenHeight) / 2 - maps[2].height * 1.5f};
@@ -203,12 +205,13 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
 	bool isInSecretRoom{};
+	bool isInSarasHouse{true};
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
@@ -733,7 +736,7 @@ int main()
 							{
 								currentInterior = NONE;
 								isInside = false;
-								isInSecretRoom = true;
+								isInSarasHouse = true;
 								hero.setWorldPos(-316.f, -220.f);
 							}
 						}
@@ -1174,6 +1177,10 @@ int main()
 					}
 				}
 			}
+		}
+		else if(isInSarasHouse){
+			DrawTextureEx(maps[18], interiorPos, 0.0, 2.f, WHITE);
+			hero.tick(GetFrameTime());
 		}
 		else
 		{
