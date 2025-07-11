@@ -212,7 +212,7 @@ int main()
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
-	bool isDayTime = true;
+	bool isDayTime{true};
 	bool hasTalisman{};
 	bool hasMedkit{};
 	bool hasKey{};
@@ -328,8 +328,6 @@ int main()
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
 
-			
-			
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
@@ -573,6 +571,7 @@ int main()
 				}
 				else
 				{
+					conversation("Let's look around!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						isInTown = false;
@@ -719,6 +718,27 @@ int main()
 					}
 				}
 				props[21].Render(hero.getWorldPos());
+				if (hero.getWorldPos().x > -170 && hero.getWorldPos().x < -130 && hero.getWorldPos().y < -150)
+				{
+					if (!doorUnlocked)
+					{
+						conversation("What a nice wardrobe!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					else
+					{
+						conversation("I hope it takes me to Narnia!", hero.getScreenPos().x, hero.getScreenPos().y);
+						if (IsKeyPressed(KEY_E))
+						{
+							if (randomValue > 0)
+							{
+								currentInterior = NONE;
+								isInside = false;
+								isInSecretRoom = true;
+								hero.setWorldPos(-316.f, -220.f);
+							}
+						}
+					}
+				}
 				break;
 			default:
 				break;
@@ -1081,13 +1101,13 @@ int main()
 			if (randomValue == 5)
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
-				DrawText("You may escape in another life.", screenWidth/6, screenHeight/2, 40, RED);
+				DrawText("You may escape in another life.", screenWidth / 6, screenHeight / 2, 40, RED);
 			}
 			else if (randomValue == 6)
 			{
 
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
-				DrawText("Oh you woke up! You are very lucky!", screenWidth/6, screenHeight/2, 40, RED);
+				DrawText("Oh you woke up! You are very lucky!", screenWidth / 6, screenHeight / 2, 40, RED);
 			}
 			else
 			{
@@ -1138,6 +1158,20 @@ int main()
 					isInTown = true;
 					doorUnlocked = true;
 					hero.setWorldPos(962.f, 346.f);
+				}
+			}
+			if (hero.getWorldPos().x > -360 && hero.getWorldPos().x < -290 && hero.getWorldPos().y < -310)
+			{
+				conversation("What happens if I get back in?", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					if (randomValue > 0)
+					{
+						isInSecretRoom = false;
+						currentInterior = TEMPLE;
+						isInside = true;
+						hero.setWorldPos(-153.f, -165.f);
+					}
 				}
 			}
 		}
