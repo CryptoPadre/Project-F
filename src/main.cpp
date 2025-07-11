@@ -128,7 +128,7 @@ int main()
 	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
-	Prop props[22]{
+	Prop props[23]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -150,7 +150,8 @@ int main()
 		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1f, false, 0, 0, 0, 0},
 		Prop{Vector2{260.f, 250.f}, LoadTexture("old-house.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{130.f, -120.f}, LoadTexture("wardrobe.png"), 0.5f, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5f, false, 0, 0, 0, 0}};
+		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5f, false, 0, 0, 0, 0},
+		Prop{Vector2{300.f, -120.f}, LoadTexture("wardrobe-red.png"), 0.5f, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
@@ -205,13 +206,14 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
 	bool isInSecretRoom{};
-	bool isInSarasHouse{true};
+	bool isInSarasHouse{};
+	bool wasInSarasHouse{};
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
@@ -737,7 +739,7 @@ int main()
 								currentInterior = NONE;
 								isInside = false;
 								isInSarasHouse = true;
-								hero.setWorldPos(-316.f, -220.f);
+								hero.setWorldPos(-150.f, -275.f);
 							}
 						}
 					}
@@ -1178,9 +1180,54 @@ int main()
 				}
 			}
 		}
-		else if(isInSarasHouse){
+		else if (isInSarasHouse)
+		{
 			DrawTextureEx(maps[18], interiorPos, 0.0, 2.f, WHITE);
+			props[22].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
+			if (hero.getWorldPos().x < -494 || hero.getWorldPos().x > 71 || hero.getWorldPos().y < -350 ||
+				hero.getWorldPos().y > 98 || hero.getWorldPos().x > -489 && hero.getWorldPos().x < -312 && hero.getWorldPos().y < 70 && hero.getWorldPos().y > -106 ||
+				hero.getWorldPos().x < -405 && hero.getWorldPos().y < -131 && hero.getWorldPos().y > -346 ||
+				hero.getWorldPos().x > -30 && hero.getWorldPos().y > -109 && hero.getWorldPos().y < 31)
+			{
+				hero.undoMovement();
+			}
+			if (hero.getWorldPos().x < -110 && hero.getWorldPos().x > -187 && hero.getWorldPos().y > 70)
+			{
+				conversation("It can't be!", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					isInSarasHouse = false;
+					isOutsideTown = true;
+					wasInSarasHouse = true;
+					hero.setWorldPos(900.f, 250.f);
+				}
+			}
+			if (hero.getWorldPos().x > -170 && hero.getWorldPos().x < -130 && hero.getWorldPos().y < -310)
+			{
+				conversation("Ok. So it is one of those!", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					if (randomValue > 0)
+					{
+						isInSecretRoom = false;
+						currentInterior = TEMPLE;
+						isInside = true;
+						hero.setWorldPos(-153.f, -165.f);
+					}
+				}
+			}
+			if (wasInSarasHouse)
+			{
+				if (hero.getWorldPos().x < 912 && hero.getWorldPos().x > 870 && hero.getWorldPos().y < 270)
+				{
+					if (IsKeyPressed(KEY_E))
+					{
+						isInSarasHouse = true;
+						isOutsideTown = false;
+					}
+				}
+			}
 		}
 		else
 		{
