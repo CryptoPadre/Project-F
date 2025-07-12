@@ -12,6 +12,7 @@ class Enemy : public BaseCharacter{
     bool hasAwaken(){return isAwake;}
     virtual Vector2 getScreenPos() override;
     bool isCaveMonster{};
+    bool isStanding{};
     private:
     Character* target;
     float radius{25.f};

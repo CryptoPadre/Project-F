@@ -283,6 +283,10 @@ int main()
 	int interactionWithScroll = 0;
 
 	int randomValue = GetRandomValue(1, 4);
+
+	enemies[5]->isStanding = true;
+	enemies[5]->hasAwaken();
+	enemies[5]->setWorldPos(550.f,600.f);
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -332,7 +336,7 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-
+			enemies[5]->tick(GetFrameTime());
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
