@@ -282,7 +282,7 @@ int main()
 
 	int interactionWithScroll = 0;
 
-	int randomValue = GetRandomValue(1, 3);
+	int randomValue = GetRandomValue(1, 4);
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -734,12 +734,21 @@ int main()
 						conversation("I hope it takes me to Narnia!", hero.getScreenPos().x, hero.getScreenPos().y);
 						if (IsKeyPressed(KEY_E))
 						{
-							if (randomValue > 0)
+							if (randomValue == 1)
 							{
 								currentInterior = NONE;
 								isInside = false;
 								isInSarasHouse = true;
+								randomValue = GetRandomValue(1, 2);
 								hero.setWorldPos(-150.f, -275.f);
+							}
+							else
+							{
+								currentInterior = NONE;
+								isInside = false;
+								isInSecretRoom = true;
+								randomValue = GetRandomValue(1, 2);
+								hero.setWorldPos(-316.f, -220.f);
 							}
 						}
 					}
@@ -860,6 +869,7 @@ int main()
 				{
 					isOutsideCave = true;
 					isOutsideTown = false;
+					randomValue = GetRandomValue(1, 4);
 					hero.setWorldPos(1260.f, 785.f);
 				}
 			}
@@ -1141,6 +1151,7 @@ int main()
 					{
 						isGameOver = false;
 						isInSecretRoom = true;
+						randomValue = GetRandomValue(1, 2);
 						hero.setWorldPos(-316.f, -220.f);
 					}
 				}
@@ -1182,12 +1193,20 @@ int main()
 				conversation("What happens if I get back in?", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
-					if (randomValue > 0)
+					if (randomValue == 1)
 					{
 						isInSecretRoom = false;
 						currentInterior = TEMPLE;
 						isInside = true;
+						randomValue = GetRandomValue(1, 2);
 						hero.setWorldPos(-153.f, -165.f);
+					}
+					else
+					{
+						isInSecretRoom = false;
+						isInSarasHouse = true;
+						randomValue = GetRandomValue(1, 2);
+						hero.setWorldPos(-150.f, -275.f);
 					}
 				}
 			}
@@ -1220,12 +1239,17 @@ int main()
 				conversation("Ok. So it is one of those!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
-					if (randomValue > 0)
+					if (randomValue == 1)
 					{
-						isInSecretRoom = false;
+						isInSarasHouse = false;
 						currentInterior = TEMPLE;
 						isInside = true;
 						hero.setWorldPos(-153.f, -165.f);
+					}
+					else {
+						isInSarasHouse = false;
+						isInSecretRoom = true;
+						hero.setWorldPos(-316.f, -220.f);
 					}
 				}
 			}
