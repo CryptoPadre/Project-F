@@ -863,6 +863,18 @@ int main()
 					hero.setWorldPos(1260.f, 785.f);
 				}
 			}
+			if (wasInSarasHouse)
+			{
+				if (hero.getWorldPos().x < 912 && hero.getWorldPos().x > 870 && hero.getWorldPos().y < 250)
+				{
+					if (IsKeyPressed(KEY_E))
+					{
+						isInSarasHouse = true;
+						isOutsideTown = false;
+						hero.setWorldPos(-150.f, 50.f);
+					}
+				}
+			}
 			if (
 				hero.getWorldPos().x < 560 && hero.getWorldPos().y > 1350)
 			{
@@ -1214,17 +1226,6 @@ int main()
 						currentInterior = TEMPLE;
 						isInside = true;
 						hero.setWorldPos(-153.f, -165.f);
-					}
-				}
-			}
-			if (wasInSarasHouse)
-			{
-				if (hero.getWorldPos().x < 912 && hero.getWorldPos().x > 870 && hero.getWorldPos().y < 270)
-				{
-					if (IsKeyPressed(KEY_E))
-					{
-						isInSarasHouse = true;
-						isOutsideTown = false;
 					}
 				}
 			}
