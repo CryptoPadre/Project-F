@@ -156,7 +156,7 @@ int main()
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
 	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), false};
-	Enemy caveMonster{Vector2{1890.f, 430.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster{Vector2{1890.f, 1300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster1{Vector2{1250.f, 1120.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster2{Vector2{2230.f, 2200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster3{Vector2{1930.f, 2190.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
@@ -237,6 +237,10 @@ int main()
 	bool scrollDialogAdded{};
 	bool renderEnemy{};
 	bool doorUnlocked{};
+
+	float leftY = 840;
+	float rightY = 1240;
+
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
 	int temple_entry_width_max = 116;
@@ -284,9 +288,6 @@ int main()
 
 	int randomValue = GetRandomValue(1, 4);
 
-	enemies[5]->isStanding = true;
-	enemies[5]->hasAwaken();
-	enemies[5]->setWorldPos(550.f,600.f);
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -336,7 +337,6 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-			enemies[5]->tick(GetFrameTime());
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
@@ -1019,12 +1019,34 @@ int main()
 			}
 			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1915 && hero.getWorldPos().y < 1950)
 			{
-				conversation("Would it be the exit?", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (hasScroll && talkedToKid)
 				{
-					isOutsideCave = false;
-					isGameOver = true;
-					hero.setWorldPos(17.f, 640.f);
+					conversation("Would it be the exit?", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isOutsideCave = false;
+						isGameOver = true;
+						hero.setWorldPos(17.f, 1340.f);
+						if (wasInCave && hasScroll && talkedToKid)
+						{
+							for (int i = 5; i <= 14; i++)
+							{
+								enemies[i]->isStanding = true;
+								enemies[i]->setWorldPos(260.f, leftY);
+								leftY += 100;
+								if (i > 9)
+								{
+									enemies[i]->setCurrentRow(1);
+									enemies[i]->setWorldPos(680.f, rightY);
+									rightY -= 100;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					conversation("This is a really strange tree!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
 		}
@@ -1143,6 +1165,10 @@ int main()
 			else
 			{
 				props[19].Render(hero.getWorldPos());
+				for (int i = 5; i <= 14; i++)
+				{
+					enemies[i]->tick(GetFrameTime());
+				}
 				hero.tick(GetFrameTime());
 				if (hero.getWorldPos().y < 500)
 				{
@@ -1250,7 +1276,8 @@ int main()
 						isInside = true;
 						hero.setWorldPos(-153.f, -165.f);
 					}
-					else {
+					else
+					{
 						isInSarasHouse = false;
 						isInSecretRoom = true;
 						hero.setWorldPos(-316.f, -220.f);

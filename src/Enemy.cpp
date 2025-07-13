@@ -15,11 +15,13 @@ Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type)
 
 void Enemy::tick(float deltaTime)
 {
-    if (isStanding && isCaveMonster && isAwake)
+    if (isStanding && isCaveMonster)
     {
         texture = walk;
         currentFrame = 0;
-        currentRow = 3;
+        if (currentRow != 1){
+            currentRow = 3;
+        }
         velocity = {};
 
         Rectangle source{

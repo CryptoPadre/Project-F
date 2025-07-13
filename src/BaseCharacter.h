@@ -13,6 +13,7 @@ class BaseCharacter{
 	bool getAlive() {return alive;}
 	void setAlive(bool isAlive) {alive = isAlive;}
 	void setWorldPos(float x, float y) { worldPos = {x, y}; }
+	void setCurrentRow(int row) { currentRow = row; }
     protected:
     Texture2D texture{LoadTexture("hero-walk.png")};
 	Texture2D walk{LoadTexture("hero-walk.png")};
