@@ -1282,7 +1282,22 @@ int main()
 					hero.setWorldPos(900.f, 250.f);
 				}
 			}
-			if (hero.getWorldPos().x > -170 && hero.getWorldPos().x < -130 && hero.getWorldPos().y < -310)
+			if (hero.getWorldPos().x > -40 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 15)
+			{
+				conversation("An old rusty key?", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if (hero.getWorldPos().x > -40 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 10)
+			{
+				conversation("It must be Sara and her brother. But who is that third person? ", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if (hero.getWorldPos().x > -495 && hero.getWorldPos().y > -44 && hero.getWorldPos().y < 0)
+			{
+				conversation("Another tree? This one isn't familiar.", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if (hero.getWorldPos().x < -485 &&  hero.getWorldPos().x < -427 && hero.getWorldPos().y > 30 && hero.getWorldPos().y < 85){
+				conversation("An old dagger with a bloody blade?", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if (hero.getWorldPos().x < -290 && hero.getWorldPos().y < -130 && hero.getWorldPos().y < -310)
 			{
 				conversation("Ok. So it is one of those!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
