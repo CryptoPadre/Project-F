@@ -36,7 +36,7 @@ int main()
 	// PlayMusicStream(intro);
 	// draw hero
 	Character hero{screenWidth, screenHeight};
-	hero.setWorldPos(400.f, 200.f);
+	hero.setWorldPos(400.f, 1200.f);
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
@@ -164,10 +164,10 @@ int main()
 	Enemy caveMonster5{Vector2{2220.f, 2290.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster6{Vector2{2100.f, 2130.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster7{Vector2{1000.f, 1390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster8{Vector2{1250.f, 800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster9{Vector2{1350.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster8{Vector2{1230.f, 1300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster9{Vector2{1350.f, 750.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster10{Vector2{1050.f, 950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster11{Vector2{1550.f, 1100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster11{Vector2{1530.f, 1100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster12{Vector2{1650.f, 700.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster13{Vector2{1450.f, 650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster14{Vector2{1350.f, 800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
@@ -175,6 +175,16 @@ int main()
 	Enemy caveMonster16{Vector2{1850.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster17{Vector2{1750.f, 2000.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster18{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster19{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster20{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster21{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster22{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster23{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster24{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster25{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster26{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster27{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster28{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -197,7 +207,17 @@ int main()
 		&caveMonster15,
 		&caveMonster16,
 		&caveMonster17,
-		&caveMonster18};
+		&caveMonster18,
+		&caveMonster19,
+		&caveMonster20,
+		&caveMonster21,
+		&caveMonster22,
+		&caveMonster23,
+		&caveMonster24,
+		&caveMonster25,
+		&caveMonster26,
+		&caveMonster27,
+		&caveMonster28};
 	for (auto enemy : enemies)
 	{
 		enemy->setTarget(&hero);
@@ -206,8 +226,8 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
-	bool isGameOver{};
+	bool isGameStart{};
+	bool isGameOver{true};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
@@ -240,6 +260,19 @@ int main()
 
 	float leftY = 840;
 	float rightY = 1240;
+
+	for (int i = 22; i < 32; i++)
+	{
+		enemies[i]->isStanding = true;
+		enemies[i]->setWorldPos(260.f, leftY);
+		leftY += 100;
+		if (i > 26)
+		{
+			enemies[i]->setCurrentRow(1);
+			enemies[i]->setWorldPos(680.f, rightY);
+			rightY -= 100;
+		}
+	}
 
 	// Positions of the buildings where player can enter
 	int temple_entry_width_min = 50;
@@ -1027,21 +1060,6 @@ int main()
 						isOutsideCave = false;
 						isGameOver = true;
 						hero.setWorldPos(17.f, 1340.f);
-						if (wasInCave && hasScroll && talkedToKid)
-						{
-							for (int i = 5; i <= 14; i++)
-							{
-								enemies[i]->isStanding = true;
-								enemies[i]->setWorldPos(260.f, leftY);
-								leftY += 100;
-								if (i > 9)
-								{
-									enemies[i]->setCurrentRow(1);
-									enemies[i]->setWorldPos(680.f, rightY);
-									rightY -= 100;
-								}
-							}
-						}
 					}
 				}
 				else
@@ -1165,7 +1183,7 @@ int main()
 			else
 			{
 				props[19].Render(hero.getWorldPos());
-				for (int i = 5; i <= 14; i++)
+				for (int i = 22; i < 32; i++)
 				{
 					enemies[i]->tick(GetFrameTime());
 				}
