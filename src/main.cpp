@@ -36,7 +36,7 @@ int main()
 	// PlayMusicStream(intro);
 	// draw hero
 	Character hero{screenWidth, screenHeight};
-	hero.setWorldPos(400.f, 1200.f);
+	hero.setWorldPos(400.f, 200.f);
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
@@ -128,7 +128,7 @@ int main()
 	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
-	Prop props[23]{
+	Prop props[25]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -151,7 +151,9 @@ int main()
 		Prop{Vector2{260.f, 250.f}, LoadTexture("old-house.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{130.f, -120.f}, LoadTexture("wardrobe.png"), 0.5f, false, 0, 0, 0, 0},
 		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5f, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, -120.f}, LoadTexture("wardrobe-red.png"), 0.5f, false, 0, 0, 0, 0}};
+		Prop{Vector2{300.f, -120.f}, LoadTexture("wardrobe-red.png"), 0.5f, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("dagger.png"), 0.25f, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25f, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
@@ -226,8 +228,8 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
-	bool isGameOver{true};
+	bool isGameStart{true};
+	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
@@ -242,6 +244,8 @@ int main()
 	bool hasMedkit{};
 	bool hasKey{};
 	bool hasScroll{};
+	bool hasDagger{};
+	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool boydDialogDayThree{};
@@ -1285,17 +1289,26 @@ int main()
 			if (hero.getWorldPos().x > -40 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 15)
 			{
 				conversation("An old rusty key?", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					hasRustyKey = true;
+				}
 			}
-			if (hero.getWorldPos().x > -40 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 10)
+			if (hero.getWorldPos().x > -313 && hero.getWorldPos().x < -300 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 10)
 			{
 				conversation("It must be Sara and her brother. But who is that third person? ", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
-			if (hero.getWorldPos().x > -495 && hero.getWorldPos().y > -44 && hero.getWorldPos().y < 0)
+			if (hero.getWorldPos().x > -495 && hero.getWorldPos().x < -465 && hero.getWorldPos().y > -44 && hero.getWorldPos().y < 0)
 			{
 				conversation("Another tree? This one isn't familiar.", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
-			if (hero.getWorldPos().x < -485 &&  hero.getWorldPos().x < -427 && hero.getWorldPos().y > 30 && hero.getWorldPos().y < 85){
+			if (hero.getWorldPos().x > -495 && hero.getWorldPos().x < -427 && hero.getWorldPos().y > 30 && hero.getWorldPos().y < 90)
+			{
 				conversation("An old dagger with a bloody blade?", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					hasDagger = true;
+				}
 			}
 			if (hero.getWorldPos().x < -290 && hero.getWorldPos().y < -130 && hero.getWorldPos().y < -310)
 			{
@@ -1397,6 +1410,20 @@ int main()
 			float scale = props[17].GetScale();
 			Vector2 scrollScreenPos = {240.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
 			DrawTextureEx(tex, scrollScreenPos, 0.f, scale, WHITE);
+		}
+		if (hasDagger)
+		{
+			Texture2D tex = props[23].GetTexture();
+			float scale = props[23].GetScale();
+			Vector2 daggerScreenPos = {290.f, (float)GetScreenHeight() - tex.height * scale};
+			DrawTextureEx(tex, daggerScreenPos, 0.f, scale, WHITE);
+		}
+		if (hasRustyKey)
+		{
+			Texture2D tex = props[24].GetTexture();
+			float scale = props[24].GetScale();
+			Vector2 rustyKeyPos = {330.f, (float)GetScreenHeight() - tex.height * scale};
+			DrawTextureEx(tex, rustyKeyPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
