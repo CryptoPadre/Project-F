@@ -52,32 +52,63 @@ void Character::tick(float deltaTime)
 		DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
 		return;
 	}
-	if (IsKeyDown(KEY_A))
+	if (!isAttacking)
 	{
-		velocity.x -= 1.0;
-		currentRow = 1;
+		if (IsKeyDown(KEY_A))
+		{
+			velocity.x -= 1.0;
+			currentRow = 1;
+		}
+		if (IsKeyDown(KEY_D))
+		{
+			velocity.x += 1.0;
+			currentRow = 3;
+		}
+		if (IsKeyDown(KEY_W))
+		{
+			velocity.y -= 1.0;
+			currentRow = 0;
+		}
+		if (IsKeyDown(KEY_S))
+		{
+			velocity.y += 1.0;
+			currentRow = 2;
+		}
 	}
-	if (IsKeyDown(KEY_D))
+	else
 	{
-		velocity.x += 1.0;
-		currentRow = 3;
+		velocity = {0.f, 0.f};
 	}
-	if (IsKeyDown(KEY_W))
+	if (IsKeyPressed(KEY_E) && !isAttacking)
 	{
-		velocity.y -= 1.0;
-		currentRow = 0;
+		isAttacking = true;
+		attackTimer = 0.0f;
+		attackFrame = 4;
+		texture = interact;
 	}
-	if (IsKeyDown(KEY_S))
+	if (isAttacking)
 	{
-		velocity.y += 1.0;
-		currentRow = 2;
+		attackTimer += GetFrameTime();
+
+		if (attackTimer >= attackFrameDuration)
+		{
+			attackTimer = 0.0f;
+			attackFrame ++;
+
+			if (attackFrame > attackTotalFrames)
+			{
+				isAttacking = false;
+
+				texture = walk;
+			}
+		}
 	}
 	BaseCharacter::tick(deltaTime);
 	if (hasDagger)
 	{
 		Vector2 origin{};
 		Vector2 offset{};
-		if (currentRow == 2)
+		if (currentRow == 1)
 		{
 			origin = {0.f, dagger.height * 0.2f};
 			offset = {35.f, 55.f};
@@ -120,6 +151,6 @@ void Character::tick(float deltaTime)
 			daggerCollisionRec.height,
 			RED);
 	}
-	
+
 	DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
 }

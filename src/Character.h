@@ -9,13 +9,15 @@ public:
 	Character(int winWidth, int winHeight);
 	virtual void tick(float deltaTime) override;
 	virtual Vector2 getScreenPos() override;
-	void setHasDagger(bool foundDagger){hasDagger = foundDagger;}
+	void setHasDagger(bool foundDagger) { hasDagger = foundDagger; }
 
 private:
 	int windowWidth{};
 	int windowHeight{};
 	Texture2D dagger{LoadTexture("dagger.png")};
 	Texture2D daggerRigth{LoadTexture("dagger-right.png")};
+	Texture2D daggerLeft{LoadTexture("dagger-left.png")};
+	Texture2D daggerUp{LoadTexture("dagger-up.png")};
 	Rectangle daggerCollisionRec{};
 	int deathFrame = 0;
 	float deathFrameTime = 0.0f;
@@ -23,6 +25,11 @@ private:
 	int deathTotalFrames = 6;
 	bool deathAnimDone = false;
 	bool hasDagger{};
+	bool isAttacking = false;
+	float attackTimer = 0.0f;
+	int attackFrame = 4;
+	int attackTotalFrames = 6;
+	float attackFrameDuration = 0.1f;
 };
 
 #endif
