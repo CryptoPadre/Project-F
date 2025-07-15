@@ -19,39 +19,39 @@ Vector2 Character::getScreenPos()
 void Character::tick(float deltaTime)
 {
 	if (!getAlive())
-    {
-        texture = die;
+	{
+		texture = die;
 
-        if (!deathAnimDone)
-        {
-            deathFrameTime += deltaTime;
-            if (deathFrameTime >= deathFrameDuration)
-            {
-                deathFrame++;
-                deathFrameTime = 0.f;
-                if (deathFrame >= deathTotalFrames)
-                {
-                    deathFrame = deathTotalFrames - 1;
-                    deathAnimDone = true;
-                }
-            }
-        }
+		if (!deathAnimDone)
+		{
+			deathFrameTime += deltaTime;
+			if (deathFrameTime >= deathFrameDuration)
+			{
+				deathFrame++;
+				deathFrameTime = 0.f;
+				if (deathFrame >= deathTotalFrames)
+				{
+					deathFrame = deathTotalFrames - 1;
+					deathAnimDone = true;
+				}
+			}
+		}
 
-        Rectangle source{
-            width * deathFrame,
-            0,
-            width,
-            height};
+		Rectangle source{
+			width * deathFrame,
+			0,
+			width,
+			height};
 
-        Rectangle dest{
-            getScreenPos().x,
-            getScreenPos().y,
-            width * scale,
-            height * scale};
+		Rectangle dest{
+			getScreenPos().x,
+			getScreenPos().y,
+			width * scale,
+			height * scale};
 
-        DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
-        return;
-    }
+		DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+		return;
+	}
 	if (IsKeyDown(KEY_A))
 	{
 		velocity.x -= 1.0;
@@ -72,42 +72,47 @@ void Character::tick(float deltaTime)
 		velocity.y += 1.0;
 		currentRow = 2;
 	}
-	/* Vector2 origin{};
-	Vector2 offset{};
-	if(currentRow == 2){
-		origin = {0.f,talisman.height*scale};
-		offset = {35.f, 55.f};
-		talismanCollisionRec = {
-			getScreenPos().x + offset.x - talisman.width * scale,
-			getScreenPos().y + offset.y,
-			talisman.width * scale,
-			talisman.height * scale
-		};
-	} else if (currentRow == 3){
-		origin = {talisman.width * scale, talisman.height * scale};
-		offset = {35.f, 55.f};
-		talismanCollisionRec = {
-			getScreenPos().x + offset.x - talisman.width * scale,
-			getScreenPos().y + offset.y - talisman.height * scale,
-			talisman.width * scale,
-			talisman.height * scale
-		};
-	} else {
-		origin = {talisman.width * scale, talisman.height * scale};
-		offset = {15.f, 55.f};
-	}
+	if (hasDagger)
+	{
+		Vector2 origin{};
+		Vector2 offset{};
+		if (currentRow == 2)
+		{
+			origin = {0.f, dagger.height * 0.2f};
+			offset = {35.f, 55.f};
+			daggerCollisionRec = {
+				getScreenPos().x + offset.x - dagger.width * 0.2f,
+				getScreenPos().y + offset.y,
+				dagger.width * 0.2f,
+				dagger.height * 0.2f};
+		}
+		else if (currentRow == 3)
+		{
+			origin = {dagger.width * 0.2f, dagger.height * 0.2f};
+			offset = {105.f, 100.f};
+			daggerCollisionRec = {
+				getScreenPos().x + offset.x - dagger.width * 0.2f,
+				getScreenPos().y + offset.y - dagger.height * 0.2f,
+				dagger.width * 0.2f,
+				dagger.height * 0.2f};
+		}
+		else
+		{
+			origin = {dagger.width * 0.2f, dagger.height * 0.2f};
+			offset = {15.f, 55.f};
+		}
 
-	// draw talisman
-	Rectangle source{0.f, 0.f, static_cast<float>(talisman.width), static_cast<float>(talisman.height)};
-	Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, talisman.width*scale, talisman.height*scale};
-	DrawTexturePro(talisman, source,dest,origin, 0.f, WHITE);
-	DrawRectangleLines(
-		talismanCollisionRec.x,
-		talismanCollisionRec.y,
-		talismanCollisionRec.width,
-		talismanCollisionRec.height,
-		RED);
-	*/
+		// draw dagger
+		Rectangle source{0.f, 0.f, static_cast<float>(dagger.width), static_cast<float>(dagger.height)};
+		Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, dagger.width * 0.2f, dagger.height * 0.2f};
+		DrawTexturePro(dagger, source, dest, origin, 0.f, WHITE);
+		DrawRectangleLines(
+			daggerCollisionRec.x,
+			daggerCollisionRec.y,
+			daggerCollisionRec.width,
+			daggerCollisionRec.height,
+			RED);
+	}
 	BaseCharacter::tick(deltaTime);
 	DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
 }

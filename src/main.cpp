@@ -244,7 +244,7 @@ int main()
 	bool hasMedkit{};
 	bool hasKey{};
 	bool hasScroll{};
-	bool hasDagger{};
+	bool hasDagger{true};
 	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
@@ -262,6 +262,7 @@ int main()
 	bool renderEnemy{};
 	bool doorUnlocked{};
 
+	hero.setHasDagger(hasDagger);
 	float leftY = 840;
 	float rightY = 1240;
 
@@ -1308,6 +1309,7 @@ int main()
 				if (IsKeyPressed(KEY_E))
 				{
 					hasDagger = true;
+					hero.setHasDagger(hasDagger);
 				}
 			}
 			if (hero.getWorldPos().x < -290 && hero.getWorldPos().y < -130 && hero.getWorldPos().y < -310)
