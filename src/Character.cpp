@@ -72,6 +72,7 @@ void Character::tick(float deltaTime)
 		velocity.y += 1.0;
 		currentRow = 2;
 	}
+	BaseCharacter::tick(deltaTime);
 	if (hasDagger)
 	{
 		Vector2 origin{};
@@ -85,27 +86,33 @@ void Character::tick(float deltaTime)
 				getScreenPos().y + offset.y,
 				dagger.width * 0.2f,
 				dagger.height * 0.2f};
+			Rectangle source{0.f, 0.f, static_cast<float>(dagger.width), static_cast<float>(dagger.height)};
+			Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, dagger.width * 0.2f, dagger.height * 0.2f};
+			DrawTexturePro(dagger, source, dest, origin, 0.f, WHITE);
 		}
 		else if (currentRow == 3)
 		{
-			origin = {dagger.width * 0.2f, dagger.height * 0.2f};
+			origin = {daggerRigth.width * 0.2f, daggerRigth.height * 0.2f};
 			offset = {105.f, 100.f};
 			daggerCollisionRec = {
-				getScreenPos().x + offset.x - dagger.width * 0.2f,
-				getScreenPos().y + offset.y - dagger.height * 0.2f,
-				dagger.width * 0.2f,
-				dagger.height * 0.2f};
+				getScreenPos().x + offset.x - daggerRigth.width * 0.2f,
+				getScreenPos().y + offset.y - daggerRigth.height * 0.2f,
+				daggerRigth.width * 0.2f,
+				daggerRigth.height * 0.2f};
+			Rectangle source{0.f, 0.f, static_cast<float>(daggerRigth.width), static_cast<float>(daggerRigth.height)};
+			Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, daggerRigth.width * 0.2f, daggerRigth.height * 0.2f};
+			DrawTexturePro(daggerRigth, source, dest, origin, 0.f, WHITE);
 		}
 		else
 		{
 			origin = {dagger.width * 0.2f, dagger.height * 0.2f};
 			offset = {15.f, 55.f};
+			Rectangle source{0.f, 0.f, static_cast<float>(dagger.width), static_cast<float>(dagger.height)};
+			Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, dagger.width * 0.2f, dagger.height * 0.2f};
+			DrawTexturePro(dagger, source, dest, origin, 0.f, WHITE);
 		}
 
 		// draw dagger
-		Rectangle source{0.f, 0.f, static_cast<float>(dagger.width), static_cast<float>(dagger.height)};
-		Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, dagger.width * 0.2f, dagger.height * 0.2f};
-		DrawTexturePro(dagger, source, dest, origin, 0.f, WHITE);
 		DrawRectangleLines(
 			daggerCollisionRec.x,
 			daggerCollisionRec.y,
@@ -113,6 +120,6 @@ void Character::tick(float deltaTime)
 			daggerCollisionRec.height,
 			RED);
 	}
-	BaseCharacter::tick(deltaTime);
+	
 	DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
 }

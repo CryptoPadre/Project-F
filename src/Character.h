@@ -15,6 +15,7 @@ private:
 	int windowWidth{};
 	int windowHeight{};
 	Texture2D dagger{LoadTexture("dagger.png")};
+	Texture2D daggerRigth{LoadTexture("dagger-right.png")};
 	Rectangle daggerCollisionRec{};
 	int deathFrame = 0;
 	float deathFrameTime = 0.0f;
