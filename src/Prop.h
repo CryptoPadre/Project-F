@@ -12,6 +12,7 @@ public:
     void RenderOnScreen(Vector2 screenPos);
     Texture2D GetTexture() const { return texture; }
     float GetScale() const { return scale; }
+    Vector2 getWorldPos() const { return worldPos; }
 private:
     Texture2D texture{};
     Vector2 worldPos{};

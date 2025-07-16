@@ -6,7 +6,7 @@
 
 class Enemy : public BaseCharacter{
     public:
-    Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type);
+    Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, Texture2D death, bool type);
 	virtual void tick(float deltaTime) override;
     void setTarget(Character* character){target = character;}
     bool hasAwaken(){return isAwake;}

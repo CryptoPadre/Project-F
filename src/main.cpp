@@ -155,38 +155,38 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("dagger.png"), 0.25f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25f, false, 0, 0, 0, 0}};
 	// render enemy
-	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), false};
-	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), false};
-	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), false};
-	Enemy caveMonster{Vector2{1890.f, 1300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster1{Vector2{1250.f, 1120.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster2{Vector2{2230.f, 2200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster3{Vector2{1930.f, 2190.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster4{Vector2{2030.f, 2250.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster5{Vector2{2220.f, 2290.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster6{Vector2{2100.f, 2130.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster7{Vector2{1000.f, 1390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster8{Vector2{1230.f, 1300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster9{Vector2{1350.f, 750.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster10{Vector2{1050.f, 950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster11{Vector2{1530.f, 1100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster12{Vector2{1650.f, 700.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster13{Vector2{1450.f, 650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster14{Vector2{1350.f, 800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster15{Vector2{1050.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster16{Vector2{1850.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster17{Vector2{1750.f, 2000.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster18{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster19{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster20{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster21{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster22{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster23{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster24{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster25{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster26{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster27{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster28{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
+	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
+	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
+	Enemy caveMonster{Vector2{1890.f, 1300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster1{Vector2{1250.f, 1120.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster2{Vector2{2230.f, 2200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster3{Vector2{1930.f, 2190.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster4{Vector2{2030.f, 2250.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster5{Vector2{2220.f, 2290.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster6{Vector2{2100.f, 2130.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster7{Vector2{1000.f, 1390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster8{Vector2{1230.f, 1300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster9{Vector2{1350.f, 750.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster10{Vector2{1050.f, 950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster11{Vector2{1530.f, 1100.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster12{Vector2{1650.f, 700.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster13{Vector2{1450.f, 650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster14{Vector2{1350.f, 800.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster15{Vector2{1050.f, 900.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster16{Vector2{1850.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster17{Vector2{1750.f, 2000.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster18{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster19{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster20{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster21{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster22{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster23{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster24{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster25{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster26{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster27{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster28{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy *enemies[]{
 		&she,
 		&he,
@@ -374,6 +374,12 @@ int main()
 			else
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
+			}
+			enemies[0]->tick(GetFrameTime());
+			enemies[1]->tick(GetFrameTime());
+			if(CheckCollisionRecs(enemies[0]->GetCollisionRec(),enemies[1]->GetCollisionRec())){
+				enemies[0]->resolveCollision(enemies[1]->getWorldPos());
+				enemies[1]->resolveCollision(enemies[0]->getWorldPos());
 			}
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());

@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "raymath.h"
 
-Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type)
+Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, Texture2D death, bool type)
 {
     worldPos = pos;
     texture = idle_texture;
@@ -10,11 +10,13 @@ Enemy::Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, bool type)
     height = (float)texture.height / totalRows;
     speed = 2.0f;
     interact = attack;
+    die = death;
     isCaveMonster = type;
 }
 
 void Enemy::tick(float deltaTime)
 {
+
     if (isStanding && isCaveMonster)
     {
         texture = walk;

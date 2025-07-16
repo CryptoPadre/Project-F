@@ -7,6 +7,7 @@ class BaseCharacter{
     BaseCharacter();
     Vector2 getWorldPos() { return worldPos; }
     void undoMovement();
+	void resolveCollision(Vector2 otherPos);
 	Rectangle GetCollisionRec();
     virtual void tick(float deltaTime);
 	virtual Vector2 getScreenPos() = 0;
@@ -35,6 +36,11 @@ class BaseCharacter{
 	Vector2 velocity{};
     private:
 	bool alive{true};
+	int deathFrame = 0;
+	float deathFrameTime = 0.0f;
+	float deathFrameDuration = 0.5f;
+	int deathTotalFrames = 6;
+	bool deathAnimDone = false;
 };
 
 #endif

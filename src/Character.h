@@ -20,11 +20,6 @@ private:
 	Texture2D daggerLeft{LoadTexture("dagger-left.png")};
 	Texture2D daggerUp{LoadTexture("dagger-up.png")};
 	Rectangle daggerCollisionRec{};
-	int deathFrame = 0;
-	float deathFrameTime = 0.0f;
-	float deathFrameDuration = 0.5f;
-	int deathTotalFrames = 6;
-	bool deathAnimDone = false;
 	bool hasDagger{};
 	bool isAttacking = false;
 	float attackTimer = 0.0f;
