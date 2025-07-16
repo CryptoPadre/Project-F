@@ -89,13 +89,11 @@ void Character::tick(float deltaTime)
 	if (isAttacking)
 	{
 		attackTimer += GetFrameTime();
-
 		if (attackTimer >= attackFrameDuration)
 		{
 			attackTimer = 0.0f;
-			attackFrame ++;
-
-			if (attackFrame > attackTotalFrames)
+			attackFrame++;
+			if (attackFrame <= attackTotalFrames)
 			{
 				isAttacking = false;
 
@@ -103,7 +101,27 @@ void Character::tick(float deltaTime)
 			}
 		}
 	}
-	BaseCharacter::tick(deltaTime);
+	if (isAttacking)
+	{
+		Rectangle source{
+			width * attackFrame,
+			currentRow * height, 
+			width,
+			height};
+
+		Rectangle dest{
+			getScreenPos().x,
+			getScreenPos().y,
+			width * scale,
+			height * scale};
+
+		DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+		return; 
+	}
+	else
+	{
+		BaseCharacter::tick(deltaTime); // This draws the walking animation
+	}
 	if (hasDagger)
 	{
 		Vector2 origin{};

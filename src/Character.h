@@ -27,9 +27,9 @@ private:
 	bool hasDagger{};
 	bool isAttacking = false;
 	float attackTimer = 0.0f;
-	int attackFrame = 4;
+	int attackFrame = 5;
 	int attackTotalFrames = 6;
-	float attackFrameDuration = 0.1f;
+	float attackFrameDuration = 0.2f;
 };
 
 #endif
