@@ -15,7 +15,7 @@ private:
 	int windowWidth{};
 	int windowHeight{};
 	Texture2D dagger{LoadTexture("dagger.png")};
-	Texture2D daggerRigth{LoadTexture("dagger-right.png")};
+	Texture2D daggerRight{LoadTexture("dagger-right.png")};
 	Texture2D daggerLeft{LoadTexture("dagger-left.png")};
 	Texture2D daggerUp{LoadTexture("dagger-up.png")};
 	Rectangle daggerCollisionRec{};

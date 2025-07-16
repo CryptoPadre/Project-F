@@ -103,9 +103,62 @@ void Character::tick(float deltaTime)
 	}
 	if (isAttacking)
 	{
+		if (hasDagger)
+		{
+			Texture2D currentDagger = dagger;
+			Vector2 offset{};
+			Vector2 origin{};
+
+			switch (currentRow)
+			{
+			case 0: // UP
+				currentDagger = daggerUp;
+				offset = {80.f, 10.f};
+				origin = {0.f, 0.f};
+				break;
+			case 1: // LEFT
+				currentDagger = daggerLeft;
+				offset = {-30.f, 108.f};
+				origin = {0.f, dagger.height * 0.2f};
+				break;
+			case 2: // DOWN
+				currentDagger = dagger;
+				offset = {122.f, 142.f};
+				origin = {dagger.width * 0.2f, dagger.height * 0.2f};
+				break;
+			case 3: // RIGHT
+				currentDagger = daggerRight;
+				offset = {157.f, 87.f};
+				origin = {daggerRight.width * 0.2f, daggerRight.height * 0.2f};
+				break;
+			}
+
+			Rectangle source{0.f, 0.f, static_cast<float>(currentDagger.width), static_cast<float>(currentDagger.height)};
+			Rectangle destDagger{
+				getScreenPos().x + offset.x,
+				getScreenPos().y + offset.y,
+				currentDagger.width * 0.2f,
+				currentDagger.height * 0.2f};
+
+			daggerCollisionRec = {
+				destDagger.x - origin.x,
+				destDagger.y - origin.y,
+				destDagger.width,
+				destDagger.height};
+
+			DrawTexturePro(currentDagger, source, destDagger, origin, 0.f, WHITE);
+
+			// Debug hitbox
+			DrawRectangleLines(
+				daggerCollisionRec.x,
+				daggerCollisionRec.y,
+				daggerCollisionRec.width,
+				daggerCollisionRec.height,
+				RED);
+		}
 		Rectangle source{
 			width * attackFrame,
-			currentRow * height, 
+			currentRow * height,
 			width,
 			height};
 
@@ -116,58 +169,12 @@ void Character::tick(float deltaTime)
 			height * scale};
 
 		DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
-		return; 
+
+		return;
 	}
 	else
 	{
 		BaseCharacter::tick(deltaTime); // This draws the walking animation
-	}
-	if (hasDagger)
-	{
-		Vector2 origin{};
-		Vector2 offset{};
-		if (currentRow == 1)
-		{
-			origin = {0.f, dagger.height * 0.2f};
-			offset = {35.f, 55.f};
-			daggerCollisionRec = {
-				getScreenPos().x + offset.x - dagger.width * 0.2f,
-				getScreenPos().y + offset.y,
-				dagger.width * 0.2f,
-				dagger.height * 0.2f};
-			Rectangle source{0.f, 0.f, static_cast<float>(dagger.width), static_cast<float>(dagger.height)};
-			Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, dagger.width * 0.2f, dagger.height * 0.2f};
-			DrawTexturePro(dagger, source, dest, origin, 0.f, WHITE);
-		}
-		else if (currentRow == 3)
-		{
-			origin = {daggerRigth.width * 0.2f, daggerRigth.height * 0.2f};
-			offset = {105.f, 100.f};
-			daggerCollisionRec = {
-				getScreenPos().x + offset.x - daggerRigth.width * 0.2f,
-				getScreenPos().y + offset.y - daggerRigth.height * 0.2f,
-				daggerRigth.width * 0.2f,
-				daggerRigth.height * 0.2f};
-			Rectangle source{0.f, 0.f, static_cast<float>(daggerRigth.width), static_cast<float>(daggerRigth.height)};
-			Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, daggerRigth.width * 0.2f, daggerRigth.height * 0.2f};
-			DrawTexturePro(daggerRigth, source, dest, origin, 0.f, WHITE);
-		}
-		else
-		{
-			origin = {dagger.width * 0.2f, dagger.height * 0.2f};
-			offset = {15.f, 55.f};
-			Rectangle source{0.f, 0.f, static_cast<float>(dagger.width), static_cast<float>(dagger.height)};
-			Rectangle dest{getScreenPos().x + offset.x, getScreenPos().y + offset.y, dagger.width * 0.2f, dagger.height * 0.2f};
-			DrawTexturePro(dagger, source, dest, origin, 0.f, WHITE);
-		}
-
-		// draw dagger
-		DrawRectangleLines(
-			daggerCollisionRec.x,
-			daggerCollisionRec.y,
-			daggerCollisionRec.width,
-			daggerCollisionRec.height,
-			RED);
 	}
 
 	DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
