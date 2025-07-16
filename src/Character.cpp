@@ -148,7 +148,7 @@ void Character::tick(float deltaTime)
 
 			DrawTexturePro(currentDagger, source, destDagger, origin, 0.f, WHITE);
 
-			// Debug hitbox
+			
 			DrawRectangleLines(
 				daggerCollisionRec.x,
 				daggerCollisionRec.y,

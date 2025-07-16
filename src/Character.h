@@ -10,6 +10,7 @@ public:
 	virtual void tick(float deltaTime) override;
 	virtual Vector2 getScreenPos() override;
 	void setHasDagger(bool foundDagger) { hasDagger = foundDagger; }
+	Rectangle getDaggerCollisionRec(){ return daggerCollisionRec;}
 
 private:
 	int windowWidth{};
