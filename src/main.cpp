@@ -380,6 +380,7 @@ int main()
 			if(CheckCollisionRecs(npcs[3]->GetCollisionRec(),hero.GetCollisionRec())){
 				npcs[3]->setAlive(false);
 			}
+			
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),

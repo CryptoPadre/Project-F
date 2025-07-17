@@ -14,7 +14,7 @@ public:
     void clearInteractionCount() { interactionCount = 0; }
     void setTarget(Character *character) { hero = character; }
     void setAttack() { willAttack = true; }
-    void setCurrentFrame(int frame) {currentFrame = frame; }
+    void setCurrentFrame(int frame) { currentFrame = frame; }
     void advanceDialogue();
     void resetDialogue();
     const std::vector<std::string> &getDialogues() const { return NPCDialog; }
@@ -47,6 +47,8 @@ private:
     int yellowAttackColumns = 6;
     int yellowAttackRows = 4;
     bool willAttack{};
-   
-   
+    float deathAnimTime = 0.f;
+    float deathAnimSpeed = 1.f;
+    bool deathAnimDone{};
+    bool deathAnimStarted{};
 };

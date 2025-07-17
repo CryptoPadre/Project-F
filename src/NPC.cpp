@@ -48,6 +48,42 @@ void NPC::talk()
 
 void NPC::tick(float deltaTime)
 {
+    if (!getAlive())
+    {
+        // Freeze velocity to stop movement
+        velocity = {};
+        texture = interact;
+        if (!deathAnimStarted)
+        {
+            currentFrame = 6;
+            deathAnimStarted = true;
+            
+        }
+
+        // Play death animation
+        if (!deathAnimDone)
+        {
+            deathAnimTime += deltaTime;
+            if (deathAnimTime >= deathAnimSpeed)
+            {
+                currentFrame--; 
+                deathAnimTime = 0.f;
+
+                if (currentFrame <= 2)
+                {
+                    currentFrame = 2;     
+                    deathAnimDone = true; 
+                }
+            }
+        }
+        float frameWidth = texture.width / 7.f;
+        float frameHeight = texture.height / 4.f;
+        Rectangle source{frameWidth * currentFrame, frameHeight * currentRow, frameWidth, frameHeight};
+        Rectangle dest{getScreenPos().x, getScreenPos().y, frameWidth * scale, frameHeight * scale};
+        DrawTexturePro(texture, source, dest, {0, 0}, 0.f, WHITE);
+        return;
+    }
+
     if (hero->getWorldPos().x > getScreenPos().x)
     {
         currentRow = 3;
@@ -87,19 +123,9 @@ void NPC::tick(float deltaTime)
             {
                 currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
             }
-            if (!getAlive())
-            {
-                texture = interact;
-                float frameWidth = (float)texture.width / 7;
-                float frameHeight = (float)texture.height/4;
-
-                Rectangle source{frameWidth * currentFrame, 0, frameWidth, frameHeight};
-                Rectangle dest{getScreenPos().x, getScreenPos().y, frameWidth * scale, frameHeight * scale};
-                DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
-                return;
-            }
         }
     }
+
     /* if (!isHuman)
     {
        if (!isDay)
