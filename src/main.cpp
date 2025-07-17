@@ -41,7 +41,7 @@ int main()
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
-	NPC yellow{Vector2{600.f, 600.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
+	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
 	NPC *npcs[5]{
 		&boyd,
@@ -374,11 +374,6 @@ int main()
 			else
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
-			}
-			npcs[3]->tick(GetFrameTime());
-			npcs[3]->setAttack();
-			if(CheckCollisionRecs(npcs[3]->GetCollisionRec(),hero.GetCollisionRec())){
-				npcs[3]->setAlive(false);
 			}
 			
 			props[5].Render(hero.getWorldPos());
