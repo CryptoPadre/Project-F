@@ -41,7 +41,7 @@ int main()
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
-	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
+	NPC yellow{Vector2{600.f, 600.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
 	NPC *npcs[5]{
 		&boyd,
@@ -244,7 +244,7 @@ int main()
 	bool hasMedkit{};
 	bool hasKey{};
 	bool hasScroll{};
-	bool hasDagger{true};
+	bool hasDagger{};
 	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
@@ -375,11 +375,10 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-			enemies[0]->tick(GetFrameTime());
-			enemies[1]->tick(GetFrameTime());
-			if(CheckCollisionRecs(enemies[0]->GetCollisionRec(),enemies[1]->GetCollisionRec())){
-				enemies[0]->resolveCollision(enemies[1]->getWorldPos());
-				enemies[1]->resolveCollision(enemies[0]->getWorldPos());
+			npcs[3]->tick(GetFrameTime());
+			npcs[3]->setAttack();
+			if(CheckCollisionRecs(npcs[3]->GetCollisionRec(),hero.GetCollisionRec())){
+				npcs[3]->setAlive(false);
 			}
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
@@ -1161,6 +1160,17 @@ int main()
 					hero.setAlive(false);
 				}
 				enemies[i]->tick(GetFrameTime());
+			}
+			for (int i = 3; i < 22; i++)
+			{
+				for (int j = i + 1; j < 22; j++)
+				{
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), enemies[j]->GetCollisionRec()))
+					{
+						enemies[i]->resolveCollision(enemies[j]->getWorldPos());
+						enemies[j]->resolveCollision(enemies[i]->getWorldPos());
+					}
+				}
 			}
 
 			for (int i = 10; i < 12; i++)

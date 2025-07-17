@@ -87,6 +87,17 @@ void NPC::tick(float deltaTime)
             {
                 currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
             }
+            if (!getAlive())
+            {
+                texture = interact;
+                float frameWidth = (float)texture.width / 7;
+                float frameHeight = (float)texture.height/4;
+
+                Rectangle source{frameWidth * currentFrame, 0, frameWidth, frameHeight};
+                Rectangle dest{getScreenPos().x, getScreenPos().y, frameWidth * scale, frameHeight * scale};
+                DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+                return;
+            }
         }
     }
     /* if (!isHuman)
@@ -142,7 +153,6 @@ void NPC::tick(float deltaTime)
         texture = interact;
         float frameWidth = (float)texture.width / 6;
         float frameHeight = (float)texture.height;
-        
 
         Rectangle source{frameWidth * currentFrame, 0, frameWidth, frameHeight};
         Rectangle dest{getScreenPos().x, getScreenPos().y, frameWidth * scale, frameHeight * scale};

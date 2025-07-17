@@ -21,7 +21,7 @@ void BaseCharacter::resolveCollision(Vector2 otherPos)
     }
 
     direction = Vector2Normalize(direction);
-    float pushBackAmount = 5.0f; 
+    float pushBackAmount = 3.0f; 
 
     worldPos = Vector2Add(worldPos, Vector2Scale(direction, pushBackAmount));
 }
