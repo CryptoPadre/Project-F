@@ -14,6 +14,7 @@ public:
     void clearInteractionCount() { interactionCount = 0; }
     void setTarget(Character *character) { hero = character; }
     void setAttack() { willAttack = true; }
+    bool getAttack(){return willAttack;}
     void setCurrentFrame(int frame) { currentFrame = frame; }
     void advanceDialogue();
     void resetDialogue();

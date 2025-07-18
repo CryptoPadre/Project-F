@@ -1397,6 +1397,13 @@ int main()
 					npcs[3]->setAttack();
 				}
 			}
+			if (npcs[3]->getAttack())
+			{
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.setAlive(false);
+				}
+			}
 			if (hasDagger)
 			{
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
@@ -1412,8 +1419,11 @@ int main()
 			}
 			if (!npcs[3]->getAlive())
 			{
-				npcs[3]->talk();
-				npcs[3]->setInteractionCount();
+				if (IsKeyPressed(KEY_E))
+				{
+					npcs[3]->talk();
+					npcs[3]->setInteractionCount();
+				}
 			}
 		}
 
