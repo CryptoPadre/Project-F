@@ -326,6 +326,8 @@ int main()
 
 	int randomValue = GetRandomValue(1, 4);
 
+	int hitCounter = 0;
+
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -375,7 +377,7 @@ int main()
 			{
 				DrawTextureEx(maps[7], startPos, 0.0, mapScale, WHITE);
 			}
-			
+
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
@@ -1151,11 +1153,18 @@ int main()
 			for (int i = 3; i < 22; i++)
 			{
 
-				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken())
+				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
 				{
 					hero.setAlive(false);
 				}
 				enemies[i]->tick(GetFrameTime());
+				if (hasDagger)
+				{
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && enemies[i]->hasAwaken() && IsKeyPressed(KEY_SPACE))
+					{
+						enemies[i]->setAlive(false);
+					}
+				}
 			}
 			for (int i = 3; i < 22; i++)
 			{
@@ -1324,7 +1333,7 @@ int main()
 					hero.setHasDagger(hasDagger);
 				}
 			}
-			if (hero.getWorldPos().x < -290 && hero.getWorldPos().y < -130 && hero.getWorldPos().y < -310)
+			if (hero.getWorldPos().x > -165 && hero.getWorldPos().x < -125 && hero.getWorldPos().y < -300)
 			{
 				conversation("Ok. So it is one of those!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
@@ -1355,14 +1364,17 @@ int main()
 			{
 				hero.undoMovement();
 			}
-			if (hero.getWorldPos().x > 243 && hero.getWorldPos().x < 320 && hero.getWorldPos().y < 40)
+			if (isYellowDead)
 			{
-				conversation("Let's go back to the tree", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (hero.getWorldPos().x > 243 && hero.getWorldPos().x < 320 && hero.getWorldPos().y < 40)
 				{
-					isEndGame = false;
-					isInCave = true;
-					hero.setWorldPos(850.f, 2350.f);
+					conversation("Let's go back to the tree", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isEndGame = false;
+						isInCave = true;
+						hero.setWorldPos(850.f, 2350.f);
+					}
 				}
 			}
 			hero.tick(GetFrameTime());
@@ -1384,6 +1396,24 @@ int main()
 				{
 					npcs[3]->setAttack();
 				}
+			}
+			if (hasDagger)
+			{
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
+				{
+					hitCounter++;
+				}
+				if (hitCounter == 10)
+				{
+					npcs[3]->setAlive(false);
+					isYellowDead = true;
+					npcs[3]->addDialog(yellowDialogAfterFight);
+				}
+			}
+			if (!npcs[3]->getAlive())
+			{
+				npcs[3]->talk();
+				npcs[3]->setInteractionCount();
 			}
 		}
 
