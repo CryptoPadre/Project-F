@@ -135,25 +135,25 @@ int main()
 		Prop{Vector2{1200.f, 190.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 100, 200},
 		Prop{Vector2{1050.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 380.f}, LoadTexture("car.png"), 8.f, false, 140, 100, 0, 0},
+		Prop{Vector2{600.f, 380.f}, LoadTexture("car-2.png"), 0.3, false, 140, 100, 0, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{2500.f, 600.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
 		Prop{Vector2{1800.f, 1020.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25f, false, 0, 0, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4f, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{600.f, 2340.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2f, false, 0, 0, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("scroll.png"), 0.2f, false, 0, 0, 0, 0},
-		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1f, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("scroll.png"), 0.2, false, 0, 0, 0, 0},
+		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1, false, 0, 0, 0, 0},
 		Prop{Vector2{260.f, 250.f}, LoadTexture("old-house.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{130.f, -120.f}, LoadTexture("wardrobe.png"), 0.5f, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5f, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, -120.f}, LoadTexture("wardrobe-red.png"), 0.5f, false, 0, 0, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("dagger.png"), 0.25f, false, 0, 0, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25f, false, 0, 0, 0, 0}};
+		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5, false, 0, 0, 0, 0},
+		Prop{Vector2{300.f, -120.f}, LoadTexture("wardrobe-red.png"), 0.5, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("dagger.png"), 0.25, false, 0, 0, 0, 0},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
@@ -248,7 +248,9 @@ int main()
 	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
-	bool boydDialogDayThree{};
+	bool saraDialogTwo{};
+	bool boydDialogAfterFight{};
+	bool boydDialogKid{};
 	bool wasInCave{};
 	bool isYellowDead{};
 	bool metYellow{};
@@ -292,8 +294,8 @@ int main()
 	int town_exit_width_min = 1750;
 	int town_exit_height_min = 877;
 	int town_exit_height_max = 1417;
-	int closed_house_width_min = 940;
-	int closed_house_width_max = 1040;
+	int closed_house_width_min = 935;
+	int closed_house_width_max = 1000;
 	int closed_house_height = 355;
 
 	enum InteriorType
@@ -361,10 +363,18 @@ int main()
 			npcs[0]->addDialog(boydDialoguesDayTwo);
 			boydDialogDayTwo = true;
 		}
-		if (daysSurvived > 5 && !boydDialogDayThree)
+		if (wasInCave && !saraDialogTwo)
 		{
-			npcs[0]->addDialog(boydDialoguesDayThree);
-			boydDialogDayThree = true;
+			npcs[1]->addDialog(saraDialoguesDayTwo);
+			saraDialogTwo = true;
+		}
+		if(isYellowDead && !boydDialogAfterFight){
+			npcs[0]->addDialog(boydDialoguesAfterFight);
+			boydDialogAfterFight = true;
+		}
+		if(talkedToKid && !boydDialogKid){
+			npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
+			boydDialogKid = true;
 		}
 		// Beginning of the game
 		if (isGameStart)
@@ -415,7 +425,7 @@ int main()
 					}
 				}
 			}
-			if (talkedToKid)
+			if (talkedToKid && !hasDagger)
 			{
 
 				if (IsKeyPressed(KEY_E))
@@ -438,8 +448,9 @@ int main()
 				{
 					enemies[1]->tick(GetFrameTime());
 				}
+				npcs[3]->tick(GetFrameTime());
 			}
-			npcs[3]->tick(GetFrameTime());
+
 			hero.tick(GetFrameTime());
 		}
 		// World map changing between daytime/nighttime
@@ -608,8 +619,8 @@ int main()
 					}
 				}
 			}
-			if (hero.getWorldPos().x >= closed_house_width_min && hero.getWorldPos().x <= closed_house_width_max &&
-				hero.getWorldPos().y <= closed_house_height && lockedHouseCounter <= heroInteractionWithDoor2.size() - 1)
+			if (hero.getWorldPos().x > closed_house_width_min && hero.getWorldPos().x < closed_house_width_max &&
+				hero.getWorldPos().y < closed_house_height)
 			{
 				if (!doorUnlocked)
 				{
@@ -887,7 +898,6 @@ int main()
 					if (npcs[2]->getInteractionCount() == 1)
 					{
 						talkedToKid = true;
-						npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
 						npcs[3]->addDialog(yellowDialogStartMap);
 						npcs[3]->setWorldPos(850.f, 750.f);
 						npcs[3]->setCurrentRow(2);
@@ -1135,7 +1145,6 @@ int main()
 					hero.setWorldPos(650.f, 435.f);
 					wasInCave = true;
 					npcs[1]->setWorldPos(1200.f, 2100.f);
-					npcs[1]->addDialog(saraDialoguesDayTwo);
 				}
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
@@ -1401,7 +1410,7 @@ int main()
 			{
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
-					hero.setAlive(false);
+					hero.setAlive(true);
 				}
 			}
 			if (hasDagger)

@@ -159,10 +159,7 @@ void NPC::tick(float deltaTime)
     {
         texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
-        if (isTalking && interactionCount - 1 < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 250.f)
-        {
-            conversation(NPCDialog[interactionCount - 1], getScreenPos().x, getScreenPos().y);
-        }
+        
         // Determine animation row based on direction
         if (fabs(velocity.x) > fabs(velocity.y))
         {
