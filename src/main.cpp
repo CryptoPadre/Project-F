@@ -135,7 +135,7 @@ int main()
 		Prop{Vector2{1200.f, 190.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 100, 200},
 		Prop{Vector2{1050.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 380.f}, LoadTexture("car-2.png"), 0.3, false, 140, 100, 0, 0},
+		Prop{Vector2{520.f, 330.f}, LoadTexture("car-2.png"), 0.35, false, 100, 40, 0, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
