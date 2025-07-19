@@ -249,7 +249,7 @@ int main()
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool saraDialogTwo{};
-	bool boydDialogAfterFight{};
+	bool dialogsAfterFight{};
 	bool boydDialogKid{};
 	bool wasInCave{};
 	bool isYellowDead{};
@@ -330,6 +330,8 @@ int main()
 
 	int hitCounter = 0;
 
+	int afterFightCounter = 0;
+
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -363,16 +365,20 @@ int main()
 			npcs[0]->addDialog(boydDialoguesDayTwo);
 			boydDialogDayTwo = true;
 		}
-		if (wasInCave && !saraDialogTwo)
+		if (wasInCave && !saraDialogTwo && boydDialogDayTwo)
 		{
 			npcs[1]->addDialog(saraDialoguesDayTwo);
 			saraDialogTwo = true;
 		}
-		if(isYellowDead && !boydDialogAfterFight){
+		if (isYellowDead && !dialogsAfterFight)
+		{
 			npcs[0]->addDialog(boydDialoguesAfterFight);
-			boydDialogAfterFight = true;
+			npcs[1]->addDialog(saraDialoguesDayAfterFight);
+			npcs[4]->addDialog(yellowDialogAfterFight);
+			dialogsAfterFight = true;
 		}
-		if(talkedToKid && !boydDialogKid){
+		if (talkedToKid && !boydDialogKid)
+		{
 			npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
 			boydDialogKid = true;
 		}
@@ -625,7 +631,7 @@ int main()
 				if (!doorUnlocked)
 				{
 					conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
-					if (IsKeyPressed(KEY_E))
+					if (IsKeyPressed(KEY_E) && lockedHouseCounter < heroInteractionWithDoor2.size())
 					{
 						lockedHouseCounter++;
 					}
@@ -1413,7 +1419,7 @@ int main()
 					hero.setAlive(true);
 				}
 			}
-			if (hasDagger)
+			if (hasDagger && npcs[3]->getAttack())
 			{
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 				{
@@ -1423,15 +1429,15 @@ int main()
 				{
 					npcs[3]->setAlive(false);
 					isYellowDead = true;
-					npcs[3]->addDialog(yellowDialogAfterFight);
 				}
 			}
 			if (!npcs[3]->getAlive())
 			{
+				if (afterFightCounter < yellowDialogAfterFight.size() - 1)
+					conversation(yellowDialogAfterFight[afterFightCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
-					npcs[3]->talk();
-					npcs[3]->setInteractionCount();
+					afterFightCounter++;
 				}
 			}
 		}

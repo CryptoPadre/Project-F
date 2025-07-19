@@ -50,6 +50,7 @@ void NPC::tick(float deltaTime)
 {
     if (!getAlive())
     {
+        
         // Freeze velocity to stop movement
         velocity = {};
         texture = interact;
