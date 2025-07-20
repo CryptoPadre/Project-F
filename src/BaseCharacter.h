@@ -12,6 +12,7 @@ class BaseCharacter{
     virtual void tick(float deltaTime);
 	virtual Vector2 getScreenPos() = 0;
 	bool getAlive() {return alive;}
+	bool getDeatFrameAnim() { return deathAnimDone;}
 	void setAlive(bool isAlive) {alive = isAlive;}
 	void setWorldPos(float x, float y) { worldPos = {x, y}; }
 	void setCurrentRow(int row) { currentRow = row; }

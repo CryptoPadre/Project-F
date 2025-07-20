@@ -43,12 +43,14 @@ int main()
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
 	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
-	NPC *npcs[5]{
+	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-hurt.png"), LoadTexture("baby-attack.png"), false, true};
+	NPC *npcs[6]{
 		&boyd,
 		&sara,
 		&kid,
 		&yellow,
-		&woman};
+		&woman,
+		&baby};
 	for (auto npc : npcs)
 	{
 		npc->setTarget(&hero);
@@ -257,9 +259,6 @@ int main()
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
-	bool putTalismanInTheHouseOne{};
-	bool putTalismanInTheHouseTwo{};
-	bool putTalismanInTheTemple{};
 	bool scrollDialogAdded{};
 	bool renderEnemy{};
 	bool doorUnlocked{};
@@ -699,25 +698,13 @@ int main()
 						hero.setWorldPos(-350.f, -177.f);
 					}
 				}
-				if (isDayTime && !putTalismanInTheHouseOne && hasTalisman)
+				if (!isDayTime && hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
 				{
-					if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
-					{
-						conversation("The guy said the talisman keep them away!", hero.getScreenPos().x, hero.getScreenPos().y);
-						if (IsKeyPressed(KEY_E))
-						{
-							putTalismanInTheHouseOne = true;
-							hasTalisman = false;
-						}
-					}
-				}
-				else if (!isDayTime && hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
-				{
-					conversation("It's still dark. Better to wait till sunries", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("It's still dark. Better to wait till sunrise", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 				else if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
 				{
-					conversation("Let's get the hell out of here!", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("Let's get out of here!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;
@@ -733,7 +720,6 @@ int main()
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
 				{
-					conversation("Is anybody here?", hero.getScreenPos().x, hero.getScreenPos().y);
 					hero.undoMovement();
 				}
 
@@ -758,6 +744,17 @@ int main()
 				if (npcs[4]->getInteractionCount() >= womanInTheHouse.size() - 1)
 				{
 					talkedToWoman = true;
+				}
+				if (hasMedkit)
+				{
+					npcs[5]->tick(GetFrameTime());
+					if (Vector2Distance(npcs[5]->getScreenPos(), hero.getScreenPos()) < 150.f)
+					{
+						npcs[5]->setAttack();
+					}
+					else {
+						conversation("Moooother!", npcs[5]->getScreenPos().x + 30, npcs[5]->getScreenPos().y + 20);
+					}
 				}
 				if (CheckCollisionRecs(npcs[4]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
@@ -1171,6 +1168,11 @@ int main()
 				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
 				{
 					hero.setAlive(false);
+					if (hero.getDeatFrameAnim())
+					{
+						isInCave = false;
+						isGameOver = true;
+					}
 				}
 				enemies[i]->tick(GetFrameTime());
 				if (hasDagger)
@@ -1180,6 +1182,11 @@ int main()
 						enemies[i]->setAlive(false);
 					}
 				}
+			}
+			if (!hero.getAlive())
+			{
+				isInCave = false;
+				isGameOver = true;
 			}
 			for (int i = 3; i < 22; i++)
 			{
@@ -1210,6 +1217,7 @@ int main()
 		}
 		else if (isGameOver)
 		{
+
 			if (randomValue == 5)
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
