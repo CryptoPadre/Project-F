@@ -36,7 +36,8 @@ int main()
 	// PlayMusicStream(intro);
 	// draw hero
 	Character hero{screenWidth, screenHeight};
-	hero.setWorldPos(400.f, 200.f);
+	// start 400.f 200.f
+	hero.setWorldPos(-294.f, 56.f);
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
@@ -156,16 +157,16 @@ int main()
 		Prop{Vector2{300.f, -120.f}, LoadTexture("wardrobe-red.png"), 0.5, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("dagger.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 600.f}, LoadTexture("box-locked.png"), 0.25, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 700.f}, LoadTexture("box-open.png"), 0.25, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 600.f}, LoadTexture("chair.png"), 0.4, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 700.f}, LoadTexture("clock.png"), 0.6, false, 0, 0, 0, 0},
-		Prop{Vector2{800.f, 800.f}, LoadTexture("desk.png"), 0.6, false, 0, 0, 0, 0},
-		Prop{Vector2{800.f, 900.f}, LoadTexture("desk-2.png"), 0.6, false, 0, 0, 0, 0},
+		Prop{Vector2{530.f, 120.f}, LoadTexture("box-locked.png"), 0.25, false, 0, 0, 0, 0},
+		Prop{Vector2{530.f, 120.f}, LoadTexture("box-open.png"), 0.25, false, 0, 0, 0, 0},
+		Prop{Vector2{140.f, 150.f}, LoadTexture("chair.png"), 0.4, false, 0, 0, 0, 0},
+		Prop{Vector2{385.f, -180.f}, LoadTexture("clock.png"), 0.6, false, 0, 0, 0, 0},
+		Prop{Vector2{100.f, 130.f}, LoadTexture("desk.png"), 0.6, false, 0, 0, 0, 0},
+		Prop{Vector2{550.f, 20.f}, LoadTexture("desk-2.png"), 0.6, false, 0, 0, 0, 0},
 		Prop{Vector2{800.f, 600.f}, LoadTexture("desk-3.png"), 0.5, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 700.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 800.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
-		Prop{Vector2{600.f, 900.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 0, 0}};
+		Prop{Vector2{500.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
+		Prop{Vector2{65.f, 150.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
+		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
@@ -240,12 +241,12 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
-	bool isInSecretRoom{};
+	bool isInSecretRoom{true};
 	bool isInSarasHouse{};
 	bool wasInSarasHouse{};
 	bool hasFlashlight{};
@@ -677,7 +678,7 @@ int main()
 				{
 					hero.undoMovement();
 				}
-				props[9].Render(hero.getWorldPos());
+				props[32].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x < 130 && hero.getWorldPos().x > -38 && hero.getWorldPos().y > -190 && hero.getWorldPos().y < -20)
 				{
 
@@ -747,6 +748,7 @@ int main()
 					}
 				}
 				npcs[4]->tick(GetFrameTime());
+				props[27].Render(hero.getWorldPos());
 				if (IsKeyPressed(KEY_E))
 				{
 					npcs[4]->talk();
@@ -772,7 +774,9 @@ int main()
 				{
 					hero.undoMovement();
 				}
-
+				
+				props[30].Render(hero.getWorldPos());
+				props[34].Render(hero.getWorldPos());
 				break;
 			case TEMPLE:
 				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
@@ -823,6 +827,13 @@ int main()
 							}
 						}
 					}
+				}
+				props[29].Render(hero.getWorldPos());
+				if(!hasRustyKey){
+				props[25].Render(hero.getWorldPos());
+				}
+				else {
+				props[26].Render(hero.getWorldPos());
 				}
 				break;
 			default:
@@ -879,6 +890,7 @@ int main()
 					}
 				}
 			}
+			props[33].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
 		}
 		// Map if hero tries to leave the town
@@ -1278,6 +1290,7 @@ int main()
 		{
 			DrawTextureEx(maps[17], interiorPos, 0.0, 1.5, WHITE);
 			props[20].Render(hero.getWorldPos());
+			props[28].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
 			if (hero.getWorldPos().y < -352 || hero.getWorldPos().x > -90 || hero.getWorldPos().x < -491 || hero.getWorldPos().y > 71)
 			{
