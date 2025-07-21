@@ -130,7 +130,7 @@ int main()
 	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
-	Prop props[25]{
+	Prop props[27]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -155,7 +155,9 @@ int main()
 		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5, false, 0, 0, 0, 0},
 		Prop{Vector2{300.f, -120.f}, LoadTexture("wardrobe-red.png"), 0.5, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("dagger.png"), 0.25, false, 0, 0, 0, 0},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25, false, 0, 0, 0, 0}};
+		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25, false, 0, 0, 0, 0},
+		Prop{Vector2{600.f, 600.f}, LoadTexture("box-locked.png"), 0.25, false, 0, 0, 0, 0},
+		Prop{Vector2{600.f, 700.f}, LoadTexture("box-open.png"), 0.25, false, 0, 0, 0, 0}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
@@ -395,6 +397,7 @@ int main()
 
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
+			
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()))
 			{
@@ -752,7 +755,8 @@ int main()
 					{
 						npcs[5]->setAttack();
 					}
-					else {
+					else
+					{
 						conversation("Moooother!", npcs[5]->getScreenPos().x + 30, npcs[5]->getScreenPos().y + 20);
 					}
 				}
