@@ -159,14 +159,14 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{530.f, 120.f}, LoadTexture("box-locked.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{530.f, 120.f}, LoadTexture("box-open.png"), 0.25, false, 0, 0, 0, 0},
-		Prop{Vector2{140.f, 150.f}, LoadTexture("chair.png"), 0.4, false, 0, 0, 0, 0},
+		Prop{Vector2{140.f, 30.f}, LoadTexture("chair.png"), 0.4, false, 30, 0, 10, 10},
 		Prop{Vector2{385.f, -180.f}, LoadTexture("clock.png"), 0.6, false, 0, 0, 0, 0},
 		Prop{Vector2{100.f, 130.f}, LoadTexture("desk.png"), 0.6, false, 0, 0, 0, 0},
-		Prop{Vector2{550.f, 20.f}, LoadTexture("desk-2.png"), 0.6, false, 0, 0, 0, 0},
+		Prop{Vector2{550.f, 20.f}, LoadTexture("desk-2.png"), 0.6, false, 70, 0, 0, 0},
 		Prop{Vector2{800.f, 600.f}, LoadTexture("desk-3.png"), 0.5, false, 0, 0, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{65.f, 150.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 0, 0}};
+		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -10}};
 	// render enemy
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
@@ -255,7 +255,7 @@ int main()
 	bool isDayTime{true};
 	bool hasTalisman{};
 	bool hasMedkit{};
-	bool hasKey{};
+	bool hasKey{true};
 	bool hasScroll{};
 	bool hasDagger{};
 	bool hasRustyKey{};
@@ -406,7 +406,7 @@ int main()
 
 			props[5].Render(hero.getWorldPos());
 			props[6].Render(hero.getWorldPos());
-			
+
 			if (CheckCollisionRecs(props[6].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()))
 			{
@@ -679,14 +679,17 @@ int main()
 					hero.undoMovement();
 				}
 				props[32].Render(hero.getWorldPos());
-				if (hero.getWorldPos().x < 130 && hero.getWorldPos().x > -38 && hero.getWorldPos().y > -190 && hero.getWorldPos().y < -20)
+				if (hero.getWorldPos().x < 140 && hero.getWorldPos().x > -65 && hero.getWorldPos().y > -170)
 				{
 
 					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				if (hero.getWorldPos().x < 100 && hero.getWorldPos().x > -8 && hero.getWorldPos().y > -160 && hero.getWorldPos().y < 10)
+				if (hero.getWorldPos().x < 125 && hero.getWorldPos().x > -40 && hero.getWorldPos().y > -160 && hero.getWorldPos().y < 0)
 				{
 					hero.undoMovement();
+				}
+				if (hero.getWorldPos().x < 70 && hero.getWorldPos().x > 10 && hero.getWorldPos().y > -180 && hero.getWorldPos().y < -160)
+				{
 					if (metYellow)
 					{
 						if (IsKeyPressed(KEY_E))
@@ -747,8 +750,11 @@ int main()
 						hero.setWorldPos(house_two_entry_width_min, house_two_entry_height);
 					}
 				}
-				npcs[4]->tick(GetFrameTime());
+
 				props[27].Render(hero.getWorldPos());
+				props[30].Render(hero.getWorldPos());
+				props[34].Render(hero.getWorldPos());
+				npcs[4]->tick(GetFrameTime());
 				if (IsKeyPressed(KEY_E))
 				{
 					npcs[4]->talk();
@@ -774,14 +780,23 @@ int main()
 				{
 					hero.undoMovement();
 				}
-				
-				props[30].Render(hero.getWorldPos());
-				props[34].Render(hero.getWorldPos());
+				if(CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+					hero.undoMovement();
+				}
+				if(CheckCollisionRecs(props[30].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+					hero.undoMovement();
+				}
+				if(CheckCollisionRecs(props[34].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+					hero.undoMovement();
+				}
+
 				break;
 			case TEMPLE:
 				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -390 || hero.getWorldPos().x > 102 ||
-					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200)
+					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200 ||
+					hero.getWorldPos().x < -255 && hero.getWorldPos().y < -145 ||
+					hero.getWorldPos().x > -18 && hero.getWorldPos().x < 90 && hero.getWorldPos().y < -150)
 				{
 					hero.undoMovement();
 				}
@@ -829,11 +844,13 @@ int main()
 					}
 				}
 				props[29].Render(hero.getWorldPos());
-				if(!hasRustyKey){
-				props[25].Render(hero.getWorldPos());
+				if (!hasRustyKey)
+				{
+					props[25].Render(hero.getWorldPos());
 				}
-				else {
-				props[26].Render(hero.getWorldPos());
+				else
+				{
+					props[26].Render(hero.getWorldPos());
 				}
 				break;
 			default:

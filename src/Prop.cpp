@@ -32,9 +32,9 @@ void Prop::Render(Vector2 heroPos)
         float trunkWidth = totalWidth * 0.6f;
         float trunkHeight = totalHeight * 0.2f;
         DrawRectangleLines(
-            screenPos.x + (totalWidth - trunkWidth) / 2.f, // right side
+            screenPos.x + (totalWidth - trunkWidth) / 2.f + adjustmentWidthA, // right side
             screenPos.y + totalHeight - trunkHeight - adjustmentHeightA,
-            trunkWidth , // left side
+            trunkWidth + adjustmentWidthB, // left side
             trunkHeight + adjustmentHeightB,
             BLUE);
     }
@@ -58,9 +58,9 @@ Rectangle Prop::GetCollisionRec(Vector2 heroPos)
         float trunkWidth = totalWidth * 0.6f;
         float trunkHeight = totalHeight * 0.2f;
         return Rectangle{
-            screenPos.x + (totalWidth - trunkWidth) / 2.0f,
+            screenPos.x + (totalWidth - trunkWidth) / 2.0f + adjustmentWidthA,
             screenPos.y + totalHeight - trunkHeight - adjustmentHeightA,
-            trunkWidth,
+            trunkWidth + adjustmentWidthB,
             trunkHeight + adjustmentHeightB};
     }
 }
