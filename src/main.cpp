@@ -159,7 +159,7 @@ int main()
 		Prop{Vector2{0.f, 0.f}, LoadTexture("rusty-key.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{530.f, 120.f}, LoadTexture("box-locked.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{530.f, 120.f}, LoadTexture("box-open.png"), 0.25, false, 0, 0, 0, 0},
-		Prop{Vector2{140.f, 30.f}, LoadTexture("chair.png"), 0.4, false, 30, 0, 10, 10},
+		Prop{Vector2{140.f, 30.f}, LoadTexture("chair.png"), 0.4, false, 30, 0, 10, 5},
 		Prop{Vector2{385.f, -180.f}, LoadTexture("clock.png"), 0.6, false, 0, 0, 0, 0},
 		Prop{Vector2{100.f, 130.f}, LoadTexture("desk.png"), 0.6, false, 0, 0, 0, 0},
 		Prop{Vector2{550.f, 20.f}, LoadTexture("desk-2.png"), 0.6, false, 70, 0, 0, 0},
@@ -258,7 +258,7 @@ int main()
 	bool hasKey{true};
 	bool hasScroll{};
 	bool hasDagger{};
-	bool hasRustyKey{};
+	bool hasRustyKey{true};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool saraDialogTwo{};
@@ -273,6 +273,7 @@ int main()
 	bool scrollDialogAdded{};
 	bool renderEnemy{};
 	bool doorUnlocked{};
+	bool boxOpen{};
 
 	hero.setHasDagger(hasDagger);
 	float leftY = 840;
@@ -341,6 +342,8 @@ int main()
 	int hitCounter = 0;
 
 	int afterFightCounter = 0;
+
+	int daggerInteraction = 0;
 
 	// set target fps
 	SetTargetFPS(60);
@@ -780,13 +783,16 @@ int main()
 				{
 					hero.undoMovement();
 				}
-				if(CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+				if (CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
+				{
 					hero.undoMovement();
 				}
-				if(CheckCollisionRecs(props[30].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+				if (CheckCollisionRecs(props[30].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
+				{
 					hero.undoMovement();
 				}
-				if(CheckCollisionRecs(props[34].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+				if (CheckCollisionRecs(props[34].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
+				{
 					hero.undoMovement();
 				}
 
@@ -844,7 +850,7 @@ int main()
 					}
 				}
 				props[29].Render(hero.getWorldPos());
-				if (!hasRustyKey)
+				if (!boxOpen)
 				{
 					props[25].Render(hero.getWorldPos());
 				}
@@ -852,6 +858,16 @@ int main()
 				{
 					props[26].Render(hero.getWorldPos());
 				}
+				if (hero.getWorldPos().x > 20 && hero.getWorldPos().x < 60 && hero.getWorldPos().y < -140)
+				{
+					if (IsKeyPressed(KEY_E))
+					{
+						boxOpen = true;
+
+					}
+				}
+				
+
 				break;
 			default:
 				break;

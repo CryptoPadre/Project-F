@@ -24,7 +24,6 @@ inline std::vector<std::string> boydDialoguesDayTwo = {
     "Only one woman ever got out, and...",
     "She died here."};
 
-
 inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
     "Have you seen a kid?",
     "You've been here before...",
@@ -102,7 +101,7 @@ inline std::vector<std::string> kidDialogScroll = {
     "I'm your daugther, we are!",
     "You die, you left, you return!",
     "The only escape is thru the tree"};
-    
+
 inline std::vector<std::string> yellowDialogScroll = {
     "You did this to yourself.",
     "You arrived early.",
@@ -164,6 +163,13 @@ inline std::vector<std::string> heroScroll = {
     "A scroll with some gibberish text?",
     "Let's take it!",
     "Someone might know what is written on it!"};
+
+inline std::vector<std::string> heroDagger = {
+    "A dagger?", 
+    "A dagger?",
+    "It's very sharp!"
+
+};
 
 inline std::vector<std::string> heroInteractionWithDoors = {
     "Heeeelp!",
