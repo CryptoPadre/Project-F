@@ -164,13 +164,6 @@ inline std::vector<std::string> heroScroll = {
     "Let's take it!",
     "Someone might know what is written on it!"};
 
-inline std::vector<std::string> heroDagger = {
-    "A dagger?", 
-    "A dagger?",
-    "It's very sharp!"
-
-};
-
 inline std::vector<std::string> heroInteractionWithDoors = {
     "Heeeelp!",
     "It's locked!"};

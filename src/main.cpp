@@ -274,6 +274,7 @@ int main()
 	bool renderEnemy{};
 	bool doorUnlocked{};
 	bool boxOpen{};
+	bool daggerPickedUp{};
 
 	hero.setHasDagger(hasDagger);
 	float leftY = 840;
@@ -860,14 +861,25 @@ int main()
 				}
 				if (hero.getWorldPos().x > 20 && hero.getWorldPos().x < 60 && hero.getWorldPos().y < -140)
 				{
-					if (IsKeyPressed(KEY_E))
+					if (!boxOpen)
 					{
-						boxOpen = true;
+						conversation("Let's see if this opens it!", hero.getScreenPos().x, hero.getScreenPos().y);
 
+						if (IsKeyPressed(KEY_E))
+						{
+							boxOpen = true;
+						}
+					}
+					else if (boxOpen && !hasDagger)
+					{
+						conversation("A dagger?", hero.getScreenPos().x, hero.getScreenPos().y);
+						if (IsKeyPressed(KEY_E))
+						{
+							hasDagger = true;
+							hero.setHasDagger(hasDagger);
+						}
 					}
 				}
-				
-
 				break;
 			default:
 				break;
