@@ -258,7 +258,7 @@ int main()
 	bool hasKey{true};
 	bool hasScroll{};
 	bool hasDagger{};
-	bool hasRustyKey{true};
+	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool saraDialogTwo{};
@@ -344,6 +344,8 @@ int main()
 
 	int afterFightCounter = 0;
 
+	int templeBookInteraction = 0;
+
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -372,7 +374,7 @@ int main()
 		{
 			isDayTime = fmod(GetTime(), 40.0) < 20.0;
 		}
-		if (daysSurvived > 3 && !boydDialogDayTwo)
+		if (templeBookInteraction > 5 && !boydDialogDayTwo)
 		{
 			npcs[0]->addDialog(boydDialoguesDayTwo);
 			boydDialogDayTwo = true;
@@ -849,6 +851,14 @@ int main()
 					}
 				}
 				props[29].Render(hero.getWorldPos());
+				if (hero.getWorldPos().x < -300 && hero.getWorldPos().y < -135 && templeBookInteraction <= heroInteractionWithBookInTemple.size() - 1)
+				{
+					conversation(heroInteractionWithBookInTemple[templeBookInteraction], hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						templeBookInteraction++;
+					}
+				}
 				if (!boxOpen)
 				{
 					props[25].Render(hero.getWorldPos());
@@ -861,16 +871,26 @@ int main()
 				{
 					if (!boxOpen)
 					{
-						conversation("Let's see if this opens it!", hero.getScreenPos().x, hero.getScreenPos().y);
-
-						if (IsKeyPressed(KEY_E))
+						if (templeBookInteraction > 1)
 						{
-							boxOpen = true;
+							conversation("It must be inside!", hero.getScreenPos().x, hero.getScreenPos().y);
+						}
+						else if (!boxOpen && hasRustyKey)
+						{
+							conversation("Let's see if this opens it!", hero.getScreenPos().x, hero.getScreenPos().y);
+							if (IsKeyPressed(KEY_E))
+							{
+								boxOpen = true;
+							}
+						}
+						else
+						{
+							conversation("I can't open it without a key!", hero.getScreenPos().x, hero.getScreenPos().y);
 						}
 					}
 					else if (boxOpen && !hasDagger)
 					{
-						conversation("A dagger?", hero.getScreenPos().x, hero.getScreenPos().y);
+						conversation("Okay, let's see if Jade's theory is right.", hero.getScreenPos().x, hero.getScreenPos().y);
 						if (IsKeyPressed(KEY_E))
 						{
 							hasDagger = true;
@@ -998,9 +1018,10 @@ int main()
 					hero.setWorldPos(1260.f, 785.f);
 				}
 			}
-			if (wasInSarasHouse)
+			if (hero.getWorldPos().x < 912 && hero.getWorldPos().x > 870 && hero.getWorldPos().y < 250)
 			{
-				if (hero.getWorldPos().x < 912 && hero.getWorldPos().x > 870 && hero.getWorldPos().y < 250)
+
+				if (wasInSarasHouse)
 				{
 					if (IsKeyPressed(KEY_E))
 					{
@@ -1008,6 +1029,10 @@ int main()
 						isOutsideTown = false;
 						hero.setWorldPos(-150.f, 50.f);
 					}
+				}
+				else
+				{
+					conversation("It's locked!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
 			if (

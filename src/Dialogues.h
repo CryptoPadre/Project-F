@@ -182,6 +182,26 @@ inline std::vector<std::string> interactionWithHouseOutsideTown = {
     "Tabitha escaped once.",
     "You may escape too!"};
 
+inline std::vector<std::string> heroInteractionWithBookInTemple = {
+    "A book?",
+    "Somebody wrote this page just yesterday.",
+    "I went into the cave for answers.",
+    "It was full of those monsters.",
+    "I hid behind a rock.",
+    "And there, I found this dagger.",
+    "Stabbed into a skeleton's head.",
+    "It must have been there for ages.",
+    "But the blood is still fresh on it.",
+    "I'm afraid it has something to do with the man in yellow.",
+    "He appeared the next day.",
+    "He might have been looking for the dagger.",
+    "It's better to lock it away.",
+    "I'll need to go back to that cave.",
+    "Those kids want to show me something.",
+    "Who wrote this?",
+    "Jade?",
+};
+
 inline std::vector<std::string> womanInTheHouse = {
     "Arrrgh...",
     "Please help me...",
