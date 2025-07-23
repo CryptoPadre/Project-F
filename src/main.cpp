@@ -344,8 +344,6 @@ int main()
 
 	int afterFightCounter = 0;
 
-	int daggerInteraction = 0;
-
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -1416,15 +1414,6 @@ int main()
 			if (hero.getWorldPos().x > -495 && hero.getWorldPos().x < -465 && hero.getWorldPos().y > -44 && hero.getWorldPos().y < 0)
 			{
 				conversation("Another tree? This one isn't familiar.", hero.getScreenPos().x, hero.getScreenPos().y);
-			}
-			if (hero.getWorldPos().x > -495 && hero.getWorldPos().x < -427 && hero.getWorldPos().y > 30 && hero.getWorldPos().y < 90)
-			{
-				conversation("An old dagger with a bloody blade?", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
-				{
-					hasDagger = true;
-					hero.setHasDagger(hasDagger);
-				}
 			}
 			if (hero.getWorldPos().x > -165 && hero.getWorldPos().x < -125 && hero.getWorldPos().y < -300)
 			{
