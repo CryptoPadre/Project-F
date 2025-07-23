@@ -1399,7 +1399,7 @@ int main()
 					hero.setWorldPos(900.f, 250.f);
 				}
 			}
-			if (hero.getWorldPos().x > -40 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 15)
+			if (hero.getWorldPos().x > -40 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 15 && !hasRustyKey)
 			{
 				conversation("An old rusty key?", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
@@ -1414,6 +1414,10 @@ int main()
 			if (hero.getWorldPos().x > -495 && hero.getWorldPos().x < -465 && hero.getWorldPos().y > -44 && hero.getWorldPos().y < 0)
 			{
 				conversation("Another tree? This one isn't familiar.", hero.getScreenPos().x, hero.getScreenPos().y);
+			}
+			if (hero.getWorldPos().x > -495 && hero.getWorldPos().x < -427 && hero.getWorldPos().y > 30 && hero.getWorldPos().y < 90 && !wasInSarasHouse)
+			{
+				conversation("What is this?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 			if (hero.getWorldPos().x > -165 && hero.getWorldPos().x < -125 && hero.getWorldPos().y < -300)
 			{
