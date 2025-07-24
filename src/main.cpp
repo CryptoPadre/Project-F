@@ -717,13 +717,14 @@ int main()
 						hero.setWorldPos(-350.f, -177.f);
 					}
 				}
-				if (!isDayTime && hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
+				if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
 				{
-					conversation("It's still dark. Better to wait till sunrise", hero.getScreenPos().x, hero.getScreenPos().y);
-				}
-				else if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
-				{
-					conversation("Let's get out of here!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if(!isDayTime){
+					conversation("They are still outside!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					else{
+						conversation("Where should I go now?", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;
