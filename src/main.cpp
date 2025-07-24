@@ -266,7 +266,7 @@ int main()
 	bool boydDialogKid{};
 	bool wasInCave{};
 	bool isYellowDead{};
-	bool metYellow{};
+	bool metYellow{true};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
@@ -275,6 +275,7 @@ int main()
 	bool doorUnlocked{};
 	bool boxOpen{};
 	bool daggerPickedUp{};
+	bool hasFallen{};
 
 	hero.setHasDagger(hasDagger);
 	float leftY = 840;
@@ -357,7 +358,7 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 		// UpdateMusicStream(intro);
-
+		hero.setIsGettingUp(hasFallen);
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);
@@ -701,7 +702,7 @@ int main()
 							currentInterior = NONE;
 							isInside = false;
 							isInCave = true;
-							inCaveCounter++;
+							hasFallen = true;
 							hero.setWorldPos(70.f, 2040.f);
 						}
 					}
@@ -719,10 +720,12 @@ int main()
 				}
 				if (hero.getWorldPos().x > -415 && hero.getWorldPos().x < -350 && hero.getWorldPos().y > 300)
 				{
-					if(!isDayTime){
-					conversation("They are still outside!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (!isDayTime)
+					{
+						conversation("They are still outside!", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
-					else{
+					else
+					{
 						conversation("Where should I go now?", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
 					if (IsKeyPressed(KEY_E))
@@ -1192,13 +1195,6 @@ int main()
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
 			}
-
-			if (hero.getWorldPos().x > 73 && hero.getWorldPos().x < 217 && hero.getWorldPos().y < 2102 && hero.getWorldPos().y > 1970)
-			{
-
-				hero.undoMovement();
-			}
-			props[15].Render(hero.getWorldPos());
 			if (!hasScroll)
 			{
 
@@ -1301,12 +1297,14 @@ int main()
 			if (hero.getWorldPos().x > 55 && hero.getWorldPos().x < 240 && hero.getWorldPos().y < 2150 && hero.getWorldPos().y > 1920 && inCaveCounter < heroInCave.size())
 			{
 				conversation(heroInCave[inCaveCounter], hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E) && inCaveCounter < heroInCave.size())
+				if (IsKeyPressed(KEY_E) && inCaveCounter <= heroInCave.size() - 1)
 				{
 					inCaveCounter++;
+					hasFallen = false;
 				}
 			}
 			hero.tick(GetFrameTime());
+			
 		}
 		else if (isGameOver)
 		{

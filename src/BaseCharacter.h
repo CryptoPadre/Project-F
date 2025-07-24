@@ -17,6 +17,7 @@ class BaseCharacter{
 	void setWorldPos(float x, float y) { worldPos = {x, y}; }
 	void setCurrentRow(int row) { currentRow = row; }
 	void setCurrentFrame(int frame) {currentFrame = frame;};
+	void setIsGettingUp(bool fellDown) {isGettingUp = fellDown;}
     protected:
     Texture2D texture{LoadTexture("hero-walk.png")};
 	Texture2D walk{LoadTexture("hero-walk.png")};
@@ -43,6 +44,8 @@ class BaseCharacter{
 	float deathFrameDuration = 0.5f;
 	int deathTotalFrames = 6;
 	bool deathAnimDone = false;
+	bool isGettingUp{};
+	int getUpFrame = 5;
 };
 
 #endif

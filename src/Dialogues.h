@@ -154,8 +154,8 @@ inline std::vector<std::string> heroTextStartMap = {
     "If I hurry, I'll get back before sunset."};
 
 inline std::vector<std::string> heroInCave = {
-    "A hole... could it be an exit?",
-    "I can't go back that way!",
+    "Oh my leg!",
+    "What the hell is this place?",
     "There has to be another way out!"};
 
 inline std::vector<std::string> heroScroll = {
