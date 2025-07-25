@@ -50,7 +50,7 @@ void NPC::tick(float deltaTime)
 {
     if (!getAlive())
     {
-        
+
         // Freeze velocity to stop movement
         velocity = {};
         texture = interact;
@@ -58,7 +58,6 @@ void NPC::tick(float deltaTime)
         {
             currentFrame = 6;
             deathAnimStarted = true;
-            
         }
 
         // Play death animation
@@ -67,13 +66,13 @@ void NPC::tick(float deltaTime)
             deathAnimTime += deltaTime;
             if (deathAnimTime >= deathAnimSpeed)
             {
-                currentFrame--; 
+                currentFrame--;
                 deathAnimTime = 0.f;
 
                 if (currentFrame <= 2)
                 {
-                    currentFrame = 2;     
-                    deathAnimDone = true; 
+                    currentFrame = 2;
+                    deathAnimDone = true;
                 }
             }
         }
@@ -107,15 +106,6 @@ void NPC::tick(float deltaTime)
         if (willAttack)
         {
             velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
-            if (Vector2Length(velocity) < radius)
-            {
-                velocity = {};
-                texture = die;
-            }
-            else
-            {
-                texture = walk;
-            }
             if (fabs(velocity.x) > fabs(velocity.y))
             {
                 currentRow = (velocity.x > 0) ? 3 : 1; // Right or Left
@@ -123,6 +113,42 @@ void NPC::tick(float deltaTime)
             else
             {
                 currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
+            }
+            if (Vector2Length(velocity) < radius)
+            {
+                velocity = {};
+                texture = die;
+                attackTimer += GetFrameTime();
+                if (attackTimer >= attackFrameDuration)
+                {
+                    attackTimer = 0.0f;
+                    attackFrame++;
+                    if (attackFrame <= attackTotalFrames)
+                    {
+                        isAttacking = false;
+
+                        texture = walk;
+                    }
+                }
+                Rectangle source{
+                    width * attackFrame,
+                    currentRow * height,
+                    width,
+                    height};
+
+                Rectangle dest{
+                    getScreenPos().x,
+                    getScreenPos().y,
+                    width * scale,
+                    height * scale};
+
+                DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+
+                return;
+            }
+            else
+            {
+                texture = walk;
             }
         }
     }
@@ -160,7 +186,7 @@ void NPC::tick(float deltaTime)
     {
         texture = walk;
         velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
-        
+
         // Determine animation row based on direction
         if (fabs(velocity.x) > fabs(velocity.y))
         {

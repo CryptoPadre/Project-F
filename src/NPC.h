@@ -52,4 +52,9 @@ private:
     float deathAnimSpeed = 1.f;
     bool deathAnimDone{};
     bool deathAnimStarted{};
+    bool isAttacking = false;
+	float attackTimer = 0.0f;
+	int attackFrame = 5;
+	int attackTotalFrames = 6;
+	float attackFrameDuration = 0.2f;
 };
