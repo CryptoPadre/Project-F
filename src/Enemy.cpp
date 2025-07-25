@@ -82,6 +82,33 @@ void Enemy::tick(float deltaTime)
         {
             velocity = {};
             texture = interact;
+            attackTimer += GetFrameTime();
+                if (attackTimer >= attackFrameDuration)
+                {
+                    attackTimer = 0.0f;
+                    attackFrame++;
+                    if (attackFrame <= attackTotalFrames)
+                    {
+                        isAttacking = false;
+
+                        texture = walk;
+                    }
+                }
+                Rectangle source{
+                    width * attackFrame,
+                    currentRow * height,
+                    width,
+                    height};
+
+                Rectangle dest{
+                    getScreenPos().x,
+                    getScreenPos().y,
+                    width * scale,
+                    height * scale};
+
+                DrawTexturePro(texture, source, dest, Vector2{0, 0}, 0.f, WHITE);
+
+                return;
         }
         else
         {

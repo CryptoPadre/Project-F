@@ -21,7 +21,7 @@ private:
 	Texture2D daggerUp{LoadTexture("dagger-up.png")};
 	Rectangle daggerCollisionRec{};
 	bool hasDagger{};
-	bool isAttacking = false;
+	bool isAttacking{};
 	float attackTimer = 0.0f;
 	int attackFrame = 5;
 	int attackTotalFrames = 6;

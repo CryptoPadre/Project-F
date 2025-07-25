@@ -22,6 +22,11 @@ class Enemy : public BaseCharacter{
 	bool awakeningAnimDone = false;
     bool isAwake{};
     int awakeningTrigger = 150;
+    bool isAttacking{};
+    float attackTimer = 0.0f;
+	int attackFrame = 5;
+	int attackTotalFrames = 6;
+	float attackFrameDuration = 0.2f;
     
 };
 
