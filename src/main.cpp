@@ -37,7 +37,7 @@ int main()
 	// draw hero
 	Character hero{screenWidth, screenHeight};
 	// start 400.f 200.f
-	hero.setWorldPos(-294.f, 56.f);
+	hero.setWorldPos(400.f, 200.f);
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
@@ -241,12 +241,12 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
 	bool isOutsideCave{};
-	bool isInSecretRoom{true};
+	bool isInSecretRoom{};
 	bool isInSarasHouse{};
 	bool wasInSarasHouse{};
 	bool hasFlashlight{};
@@ -255,7 +255,7 @@ int main()
 	bool isDayTime{true};
 	bool hasTalisman{};
 	bool hasMedkit{};
-	bool hasKey{true};
+	bool hasKey{};
 	bool hasScroll{};
 	bool hasDagger{};
 	bool hasRustyKey{};
@@ -264,9 +264,10 @@ int main()
 	bool saraDialogTwo{};
 	bool dialogsAfterFight{};
 	bool boydDialogKid{};
+	bool boydDialogAfterBook{};
 	bool wasInCave{};
 	bool isYellowDead{};
-	bool metYellow{true};
+	bool metYellow{};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
@@ -375,10 +376,12 @@ int main()
 		{
 			isDayTime = fmod(GetTime(), 40.0) < 20.0;
 		}
-		if (templeBookInteraction > 5 && !boydDialogDayTwo)
+		if (templeBookInteraction > 5 && !boydDialogAfterBook)
 		{
-			npcs[0]->addDialog(boydDialoguesDayTwo);
-			boydDialogDayTwo = true;
+			npcs[0]->addDialog(boydDialoguesAfterReadingTheBook);
+			npcs[0]->setWorldPos(240.f, 500.f);
+			npcs[0]->setCurrentRow(0);
+			boydDialogAfterBook = true;
 		}
 		if (wasInCave && !saraDialogTwo && boydDialogDayTwo)
 		{
@@ -459,7 +462,6 @@ int main()
 				{
 					conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 					metYellowAtCar = true;
-					enemies[1]->setWorldPos(600.f, 1700.f);
 				}
 				if (hero.getWorldPos().y < 370.f)
 				{
@@ -555,8 +557,11 @@ int main()
 				npcs[0]->undoMovement();
 			}
 			hero.tick(GetFrameTime());
-			npcs[0]->tick(GetFrameTime());
-			npcs[0]->isDay = isDayTime;
+			if (!boydDialogAfterBook)
+			{
+				npcs[0]->tick(GetFrameTime());
+				npcs[0]->isDay = isDayTime;
+			}
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[0]->talk();
@@ -861,6 +866,20 @@ int main()
 					if (IsKeyPressed(KEY_E))
 					{
 						templeBookInteraction++;
+					}
+				}
+				if (boydDialogAfterBook)
+				{
+					npcs[0]->tick(GetFrameTime());
+					if (IsKeyPressed(KEY_E))
+					{
+						npcs[0]->talk();
+						npcs[0]->setInteractionCount();
+					}
+					if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.undoMovement();
+						npcs[0]->undoMovement();
 					}
 				}
 				if (!boxOpen)
@@ -1304,7 +1323,6 @@ int main()
 				}
 			}
 			hero.tick(GetFrameTime());
-			
 		}
 		else if (isGameOver)
 		{
@@ -1487,9 +1505,11 @@ int main()
 					}
 				}
 			}
+
 			hero.tick(GetFrameTime());
 			npcs[3]->tick(GetFrameTime());
 			npcs[3]->setCurrentRow(0);
+
 			if (IsKeyPressed(KEY_E))
 			{
 				npcs[3]->talk();

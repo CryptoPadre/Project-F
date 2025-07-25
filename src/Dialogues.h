@@ -2,13 +2,17 @@
 #include <string>
 #include <vector>
 
-// Dialogs for Boyd
-inline std::vector<std::string> boydDialoguesDayOne = {
-    "Some thought he scared them off...",
+/*
+"Some thought he scared them off...",
     "Others thought he was one of them.",
     "I didn't know what was scarier...",
     "Him, walking around in daylight like one of them,",
     "or the fact that the monsters seemed scared of him.",
+
+*/
+
+// Dialogs for Boyd
+inline std::vector<std::string> boydDialoguesDayOne = {
     "He killed them all. Everyone...except me and Sara.",
     "It'll get dark soon!",
     "Take this talisman !",
@@ -23,6 +27,17 @@ inline std::vector<std::string> boydDialoguesDayTwo = {
     "But let me tell you something...",
     "Only one woman ever got out, and...",
     "She died here."};
+
+inline std::vector<std::string> boydDialoguesAfterReadingTheBook = {
+    "Jade?",
+    "Did you say that name?",
+    "Why are you asking?",
+    "He tried to escape at all costs.",
+    "And it cost him his life.",
+    "Before he died, he spoke about a scroll.",
+    "He believed the Man in Yellow appeared because of him.",
+    "He went to the cave to find answers, but...",
+    "He never returned!"};
 
 inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
     "Have you seen a kid?",
