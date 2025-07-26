@@ -24,6 +24,7 @@ public:
     bool isDay{};
     int getInteractionCount() { return interactionCount; }
     bool isInHouse{};
+    bool isInTemple{};
 
 private:
     int currentDialogIndex = 0;

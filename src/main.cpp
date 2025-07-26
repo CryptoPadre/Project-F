@@ -379,8 +379,10 @@ int main()
 		if (templeBookInteraction > 5 && !boydDialogAfterBook)
 		{
 			npcs[0]->addDialog(boydDialoguesAfterReadingTheBook);
-			npcs[0]->setWorldPos(240.f, 500.f);
+			npcs[0]->setWorldPos(280.f, 500.f);
+			npcs[0]->isInTemple = true;
 			npcs[0]->setCurrentRow(0);
+			npcs[0]->setCurrentFrame(0);
 			boydDialogAfterBook = true;
 		}
 		if (wasInCave && !saraDialogTwo && boydDialogDayTwo)
@@ -538,6 +540,17 @@ int main()
 			if (!isDayTime)
 			{
 				// Set collision with enemies
+				for (int i = 0; i < 3; i++)
+				{
+					for (int j = i + 1; j < 3; j++)
+					{
+						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), enemies[j]->GetCollisionRec()))
+						{
+							enemies[i]->resolveCollision(enemies[j]->getWorldPos());
+							enemies[j]->resolveCollision(enemies[i]->getWorldPos());
+						}
+					}
+				}
 				for (int i = 0; i < 3; i++)
 				{
 					enemies[i]->tick(GetFrameTime());
@@ -871,7 +884,7 @@ int main()
 				if (boydDialogAfterBook)
 				{
 					npcs[0]->tick(GetFrameTime());
-					if (IsKeyPressed(KEY_E))
+					if (IsKeyPressed(KEY_E) && hero.getWorldPos().y > 200)
 					{
 						npcs[0]->talk();
 						npcs[0]->setInteractionCount();

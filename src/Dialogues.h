@@ -29,9 +29,6 @@ inline std::vector<std::string> boydDialoguesDayTwo = {
     "She died here."};
 
 inline std::vector<std::string> boydDialoguesAfterReadingTheBook = {
-    "Jade?",
-    "Did you say that name?",
-    "Why are you asking?",
     "He tried to escape at all costs.",
     "And it cost him his life.",
     "Before he died, he spoke about a scroll.",

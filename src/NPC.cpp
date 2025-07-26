@@ -84,13 +84,16 @@ void NPC::tick(float deltaTime)
         return;
     }
 
-    if (hero->getWorldPos().x > getScreenPos().x)
+    if (!isInTemple)
     {
-        currentRow = 3;
-    }
-    else
-    {
-        currentRow = 1;
+        if (abs(hero->getWorldPos().x) > abs(getScreenPos().x))
+        {
+            currentRow = 3;
+        }
+        else
+        {
+            currentRow = 1;
+        }
     }
     if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
     {
