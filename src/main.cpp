@@ -400,6 +400,7 @@ int main()
 			npcs[0]->addDialog(boydDialoguesAfterFight);
 			npcs[1]->addDialog(saraDialoguesDayAfterFight);
 			npcs[4]->addDialog(yellowDialogAfterFight);
+			npcs[0]->setWorldPos(750.f, 300.f);
 			dialogsAfterFight = true;
 		}
 		if (talkedToKid && !boydDialogKid)
