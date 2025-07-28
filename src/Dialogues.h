@@ -21,8 +21,7 @@ inline std::vector<std::string> boydDialoguesDayOne = {
     "They are coming!"};
 
 inline std::vector<std::string> boydDialoguesDayTwo = {
-    "I'm glad you're alive.",
-    "Talk to Sara.",
+    "Have you met Sara?",
     "She still thinks there's a way out.",
     "But let me tell you something...",
     "Only one woman ever got out, and...",
@@ -219,4 +218,5 @@ inline std::vector<std::string> womanInTheHouse = {
     "Please help me...",
     "My meds... They're in the medkit!",
     "It's under... my bed.",
-    "Please,hurry!"};
+    "Please,hurry!",
+    "It's time for the baby to be born."};

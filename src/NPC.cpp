@@ -21,7 +21,7 @@ NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, Texture2D spec
 
 void NPC::setInteractionCount()
 {
-    if (interactionCount != NPCDialog.size() && isTalking)
+    if (interactionCount != NPCDialog.size() -1  && isTalking)
     {
         interactionCount++;
     }

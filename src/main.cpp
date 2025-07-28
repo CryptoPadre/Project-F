@@ -261,13 +261,14 @@ int main()
 	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
-	bool saraDialogTwo{};
+	bool saraDialogDayTwo{};
 	bool dialogsAfterFight{};
 	bool boydDialogKid{};
 	bool boydDialogAfterBook{};
 	bool wasInCave{};
 	bool isYellowDead{};
 	bool metYellow{};
+	bool metSara{};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
@@ -385,10 +386,14 @@ int main()
 			npcs[0]->setCurrentFrame(0);
 			boydDialogAfterBook = true;
 		}
-		if (wasInCave && !saraDialogTwo && boydDialogDayTwo)
+		if(!boydDialogDayTwo & metSara){
+			npcs[0]->addDialog(boydDialoguesDayTwo);
+			boydDialogDayTwo = true;
+		}
+		if (wasInCave && !saraDialogDayTwo && boydDialogDayTwo)
 		{
 			npcs[1]->addDialog(saraDialoguesDayTwo);
-			saraDialogTwo = true;
+			saraDialogDayTwo = true;
 		}
 		if (isYellowDead && !dialogsAfterFight)
 		{
@@ -907,7 +912,7 @@ int main()
 				{
 					if (!boxOpen)
 					{
-						if (templeBookInteraction > 1)
+						if (templeBookInteraction > 1 && !hasRustyKey)
 						{
 							conversation("It must be inside!", hero.getScreenPos().x, hero.getScreenPos().y);
 						}
@@ -1035,6 +1040,9 @@ int main()
 			{
 				npcs[1]->talk();
 				npcs[1]->setInteractionCount();
+			}
+			if(npcs[1]->getInteractionCount() == 1){
+				metSara = true;
 			}
 			if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
@@ -1181,6 +1189,7 @@ int main()
 						wasInCave = true;
 						npcs[3]->setWorldPos(750.f, 800.f);
 						hero.setWorldPos(1055.f, 27.f);
+						
 					}
 				}
 			}
@@ -1201,7 +1210,7 @@ int main()
 			}
 			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1915 && hero.getWorldPos().y < 1950)
 			{
-				if (hasScroll && talkedToKid)
+				if (hasScroll && talkedToKid && !isYellowDead)
 				{
 					conversation("Would it be the exit?", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -1210,6 +1219,9 @@ int main()
 						isGameOver = true;
 						hero.setWorldPos(17.f, 1340.f);
 					}
+				}
+				else if(isYellowDead){
+					conversation("We lived together, now we leave together!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 				else
 				{
@@ -1429,6 +1441,9 @@ int main()
 						hero.setWorldPos(-150.f, -275.f);
 					}
 				}
+			}
+			if (hero.getWorldPos().x > -110 && hero.getWorldPos().y < -310){
+				conversation("Why would anyone need a clock here?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 		}
 		else if (isInSarasHouse)
