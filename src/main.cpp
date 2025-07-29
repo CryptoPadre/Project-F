@@ -386,7 +386,8 @@ int main()
 			npcs[0]->setCurrentFrame(0);
 			boydDialogAfterBook = true;
 		}
-		if(!boydDialogDayTwo & metSara){
+		if (!boydDialogDayTwo & metSara)
+		{
 			npcs[0]->addDialog(boydDialoguesDayTwo);
 			boydDialogDayTwo = true;
 		}
@@ -400,7 +401,8 @@ int main()
 			npcs[0]->addDialog(boydDialoguesAfterFight);
 			npcs[1]->addDialog(saraDialoguesDayAfterFight);
 			npcs[4]->addDialog(yellowDialogAfterFight);
-			npcs[0]->setWorldPos(750.f, 300.f);
+			npcs[0]->setWorldPos(750.f, 350.f);
+			npcs[0]->setCurrentRow(2);
 			dialogsAfterFight = true;
 		}
 		if (talkedToKid && !boydDialogKid)
@@ -580,10 +582,10 @@ int main()
 			{
 				npcs[0]->tick(GetFrameTime());
 				npcs[0]->isDay = isDayTime;
-			}
-			if (IsKeyPressed(KEY_E))
-			{
 				npcs[0]->talk();
+			}
+			if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
+			{
 				npcs[0]->setInteractionCount();
 			}
 			if (boydDialoguesDayOne.size() - 1 == npcs[0]->getInteractionCount())
@@ -641,34 +643,42 @@ int main()
 				hero.getWorldPos().x >= temple_entry_width_min &&
 					hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
 			{
-				conversation("Let's see what's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (!hasStarted)
 				{
-					if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
-						hero.getWorldPos().y <= house_one_entry_height)
-					{
+					conversation("I should talk to that man first.", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else
+				{
+					conversation("Let's see what's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
 
-						currentInterior = HOUSE_ONE;
-						isInside = true;
-						isInTown = false;
-						hero.setWorldPos(-387.f, 320.f);
-						interactionWithDoors = 0;
-					}
-					if (hero.getWorldPos().x >= temple_entry_width_min &&
-						hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
+					if (IsKeyPressed(KEY_E))
 					{
-						currentInterior = TEMPLE;
-						isInside = true;
-						isInTown = false;
-						hero.setWorldPos(0.f, 270.f);
-						interactionWithDoors = 0;
+						if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
+							hero.getWorldPos().y <= house_one_entry_height)
+						{
+
+							currentInterior = HOUSE_ONE;
+							isInside = true;
+							isInTown = false;
+							hero.setWorldPos(-387.f, 320.f);
+							interactionWithDoors = 0;
+						}
+						if (hero.getWorldPos().x >= temple_entry_width_min &&
+							hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
+						{
+							currentInterior = TEMPLE;
+							isInside = true;
+							isInTown = false;
+							hero.setWorldPos(0.f, 270.f);
+							interactionWithDoors = 0;
+						}
 					}
 				}
 			}
 			if (hero.getWorldPos().x > closed_house_width_min && hero.getWorldPos().x < closed_house_width_max &&
 				hero.getWorldPos().y < closed_house_height)
 			{
-				if (!doorUnlocked)
+				if (!doorUnlocked && lockedHouseCounter <= heroInteractionWithDoor2.size() - 1)
 				{
 					conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E) && lockedHouseCounter < heroInteractionWithDoor2.size())
@@ -782,14 +792,22 @@ int main()
 						hero.setWorldPos(house_two_entry_width_min, house_two_entry_height);
 					}
 				}
+				if (hero.getWorldPos().x > 65 && hero.getWorldPos().x < 130 && hero.getWorldPos().y < -210)
+				{
+					conversation("A flashlight! That might come in handy!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						hasFlashlight = true;
+					}
+				}
 
 				props[27].Render(hero.getWorldPos());
 				props[30].Render(hero.getWorldPos());
 				props[34].Render(hero.getWorldPos());
 				npcs[4]->tick(GetFrameTime());
-				if (IsKeyPressed(KEY_E))
+				npcs[4]->talk();
+				if (IsKeyPressed(KEY_E) && npcs[4]->getIsTalking())
 				{
-					npcs[4]->talk();
 					npcs[4]->setInteractionCount();
 				}
 				if (npcs[4]->getInteractionCount() >= womanInTheHouse.size() - 1)
@@ -887,12 +905,13 @@ int main()
 						templeBookInteraction++;
 					}
 				}
-				if (boydDialogAfterBook)
+				if (boydDialogAfterBook && !isYellowDead)
 				{
 					npcs[0]->tick(GetFrameTime());
-					if (IsKeyPressed(KEY_E) && hero.getWorldPos().y > 200)
+					npcs[0]->talk();
+
+					if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
 					{
-						npcs[0]->talk();
 						npcs[0]->setInteractionCount();
 					}
 					if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
@@ -975,14 +994,6 @@ int main()
 					hasKey = true;
 				}
 			}
-			if (hero.getWorldPos().x > -400 && hero.getWorldPos().x < -340 && hero.getWorldPos().y < -205)
-			{
-				conversation("A flashlight! That might come in handy!", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
-				{
-					hasFlashlight = true;
-				}
-			}
 			if (talkedToWoman)
 			{
 				if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
@@ -1018,14 +1029,14 @@ int main()
 			{
 
 				npcs[2]->tick(GetFrameTime());
+				npcs[2]->talk();
 				if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
 					npcs[2]->undoMovement();
 				}
-				if (IsKeyPressed(KEY_E))
+				if (IsKeyPressed(KEY_E) && npcs[2]->getIsTalking())
 				{
-					npcs[2]->talk();
 					npcs[2]->setInteractionCount();
 					if (npcs[2]->getInteractionCount() == 1)
 					{
@@ -1037,12 +1048,13 @@ int main()
 				}
 			}
 			npcs[1]->tick(GetFrameTime());
-			if (IsKeyPressed(KEY_E))
+			npcs[1]->talk();
+			if (IsKeyPressed(KEY_E) && npcs[1]->getIsTalking())
 			{
-				npcs[1]->talk();
 				npcs[1]->setInteractionCount();
 			}
-			if(npcs[1]->getInteractionCount() == 1){
+			if (npcs[1]->getInteractionCount() == 1)
+			{
 				metSara = true;
 			}
 			if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
@@ -1124,9 +1136,9 @@ int main()
 			if (wasInCave)
 			{
 				npcs[1]->tick(GetFrameTime());
-				if (IsKeyPressed(KEY_E))
+				npcs[1]->talk();
+				if (IsKeyPressed(KEY_E) && npcs[1]->getIsTalking())
 				{
-					npcs[1]->talk();
 					npcs[1]->setInteractionCount();
 				}
 				if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
@@ -1140,9 +1152,9 @@ int main()
 			{
 				npcs[3]->tick(GetFrameTime());
 				npcs[3]->setCurrentRow(3);
-				if (IsKeyPressed(KEY_E))
+				npcs[3]->talk();
+				if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 				{
-					npcs[3]->talk();
 					npcs[3]->setInteractionCount();
 					if (npcs[3]->getInteractionCount() == 1)
 					{
@@ -1157,9 +1169,9 @@ int main()
 			}
 			if (hasScroll)
 			{
-				if (IsKeyPressed(KEY_E))
+				if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 				{
-					npcs[3]->talk();
+
 					npcs[3]->setInteractionCount();
 				}
 			}
@@ -1190,7 +1202,6 @@ int main()
 						wasInCave = true;
 						npcs[3]->setWorldPos(750.f, 800.f);
 						hero.setWorldPos(1055.f, 27.f);
-						
 					}
 				}
 			}
@@ -1221,7 +1232,8 @@ int main()
 						hero.setWorldPos(17.f, 1340.f);
 					}
 				}
-				else if(isYellowDead){
+				else if (isYellowDead)
+				{
 					conversation("We lived together, now we leave together!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 				else
@@ -1443,7 +1455,8 @@ int main()
 					}
 				}
 			}
-			if (hero.getWorldPos().x > -110 && hero.getWorldPos().y < -310){
+			if (hero.getWorldPos().x > -110 && hero.getWorldPos().y < -310)
+			{
 				conversation("Why would anyone need a clock here?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 		}
@@ -1533,15 +1546,17 @@ int main()
 						hero.setWorldPos(850.f, 2350.f);
 					}
 				}
+				npcs[0]->tick(GetFrameTime());
 			}
 
 			hero.tick(GetFrameTime());
 			npcs[3]->tick(GetFrameTime());
 			npcs[3]->setCurrentRow(0);
+			npcs[3]->talk();
 
-			if (IsKeyPressed(KEY_E))
+			if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 			{
-				npcs[3]->talk();
+
 				npcs[3]->setInteractionCount();
 				endGameConvo++;
 			}

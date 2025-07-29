@@ -25,6 +25,7 @@ public:
     int getInteractionCount() { return interactionCount; }
     bool isInHouse{};
     bool isInTemple{};
+    bool getIsTalking(){ return isTalking;}
 
 private:
     int currentDialogIndex = 0;
@@ -34,7 +35,7 @@ private:
     bool isTalking{};
     std::vector<std::string> NPCDialog;
     float radius{50.f};
-    int interactionCount{-1};
+    int interactionCount = 0;
     Character *hero;
     int danceFrame = 0;
     float danceFrameTime = 0.0f;

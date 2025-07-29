@@ -21,7 +21,7 @@ NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, Texture2D spec
 
 void NPC::setInteractionCount()
 {
-    if (interactionCount != NPCDialog.size()  && isTalking)
+    if (interactionCount != NPCDialog.size())
     {
         interactionCount++;
     }
@@ -29,21 +29,16 @@ void NPC::setInteractionCount()
 
 void NPC::talk()
 {
-    if (finishedTalking)
-        return;
-
+    
     if (Vector2Distance(getScreenPos(), hero->getScreenPos()) > 150.f)
     {
         isTalking = false;
-        return;
     }
 
     else
     {
-        isTalking = false;
-        finishedTalking = true;
+       isTalking = true;
     }
-    isTalking = true;
 }
 
 void NPC::tick(float deltaTime)
@@ -95,14 +90,14 @@ void NPC::tick(float deltaTime)
             currentRow = 1;
         }
     }
-    if (isTalking && interactionCount <= NPCDialog.size() -1 && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
+    if (isTalking && interactionCount != NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
     {
         conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
     }
 
     if (canAttack)
     {
-        if (isTalking && interactionCount < NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
+        if (isTalking && interactionCount != NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
         {
             conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
         }
