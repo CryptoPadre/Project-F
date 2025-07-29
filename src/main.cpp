@@ -39,6 +39,7 @@ int main()
 	// start 400.f 200.f
 	hero.setWorldPos(400.f, 200.f);
 	// draw NPCs
+	// yellow original pos 1200 2100
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
@@ -241,7 +242,7 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
@@ -278,8 +279,11 @@ int main()
 	bool boxOpen{};
 	bool daggerPickedUp{};
 	bool hasFallen{};
+	bool yellowStartMapDialogAdded{};
+	bool isTheEnd{true};
 
 	hero.setHasDagger(hasDagger);
+	int endingTitle = 200;
 	float leftY = 840;
 	float rightY = 1240;
 
@@ -349,6 +353,7 @@ int main()
 
 	int templeBookInteraction = 0;
 
+	int startMapCounter = 0;
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -377,6 +382,11 @@ int main()
 		{
 			isDayTime = fmod(GetTime(), 40.0) < 20.0;
 		}
+		if (metYellow && !yellowStartMapDialogAdded)
+		{
+			npcs[3]->addDialog(yellowDialogStartMap);
+			yellowStartMapDialogAdded = true;
+		}
 		if (templeBookInteraction > 5 && !boydDialogAfterBook)
 		{
 			npcs[0]->addDialog(boydDialoguesAfterReadingTheBook);
@@ -401,7 +411,7 @@ int main()
 			npcs[0]->addDialog(boydDialoguesAfterFight);
 			npcs[1]->addDialog(saraDialoguesDayAfterFight);
 			npcs[4]->addDialog(yellowDialogAfterFight);
-			npcs[0]->setWorldPos(750.f, 350.f);
+			npcs[0]->setWorldPos(700.f, 300.f);
 			npcs[0]->setCurrentRow(2);
 			dialogsAfterFight = true;
 		}
@@ -462,10 +472,10 @@ int main()
 			}
 			if (talkedToKid && !hasDagger)
 			{
+				npcs[3]->talk();
 
-				if (IsKeyPressed(KEY_E))
+				if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 				{
-					npcs[3]->talk();
 					npcs[3]->setInteractionCount();
 				}
 				if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f && yellowWarningCounter <= yellowWarning.size())
@@ -477,10 +487,6 @@ int main()
 				{
 					npcs[3]->setAttack();
 					yellowWarningCounter++;
-				}
-				if (!isDayTime && metYellowAtCar)
-				{
-					enemies[1]->tick(GetFrameTime());
 				}
 				npcs[3]->tick(GetFrameTime());
 			}
@@ -1041,7 +1047,6 @@ int main()
 					if (npcs[2]->getInteractionCount() == 1)
 					{
 						talkedToKid = true;
-						npcs[3]->addDialog(yellowDialogStartMap);
 						npcs[3]->setWorldPos(850.f, 750.f);
 						npcs[3]->setCurrentRow(2);
 					}
@@ -1235,6 +1240,11 @@ int main()
 				else if (isYellowDead)
 				{
 					conversation("We lived together, now we leave together!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isOutsideCave = false;
+						isTheEnd = true;
+					}
 				}
 				else
 				{
@@ -1524,6 +1534,15 @@ int main()
 				}
 			}
 		}
+		else if (isTheEnd)
+		{
+			DrawText("Thanks for playing my game!", 250, endingTitle, 30, RED);
+			DrawText("You survived and escaped From.", 250, endingTitle + 100, 30, RED);
+			DrawText("Graphics", 250, endingTitle + 150, 30, RED);
+			DrawText("Music", 250, endingTitle + 200, 30, RED);
+
+			endingTitle -= 0.5f;
+		}
 		else
 		{
 			DrawTextureEx(maps[14], interiorPos, 0.0, 3.f, WHITE);
@@ -1547,6 +1566,11 @@ int main()
 					}
 				}
 				npcs[0]->tick(GetFrameTime());
+				npcs[0]->talk();
+				if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
+				{
+					npcs[0]->setInteractionCount();
+				}
 			}
 
 			hero.tick(GetFrameTime());
