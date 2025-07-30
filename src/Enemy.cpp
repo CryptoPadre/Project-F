@@ -131,5 +131,5 @@ void Enemy::tick(float deltaTime)
 
 Vector2 Enemy::getScreenPos()
 {
-    return Vector2Subtract(worldPos, target->getWorldPos());
+    return Vector2Subtract(worldPos, cameraTarget->getWorldPos());
 }

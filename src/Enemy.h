@@ -8,13 +8,15 @@ class Enemy : public BaseCharacter{
     public:
     Enemy(Vector2 pos, Texture2D idle_texture, Texture2D attack, Texture2D death, bool type);
 	virtual void tick(float deltaTime) override;
-    void setTarget(Character* character){target = character;}
+    void setTarget(BaseCharacter* character){target = character;}
+    void setCameraTarget(BaseCharacter* cam) { cameraTarget = cam; }
     bool hasAwaken(){return isAwake;}
     virtual Vector2 getScreenPos() override;
     bool isCaveMonster{};
     bool isStanding{};
     private:
-    Character* target;
+    BaseCharacter* target;
+    BaseCharacter* cameraTarget;
     float radius{25.f};
     int awakeningFrame = 5;
 	float awakeningFrameTime = 0.0f;

@@ -18,6 +18,7 @@ class BaseCharacter{
 	void setCurrentRow(int row) { currentRow = row; }
 	void setCurrentFrame(int frame) {currentFrame = frame;};
 	void setIsGettingUp(bool fellDown) {isGettingUp = fellDown;}
+	void setDeathFrame(int frame) {deathFrame = frame;}
     protected:
     Texture2D texture{LoadTexture("hero-walk.png")};
 	Texture2D walk{LoadTexture("hero-walk.png")};

@@ -43,7 +43,7 @@ void NPC::talk()
 
 void NPC::tick(float deltaTime)
 {
-    if (!getAlive())
+    if (!getAlive() && canAttack)
     {
 
         // Freeze velocity to stop movement
@@ -77,6 +77,10 @@ void NPC::tick(float deltaTime)
         Rectangle dest{getScreenPos().x, getScreenPos().y, frameWidth * scale, frameHeight * scale};
         DrawTexturePro(texture, source, dest, {0, 0}, 0.f, WHITE);
         return;
+    }
+    else if(!getAlive() && !canAttack){
+        BaseCharacter::tick(deltaTime);  
+        
     }
 
     if (!isInTemple)
