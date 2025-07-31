@@ -143,8 +143,8 @@ int main()
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{2500.f, 600.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
-		Prop{Vector2{1800.f, 1020.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
+		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
+		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4, false, 0, 0, 0, 0},
@@ -748,6 +748,7 @@ int main()
 							isInCave = true;
 							hasFallen = true;
 							hero.setWorldPos(70.f, 2040.f);
+							hero.setSpeed(2.f);
 						}
 					}
 				}

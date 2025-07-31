@@ -162,7 +162,8 @@ inline std::vector<std::string> heroTextStartMap = {
 inline std::vector<std::string> heroInCave = {
     "Oh my leg!",
     "What the hell is this place?",
-    "There has to be another way out!"};
+    "What? Is it sleeping?",
+    "I need to get out quickly and silently!"};
 
 inline std::vector<std::string> heroScroll = {
     "What is it?",
@@ -215,3 +216,13 @@ inline std::vector<std::string> womanInTheHouse = {
     "It's under... my bed.",
     "Please,hurry!",
     "The baby is coming!"};
+
+    inline std::vector<std::string> jadeDialog {
+        "Grhhh...",
+        "Who are..",
+        "...you?",
+        "The scroll!",
+        "You must find it.",
+        "We can escape with that!",
+        "The kids help you!"
+    };
