@@ -166,10 +166,10 @@ inline std::vector<std::string> heroInCave = {
     "I need to get out quickly and silently!"};
 
 inline std::vector<std::string> heroScroll = {
-    "What is it?",
-    "A scroll with some gibberish text?",
-    "Let's take it!",
-    "Someone might know what is written on it!"};
+    "Would it be that scroll?",
+    "Some gibberish text on it...",
+    "Quickly go back to Jade!",
+    "He might know what is written on it!"};
 
 inline std::vector<std::string> heroInteractionWithDoors = {
     "Heeeelp!",
@@ -224,5 +224,6 @@ inline std::vector<std::string> womanInTheHouse = {
         "The scroll!",
         "You must find it.",
         "We can escape with that!",
-        "The kids help you!"
+        "The kids help you!",
+        "Now go and find it!"
     };

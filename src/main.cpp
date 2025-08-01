@@ -65,6 +65,8 @@ int main()
 	sara.addDialog(saraDialoguesDayOne);
 	yellow.addDialog(yellowDialogByTree);
 	woman.addDialog(womanInTheHouse);
+	jade.addDialog(jadeDialog);
+	jade.setAlive(false);
 	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{0.f, 0.f};
@@ -151,7 +153,7 @@ int main()
 		Prop{Vector2{600.f, 2340.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("first-aid-kit.png"), 0.2, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("scroll.png"), 0.2, false, 0, 0, 0, 0},
-		Prop{Vector2{2360.f, 795.f}, LoadTexture("scroll.png"), 0.1, false, 0, 0, 0, 0},
+		Prop{Vector2{640.f, 2600.f}, LoadTexture("scroll.png"), 0.1, false, 0, 0, 0, 0},
 		Prop{Vector2{260.f, 250.f}, LoadTexture("old-house.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{130.f, -120.f}, LoadTexture("wardrobe.png"), 0.5f, false, 0, 0, 0, 0},
 		Prop{Vector2{300.f, 25.f}, LoadTexture("wardrobe-olive.png"), 0.5, false, 0, 0, 0, 0},
@@ -246,10 +248,10 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isGameOver{};
 	bool isUpstairs{};
-	bool isInCave{true};
+	bool isInCave{};
 	bool isOutsideCave{};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
@@ -272,7 +274,7 @@ int main()
 	bool boydDialogAfterBook{};
 	bool wasInCave{};
 	bool isYellowDead{};
-	bool metYellow{};
+	bool metYellow{true};
 	bool metSara{};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
@@ -688,10 +690,13 @@ int main()
 			if (hero.getWorldPos().x > closed_house_width_min && hero.getWorldPos().x < closed_house_width_max &&
 				hero.getWorldPos().y < closed_house_height)
 			{
-				if (!doorUnlocked && lockedHouseCounter <= heroInteractionWithDoor2.size() - 1)
+				if (!doorUnlocked)
 				{
-					conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
-					if (IsKeyPressed(KEY_E) && lockedHouseCounter < heroInteractionWithDoor2.size())
+					if (lockedHouseCounter < heroInteractionWithDoor2.size())
+					{
+						conversation(heroInteractionWithDoor2[lockedHouseCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					if (IsKeyPressed(KEY_E) && lockedHouseCounter <= heroInteractionWithDoor2.size() - 1)
 					{
 						lockedHouseCounter++;
 					}
@@ -747,7 +752,7 @@ int main()
 							isInside = false;
 							isInCave = true;
 							hasFallen = true;
-							hero.setWorldPos(70.f, 2040.f);
+							hero.setWorldPos(1800.f, 500.f);
 							hero.setSpeed(2.f);
 						}
 					}
@@ -1271,7 +1276,7 @@ int main()
 			{
 
 				props[18].Render(hero.getWorldPos());
-				if (hero.getWorldPos().x > 1775 && hero.getWorldPos().x < 1900 && hero.getWorldPos().y < 530 && hero.getWorldPos().y > 370)
+				if (hero.getWorldPos().x > 60 && hero.getWorldPos().x < 145 && hero.getWorldPos().y < 2310 && hero.getWorldPos().y > 2200)
 				{
 					conversation(heroScroll[interactionWithScroll], hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -1361,20 +1366,26 @@ int main()
 				}
 			}
 			npcs[6]->tick(GetFrameTime());
-			if(CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec())){
+			npcs[6]->talk();
+			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
 				hero.undoMovement();
 			}
-			if (IsKeyPressed(KEY_E))
+			if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
 			{
-				npcs[6]->setAlive(false);
-				npcs[6]->setDeathFrame(3);
+				npcs[6]->setInteractionCount();
+				npcs[6]->setDeathFrame(4);
+				if (npcs[6]->getInteractionCount() > 1)
+				{
+					npcs[6]->setDeathFrame(3);
+				}
 			}
 			for (int i = 10; i < 12; i++)
 			{
 				props[i].Render(hero.getWorldPos());
 			}
 
-			if (hero.getWorldPos().x > 55 && hero.getWorldPos().x < 240 && hero.getWorldPos().y < 2150 && hero.getWorldPos().y > 1920 && inCaveCounter < heroInCave.size())
+			if (hero.getWorldPos().x > 1750 && hero.getWorldPos().x < 1820 && hero.getWorldPos().y < 540 && hero.getWorldPos().y > 480 && inCaveCounter < heroInCave.size())
 			{
 				conversation(heroInCave[inCaveCounter], hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E) && inCaveCounter <= heroInCave.size() - 1)
