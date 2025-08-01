@@ -47,7 +47,7 @@ void Enemy::tick(float deltaTime)
         {
             texture = interact;
 
-            if (Vector2Distance(getScreenPos(), target->getScreenPos()) < awakeningTrigger && !awakeningAnimDone)
+            if (Vector2Distance(getScreenPos(), target->getScreenPos()) < awakeningTrigger && !awakeningAnimDone || planned)
             {
                 awakeningTrigger = 1500;
                 awakeningFrameTime += deltaTime;

@@ -248,14 +248,14 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
-	bool isInCave{};
+	bool isInCave{true};
 	bool isOutsideCave{};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
-	bool wasInSarasHouse{};
+	bool wasInSarasHouse{true};
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
@@ -1345,8 +1345,11 @@ int main()
 				{
 					npcs[6]->setDeathFrame(3);
 				}
+				else if(npcs[6]->getInteractionCount() > 6){
+					npcs[6]->setDeathFrame(2);
+				}
 			}
-			if (npcs[6]->getInteractionCount() > 11)
+			if (npcs[6]->getInteractionCount() == 15)
 			{
 				npcs[6]->setAlive(true);
 			}
@@ -1364,7 +1367,11 @@ int main()
 				enemies[i]->tick(GetFrameTime());
 				if (npcs[6]->getAlive())
 				{
+					enemies[i]->setPlanned(true);
 					enemies[i]->setTarget(&jade);
+				}
+				else{
+					enemies[i]->setTarget(&hero);
 				}
 				if (hasDagger)
 				{
