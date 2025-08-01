@@ -227,3 +227,19 @@ inline std::vector<std::string> womanInTheHouse = {
         "The kids help you!",
         "Now go and find it!"
     };
+
+    inline std::vector<std::string> jadeDialogAfterScroll {
+        "You found it!",
+        "I don't understant it.",
+        "Wait...",
+        "I have seen this symbol.",
+        "On a bottle...",
+        "No no no noooo.",
+        "Run! They know we are here!"
+    };
+
+    inline std::vector<std::string> interactionWithPotion {
+        "It is some very strong balsam.",
+        "Let's put some on my leg!",
+        "I don't need this right now!"
+    } ;

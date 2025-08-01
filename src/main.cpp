@@ -285,6 +285,7 @@ int main()
 	bool boxOpen{};
 	bool daggerPickedUp{};
 	bool hasFallen{};
+	bool fellIntoCave{};
 	bool yellowStartMapDialogAdded{};
 	bool isTheEnd{};
 
@@ -752,6 +753,7 @@ int main()
 							isInside = false;
 							isInCave = true;
 							hasFallen = true;
+							fellIntoCave = true;
 							hero.setWorldPos(1800.f, 500.f);
 							hero.setSpeed(2.f);
 						}
@@ -1287,6 +1289,7 @@ int main()
 							hasScroll = true;
 							npcs[2]->addDialog(kidDialogScroll);
 							npcs[3]->addDialog(yellowDialogScroll);
+							npcs[6]->addDialog(jadeDialogAfterScroll);
 							scrollDialogAdded = true;
 						}
 					}
@@ -1328,19 +1331,41 @@ int main()
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
+			npcs[6]->tick(GetFrameTime());
+			npcs[6]->talk();
+			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+			}
+			if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
+			{
+				npcs[6]->setInteractionCount();
+				npcs[6]->setDeathFrame(4);
+				if (npcs[6]->getInteractionCount() > 1)
+				{
+					npcs[6]->setDeathFrame(3);
+				}
+			}
+			if (npcs[6]->getInteractionCount() > 11)
+			{
+				npcs[6]->setAlive(true);
+			}
 			for (int i = 3; i < 22; i++)
 			{
 
 				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
 				{
 					hero.setAlive(true);
-					if (hero.getDeatFrameAnim())
-					{
-						isInCave = false;
-						isGameOver = true;
-					}
+				}
+				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), npcs[6]->GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
+				{
+					npcs[6]->setAlive(false);
 				}
 				enemies[i]->tick(GetFrameTime());
+				if (npcs[6]->getAlive())
+				{
+					enemies[i]->setTarget(&jade);
+				}
 				if (hasDagger)
 				{
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && enemies[i]->hasAwaken() && IsKeyPressed(KEY_SPACE))
@@ -1363,21 +1388,6 @@ int main()
 						enemies[i]->resolveCollision(enemies[j]->getWorldPos());
 						enemies[j]->resolveCollision(enemies[i]->getWorldPos());
 					}
-				}
-			}
-			npcs[6]->tick(GetFrameTime());
-			npcs[6]->talk();
-			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-			}
-			if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
-			{
-				npcs[6]->setInteractionCount();
-				npcs[6]->setDeathFrame(4);
-				if (npcs[6]->getInteractionCount() > 1)
-				{
-					npcs[6]->setDeathFrame(3);
 				}
 			}
 			for (int i = 10; i < 12; i++)
@@ -1535,7 +1545,21 @@ int main()
 			}
 			if (hero.getWorldPos().x > -495 && hero.getWorldPos().x < -427 && hero.getWorldPos().y > 30 && hero.getWorldPos().y < 90 && !wasInSarasHouse)
 			{
-				conversation("What is this?", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (!fellIntoCave)
+				{
+					conversation(interactionWithPotion[0], hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else if (hero.getSpeed() != 3 && fellIntoCave)
+				{
+					conversation(interactionWithPotion[1], hero.getScreenPos().x, hero.getScreenPos().y);
+					if(IsKeyPressed(KEY_E)){
+						hero.setSpeed(3);
+					}
+				}
+				else
+				{
+					conversation(interactionWithPotion[2], hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 			}
 			if (hero.getWorldPos().x > -165 && hero.getWorldPos().x < -125 && hero.getWorldPos().y < -300)
 			{
