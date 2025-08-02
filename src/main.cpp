@@ -66,7 +66,6 @@ int main()
 	yellow.addDialog(yellowDialogByTree);
 	woman.addDialog(womanInTheHouse);
 	jade.addDialog(jadeDialog);
-	jade.setAlive(false);
 	// Create the maps and positions
 	Texture2D map = LoadTexture("fromville.png");
 	Vector2 mapPos{0.f, 0.f};
@@ -1340,18 +1339,6 @@ int main()
 			if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
 			{
 				npcs[6]->setInteractionCount();
-				npcs[6]->setDeathFrame(4);
-				if (npcs[6]->getInteractionCount() > 1)
-				{
-					npcs[6]->setDeathFrame(3);
-				}
-				else if(npcs[6]->getInteractionCount() > 6){
-					npcs[6]->setDeathFrame(2);
-				}
-			}
-			if (npcs[6]->getInteractionCount() == 15)
-			{
-				npcs[6]->setAlive(true);
 			}
 			for (int i = 3; i < 22; i++)
 			{
@@ -1365,7 +1352,7 @@ int main()
 					npcs[6]->setAlive(false);
 				}
 				enemies[i]->tick(GetFrameTime());
-				if (npcs[6]->getAlive())
+				if (npcs[6]->getInteractionCount() == 15 && npcs[6]->getAlive())
 				{
 					enemies[i]->setPlanned(true);
 					enemies[i]->setTarget(&jade);
