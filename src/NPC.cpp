@@ -5,7 +5,7 @@
 #include "raymath.h"
 #include "Conversation.h"
 
-NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, Texture2D special, bool human, bool danger)
+NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, Texture2D special, bool human)
 {
     worldPos = pos;
     texture = idle_texture;
@@ -16,7 +16,7 @@ NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, Texture2D spec
     height = (float)texture.height / totalRows;
     speed = 1.f;
     isHuman = human;
-    canAttack = danger;
+    
 }
 
 void NPC::setInteractionCount()

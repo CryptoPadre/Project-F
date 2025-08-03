@@ -127,6 +127,7 @@ void BaseCharacter::tick(float deltaTime)
                 frameTime = 0.0f;
             }
         }
+
         velocity = {};
         // Define source rectangle to pick one frame
         Rectangle source{

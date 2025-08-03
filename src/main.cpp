@@ -38,13 +38,13 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
-	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true, false};
-	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true, false};
-	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false, false};
-	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true, true};
-	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true, false};
-	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-hurt.png"), LoadTexture("baby-attack.png"), false, true};
-	NPC jade{Vector2{2000.f, 2000.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true, false};
+	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true};
+	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true};
+	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false};
+	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true};
+	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true};
+	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-hurt.png"), LoadTexture("baby-attack.png"), false};
+	NPC jade{Vector2{2000.f, 2000.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
 	NPC *npcs[7]{
 		&boyd,
 		&sara,
@@ -59,6 +59,8 @@ int main()
 	}
 	npcs[4]->isInHouse = true;
 	npcs[4]->setCurrentFrame(2);
+	npcs[3]->setCanAttack(true);
+	npcs[5]->setCanAttack(true);
 	// Add the dialogues to npcs dialogue vector for the first day in the game
 	boyd.addDialog(boydDialoguesDayOne);
 	kid.addDialog(kidDialogues);
@@ -241,8 +243,8 @@ int main()
 		enemy->setTarget(&hero);
 		enemy->setCameraTarget(&hero);
 	}
-
-	hero.setWorldPos(400.f, 200.f);
+ 	// 400 200
+	hero.setWorldPos(282.f, 12.f);
 	// Check if character is inside a house / outside the town / starting the game
 	bool isInTown{};
 	bool isInside{};
@@ -1660,6 +1662,9 @@ int main()
 				if (IsKeyPressed(KEY_E))
 				{
 					afterFightCounter++;
+				}
+				if(Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 150.f){
+					npcs[3]->setCanAttack(false);
 				}
 			}
 		}

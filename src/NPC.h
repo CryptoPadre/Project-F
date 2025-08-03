@@ -18,13 +18,13 @@ public:
     void setCurrentFrame(int frame) { currentFrame = frame; }
     void advanceDialogue();
     void resetDialogue();
+    void setCanAttack(bool Attack){canAttack = Attack;}
     const std::vector<std::string> &getDialogues() const { return NPCDialog; }
     virtual void tick(float deltaTime) override;
     virtual Vector2 getScreenPos() override;
     bool isDay{};
     int getInteractionCount() { return interactionCount; }
     bool isInHouse{};
-    bool isInTemple{};
     bool getIsTalking(){ return isTalking;}
 
 private:
