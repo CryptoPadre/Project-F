@@ -247,14 +247,14 @@ int main()
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isGameOver{};
 	bool isUpstairs{};
-	bool isInCave{true};
+	bool isInCave{};
 	bool isOutsideCave{};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
-	bool wasInSarasHouse{true};
+	bool wasInSarasHouse{};
 	bool hasFlashlight{};
 	bool isEndGame{};
 	bool hasStarted{};
@@ -273,7 +273,7 @@ int main()
 	bool boydDialogAfterBook{};
 	bool wasInCave{};
 	bool isYellowDead{};
-	bool metYellow{true};
+	bool metYellow{};
 	bool metSara{};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
@@ -397,9 +397,6 @@ int main()
 		{
 			npcs[0]->addDialog(boydDialoguesAfterReadingTheBook);
 			npcs[0]->setWorldPos(280.f, 500.f);
-			npcs[0]->isInTemple = true;
-			npcs[0]->setCurrentRow(0);
-			npcs[0]->setCurrentFrame(0);
 			boydDialogAfterBook = true;
 		}
 		if (!boydDialogDayTwo & metSara)
@@ -809,6 +806,10 @@ int main()
 						hero.setWorldPos(house_two_entry_width_min, house_two_entry_height);
 					}
 				}
+
+				props[27].Render(hero.getWorldPos());
+				props[30].Render(hero.getWorldPos());
+				props[34].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x > 65 && hero.getWorldPos().x < 130 && hero.getWorldPos().y < -210)
 				{
 					conversation("A flashlight! That might come in handy!", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -817,10 +818,6 @@ int main()
 						hasFlashlight = true;
 					}
 				}
-
-				props[27].Render(hero.getWorldPos());
-				props[30].Render(hero.getWorldPos());
-				props[34].Render(hero.getWorldPos());
 				npcs[4]->tick(GetFrameTime());
 				npcs[4]->talk();
 				if (IsKeyPressed(KEY_E) && npcs[4]->getIsTalking())

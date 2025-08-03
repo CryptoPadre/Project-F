@@ -29,7 +29,7 @@ void NPC::setInteractionCount()
 
 void NPC::talk()
 {
-    
+
     if (Vector2Distance(getScreenPos(), hero->getScreenPos()) > 150.f)
     {
         isTalking = false;
@@ -37,7 +37,7 @@ void NPC::talk()
 
     else
     {
-       isTalking = true;
+        isTalking = true;
     }
 }
 
@@ -78,22 +78,20 @@ void NPC::tick(float deltaTime)
         DrawTexturePro(texture, source, dest, {0, 0}, 0.f, WHITE);
         return;
     }
-    else if(!getAlive() && !canAttack){
-        BaseCharacter::tick(deltaTime);  
-        
+    else if (!getAlive() && !canAttack)
+    {
+        BaseCharacter::tick(deltaTime);
     }
 
-    if (!isInTemple)
+    if (abs(hero->getScreenPos().x) > abs(getScreenPos().x))
     {
-        if (abs(hero->getWorldPos().x) > abs(getScreenPos().x))
-        {
-            currentRow = 3;
-        }
-        else
-        {
-            currentRow = 1;
-        }
+        currentRow = 3;
     }
+    else
+    {
+        currentRow = 1;
+    }
+
     if (isTalking && interactionCount != NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
     {
         conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);
@@ -110,11 +108,11 @@ void NPC::tick(float deltaTime)
             velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
             if (fabs(velocity.x) > fabs(velocity.y))
             {
-                currentRow = (velocity.x > 0) ? 3 : 1; // Right or Left
+                currentRow = (velocity.x > 0) ? 3 : 1;
             }
             else
             {
-                currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
+                currentRow = (velocity.y > 0) ? 2 : 0;
             }
             if (Vector2Length(velocity) < radius)
             {
