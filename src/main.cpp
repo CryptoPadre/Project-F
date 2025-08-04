@@ -32,8 +32,17 @@ int main()
 	SearchAndSetResourceDir("resources");
 	InitAudioDevice();
 	// music in game
-	// Music intro = LoadMusicStream("rise-up.mp3");
-	// PlayMusicStream(intro);
+	Music audio[9] = {
+		LoadMusicStream("scary-horror-music.mp3"),
+		LoadMusicStream("high-tension-and-suspense-background.mp3"),
+		LoadMusicStream("whisper-fluisteren.mp3"),
+		LoadMusicStream("monsters-cave.mp3"),
+		LoadMusicStream("music-box-scary.mp3"),
+		LoadMusicStream("scary-game-effect.mp3"),
+		LoadMusicStream("scary-piano-music.mp3"),
+		LoadMusicStream("code-of-silence.mp3"),
+		LoadMusicStream("this-is-suspense-end-of-the-line.mp3")};
+	PlayMusicStream(audio[0]);
 	// draw hero
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
@@ -372,7 +381,6 @@ int main()
 		BeginDrawing();
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
-		// UpdateMusicStream(intro);
 		hero.setIsGettingUp(hasFallen);
 		interiorPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
@@ -425,9 +433,16 @@ int main()
 			npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
 			boydDialogKid = true;
 		}
+
 		// Beginning of the game
 		if (isGameStart)
 		{
+			if (!IsMusicStreamPlaying(audio[0]))
+				{
+					StopMusicStream(audio[2]);
+					PlayMusicStream(audio[0]);
+				}
+			UpdateMusicStream(audio[0]);
 			if (isDayTime)
 			{
 				DrawTextureEx(maps[5], startPos, 0.0, mapScale, WHITE);
@@ -501,16 +516,27 @@ int main()
 		// World map changing between daytime/nighttime
 		else if (isInTown)
 		{
-
 			if (isDayTime)
 			{
 				// draw the map for daytime
 				DrawTextureEx(maps[0], mapPos, 0.0, mapScale, WHITE);
+				if (!IsMusicStreamPlaying(audio[0]))
+				{
+					StopMusicStream(audio[5]);
+					PlayMusicStream(audio[0]);
+				}
+				UpdateMusicStream(audio[0]);
 			}
 			else
 			{
 				// draw the map for nighttime
 				DrawTextureEx(maps[1], mapPos, 0.0, mapScale, WHITE);
+				if (!IsMusicStreamPlaying(audio[5]))
+				{
+					StopMusicStream(audio[0]);
+					PlayMusicStream(audio[5]);
+				}
+				UpdateMusicStream(audio[5]);
 			}
 
 			if (hero.getWorldPos().x < 80 &&
@@ -718,6 +744,12 @@ int main()
 			switch (currentInterior)
 			{
 			case HOUSE_ONE:
+				if (!IsMusicStreamPlaying(audio[7]))
+				{
+					StopMusicStream(audio[0]);
+					PlayMusicStream(audio[7]);
+				}
+				UpdateMusicStream(audio[7]);
 				DrawTextureEx(maps[8], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -450 || hero.getWorldPos().x > 156 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230 ||
@@ -788,6 +820,13 @@ int main()
 				}
 				break;
 			case HOUSE_TWO:
+				if (!IsMusicStreamPlaying(audio[4]))
+				{
+					StopMusicStream(audio[0]);
+					StopMusicStream(audio[5]);
+					PlayMusicStream(audio[4]);
+				}
+				UpdateMusicStream(audio[4]);
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
 
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
@@ -861,6 +900,13 @@ int main()
 
 				break;
 			case TEMPLE:
+				if (!IsMusicStreamPlaying(audio[7]))
+				{
+					StopMusicStream(audio[0]);
+					StopMusicStream(audio[5]);
+					PlayMusicStream(audio[7]);
+				}
+				UpdateMusicStream(audio[7]);
 				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -390 || hero.getWorldPos().x > 102 ||
 					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200 ||
@@ -1030,10 +1076,22 @@ int main()
 		{
 			if (isDayTime)
 			{
+				if (!IsMusicStreamPlaying(audio[0]))
+				{
+					StopMusicStream(audio[2]);
+					PlayMusicStream(audio[0]);
+				}
+				UpdateMusicStream(audio[0]);
 				DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
 			}
 			else
 			{
+				if (!IsMusicStreamPlaying(audio[2]))
+				{
+					StopMusicStream(audio[0]);
+					PlayMusicStream(audio[2]);
+				}
+				UpdateMusicStream(audio[2]);
 				DrawTextureEx(maps[6], outsideTownPos, 0.0, mapScale, WHITE);
 			}
 			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0 ||
@@ -1147,12 +1205,26 @@ int main()
 		}
 		else if (isOutsideCave)
 		{
+
 			if (isDayTime)
 			{
+				if (!IsMusicStreamPlaying(audio[2]))
+				{
+					StopMusicStream(audio[0]);
+					PlayMusicStream(audio[2]);
+				}
+				UpdateMusicStream(audio[2]);
 				DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			else
 			{
+				if (!IsMusicStreamPlaying(audio[5]))
+				{
+					StopMusicStream(audio[2]);
+					StopMusicStream(audio[0]);
+					PlayMusicStream(audio[5]);
+				}
+				UpdateMusicStream(audio[5]);
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			if (wasInCave)
@@ -1273,6 +1345,13 @@ int main()
 		}
 		else if (isInCave)
 		{
+			if (!IsMusicStreamPlaying(audio[3]))
+			{
+				StopMusicStream(audio[0]);
+				StopMusicStream(audio[2]);
+				PlayMusicStream(audio[3]);
+			}
+			UpdateMusicStream(audio[3]);
 			if (hasFlashlight)
 			{
 				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
@@ -1364,10 +1443,18 @@ int main()
 				{
 					enemies[i]->setPlanned(true);
 					enemies[i]->setTarget(&jade);
+					if (!IsMusicStreamPlaying(audio[6]))
+					{
+						StopMusicStream(audio[3]);
+						PlayMusicStream(audio[6]);
+					}
+					UpdateMusicStream(audio[6]);
 				}
+
 				else
 				{
 					enemies[i]->setTarget(&hero);
+					UpdateMusicStream(audio[6]);
 				}
 				if (hasDagger)
 				{

@@ -214,6 +214,7 @@ inline std::vector<std::string> womanInTheHouse = {
     "Please help me...",
     "My meds... They're in the medkit!",
     "It's under... my bed.",
+    "There's a flashlight in the drawer — you'll need it!",
     "Please,hurry!",
     "The baby is coming!"};
 
