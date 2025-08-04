@@ -16,7 +16,6 @@ NPC::NPC(Vector2 pos, Texture2D idle_texture, Texture2D interact, Texture2D spec
     height = (float)texture.height / totalRows;
     speed = 1.f;
     isHuman = human;
-    
 }
 
 void NPC::setInteractionCount()
@@ -83,15 +82,20 @@ void NPC::tick(float deltaTime)
         BaseCharacter::tick(deltaTime);
     }
 
-    if (abs(hero->getScreenPos().x) > abs(getScreenPos().x))
-    {
-        currentRow = 3;
-    }
-    else
-    {
-        currentRow = 1;
-    }
+    float dx = hero->getScreenPos().x - getScreenPos().x;
+    float dy = hero->getScreenPos().y - getScreenPos().y;
 
+    if (Vector2Distance(hero->getScreenPos(), getScreenPos()) > 150.f)
+    {
+        if (abs(dx) > abs(dy))
+        {
+            currentRow = (dx > 0) ? 3 : 1; // Right : Left
+        }
+        else
+        {
+            currentRow = (dy > 0) ? 2 : 0; // Down : Up
+        }
+    }
     if (isTalking && interactionCount != NPCDialog.size() && Vector2Distance(getScreenPos(), hero->getScreenPos()) < 150.f)
     {
         conversation(NPCDialog[interactionCount], getScreenPos().x, getScreenPos().y);

@@ -176,26 +176,26 @@ int main()
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
 	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
 	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
-	Enemy caveMonster{Vector2{610.f, 650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster1{Vector2{490.f, 1440.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster2{Vector2{560.f, 1340.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster3{Vector2{970.f, 1650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster4{Vector2{1080.f, 1550.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster5{Vector2{1320.f, 2480.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster6{Vector2{2100.f, 2300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster7{Vector2{700.f, 2390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster8{Vector2{2400.f, 1720.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster9{Vector2{1150.f, 1050.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster10{Vector2{1350.f, 1150.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster11{Vector2{2330.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster12{Vector2{2450.f, 700.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster13{Vector2{2250.f, 950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster14{Vector2{1550.f, 2650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster15{Vector2{1050.f, 2400.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster16{Vector2{1850.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster17{Vector2{1950.f, 2200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster18{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster19{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster{Vector2{610.f, 650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster1{Vector2{490.f, 1440.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster2{Vector2{560.f, 1340.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster3{Vector2{970.f, 1650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster4{Vector2{1080.f, 1550.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster5{Vector2{1320.f, 2480.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster6{Vector2{2100.f, 2300.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster7{Vector2{700.f, 2390.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster8{Vector2{2400.f, 1720.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster9{Vector2{1150.f, 1050.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster10{Vector2{1350.f, 1150.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster11{Vector2{2330.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster12{Vector2{2450.f, 700.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster13{Vector2{2250.f, 950.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster14{Vector2{1550.f, 2650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster15{Vector2{1050.f, 2400.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster16{Vector2{1850.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster17{Vector2{1950.f, 2200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster18{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster19{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster20{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster21{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster22{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
@@ -243,8 +243,8 @@ int main()
 		enemy->setTarget(&hero);
 		enemy->setCameraTarget(&hero);
 	}
- 	// 400 200
-	hero.setWorldPos(282.f, 12.f);
+	// 400 200
+	hero.setWorldPos(400.f, 200.f);
 	// Check if character is inside a house / outside the town / starting the game
 	bool isInTown{};
 	bool isInside{};
@@ -1068,7 +1068,7 @@ int main()
 			{
 				npcs[1]->setInteractionCount();
 			}
-			if (npcs[1]->getInteractionCount() == 1)
+			if (npcs[1]->getInteractionCount() >= 7)
 			{
 				metSara = true;
 			}
@@ -1081,13 +1081,20 @@ int main()
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
 			{
-				conversation("Where does this road lead?", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (metSara)
 				{
-					isOutsideCave = true;
-					isOutsideTown = false;
-					randomValue = GetRandomValue(1, 4);
-					hero.setWorldPos(1260.f, 785.f);
+					conversation("Where does this road lead?", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isOutsideCave = true;
+						isOutsideTown = false;
+						randomValue = GetRandomValue(1, 4);
+						hero.setWorldPos(1260.f, 785.f);
+					}
+				}
+				else
+				{
+					conversation("Better talk to that woman first!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
 			if (hero.getWorldPos().x < 912 && hero.getWorldPos().x > 870 && hero.getWorldPos().y < 250)
@@ -1190,7 +1197,9 @@ int main()
 					npcs[3]->setInteractionCount();
 				}
 			}
+
 			props[7].Render(hero.getWorldPos());
+
 			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()) ||
@@ -1356,7 +1365,8 @@ int main()
 					enemies[i]->setPlanned(true);
 					enemies[i]->setTarget(&jade);
 				}
-				else{
+				else
+				{
 					enemies[i]->setTarget(&hero);
 				}
 				if (hasDagger)
@@ -1545,7 +1555,8 @@ int main()
 				else if (hero.getSpeed() != 3 && fellIntoCave)
 				{
 					conversation(interactionWithPotion[1], hero.getScreenPos().x, hero.getScreenPos().y);
-					if(IsKeyPressed(KEY_E)){
+					if (IsKeyPressed(KEY_E))
+					{
 						hero.setSpeed(3);
 					}
 				}
@@ -1663,7 +1674,8 @@ int main()
 				{
 					afterFightCounter++;
 				}
-				if(Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 150.f){
+				if (Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 150.f)
+				{
 					npcs[3]->setCanAttack(false);
 				}
 			}

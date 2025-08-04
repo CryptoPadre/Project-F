@@ -45,7 +45,7 @@ void Enemy::tick(float deltaTime)
     {
         if (isCaveMonster && !isAwake)
         {
-            texture = interact;
+            texture = die;
 
             if (Vector2Distance(getScreenPos(), target->getScreenPos()) < awakeningTrigger && !awakeningAnimDone || planned)
             {
@@ -74,11 +74,7 @@ void Enemy::tick(float deltaTime)
         velocity = Vector2Subtract(target->getScreenPos(), getScreenPos());
 
         // Choose texture and direction row
-        if (isCaveMonster && isAwake)
-        {
-            texture = walk;
-        }
-        else if (!isCaveMonster && Vector2Length(velocity) < radius)
+        if (Vector2Length(velocity) < radius)
         {
             velocity = {};
             texture = interact;
