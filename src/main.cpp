@@ -17,6 +17,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "NPC.h"
 #include "Dialogues.h"
 #include "Conversation.h"
+#include "Music.h"
 
 int main()
 {
@@ -32,17 +33,7 @@ int main()
 	SearchAndSetResourceDir("resources");
 	InitAudioDevice();
 	// music in game
-	Music audio[9] = {
-		LoadMusicStream("scary-horror-music.mp3"),
-		LoadMusicStream("high-tension-and-suspense-background.mp3"),
-		LoadMusicStream("whisper-fluisteren.mp3"),
-		LoadMusicStream("monsters-cave.mp3"),
-		LoadMusicStream("music-box-scary.mp3"),
-		LoadMusicStream("scary-game-effect.mp3"),
-		LoadMusicStream("scary-piano-music.mp3"),
-		LoadMusicStream("code-of-silence.mp3"),
-		LoadMusicStream("this-is-suspense-end-of-the-line.mp3")};
-	PlayMusicStream(audio[0]);
+	LoadAllMusic();
 	// draw hero
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
@@ -298,6 +289,7 @@ int main()
 	bool fellIntoCave{};
 	bool yellowStartMapDialogAdded{};
 	bool isTheEnd{};
+	bool caveMusicSwitched{};
 
 	hero.setHasDagger(hasDagger);
 	int endingTitle = 200;
@@ -437,12 +429,7 @@ int main()
 		// Beginning of the game
 		if (isGameStart)
 		{
-			if (!IsMusicStreamPlaying(audio[0]))
-				{
-					StopMusicStream(audio[2]);
-					PlayMusicStream(audio[0]);
-				}
-			UpdateMusicStream(audio[0]);
+			PlayMapMusic(0);
 			if (isDayTime)
 			{
 				DrawTextureEx(maps[5], startPos, 0.0, mapScale, WHITE);
@@ -520,23 +507,13 @@ int main()
 			{
 				// draw the map for daytime
 				DrawTextureEx(maps[0], mapPos, 0.0, mapScale, WHITE);
-				if (!IsMusicStreamPlaying(audio[0]))
-				{
-					StopMusicStream(audio[5]);
-					PlayMusicStream(audio[0]);
-				}
-				UpdateMusicStream(audio[0]);
+				PlayMapMusic(0);
 			}
 			else
 			{
 				// draw the map for nighttime
 				DrawTextureEx(maps[1], mapPos, 0.0, mapScale, WHITE);
-				if (!IsMusicStreamPlaying(audio[5]))
-				{
-					StopMusicStream(audio[0]);
-					PlayMusicStream(audio[5]);
-				}
-				UpdateMusicStream(audio[5]);
+				PlayMapMusic(5);
 			}
 
 			if (hero.getWorldPos().x < 80 &&
@@ -744,12 +721,7 @@ int main()
 			switch (currentInterior)
 			{
 			case HOUSE_ONE:
-				if (!IsMusicStreamPlaying(audio[7]))
-				{
-					StopMusicStream(audio[0]);
-					PlayMusicStream(audio[7]);
-				}
-				UpdateMusicStream(audio[7]);
+				PlayMapMusic(7);
 				DrawTextureEx(maps[8], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -450 || hero.getWorldPos().x > 156 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230 ||
@@ -820,13 +792,7 @@ int main()
 				}
 				break;
 			case HOUSE_TWO:
-				if (!IsMusicStreamPlaying(audio[4]))
-				{
-					StopMusicStream(audio[0]);
-					StopMusicStream(audio[5]);
-					PlayMusicStream(audio[4]);
-				}
-				UpdateMusicStream(audio[4]);
+				PlayMapMusic(4);
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
 
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
@@ -853,7 +819,7 @@ int main()
 				props[34].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x > 65 && hero.getWorldPos().x < 130 && hero.getWorldPos().y < -210)
 				{
-					conversation("A flashlight! That might come in handy!", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("Ok, now I have a flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						hasFlashlight = true;
@@ -900,13 +866,7 @@ int main()
 
 				break;
 			case TEMPLE:
-				if (!IsMusicStreamPlaying(audio[7]))
-				{
-					StopMusicStream(audio[0]);
-					StopMusicStream(audio[5]);
-					PlayMusicStream(audio[7]);
-				}
-				UpdateMusicStream(audio[7]);
+				PlayMapMusic(7);
 				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -390 || hero.getWorldPos().x > 102 ||
 					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200 ||
@@ -1029,6 +989,7 @@ int main()
 		}
 		else if (isUpstairs)
 		{
+			PlayMapMusic(7);
 			DrawTextureEx(maps[9], interiorPos, 0.0, mapScale, WHITE);
 			if (hero.getWorldPos().x < -439 || hero.getWorldPos().x > -85 ||
 				hero.getWorldPos().y > 54 || hero.getWorldPos().y < -220 ||
@@ -1056,9 +1017,9 @@ int main()
 					hasKey = true;
 				}
 			}
-			if (talkedToWoman)
+			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
 			{
-				if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
+				if (talkedToWoman)
 				{
 					conversation("There is something under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -1066,6 +1027,9 @@ int main()
 						hasMedkit = true;
 						npcs[4]->setCurrentFrame(5);
 					}
+				}
+				else{
+					conversation("It's too dark to see anything!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
 			props[33].Render(hero.getWorldPos());
@@ -1076,22 +1040,12 @@ int main()
 		{
 			if (isDayTime)
 			{
-				if (!IsMusicStreamPlaying(audio[0]))
-				{
-					StopMusicStream(audio[2]);
-					PlayMusicStream(audio[0]);
-				}
-				UpdateMusicStream(audio[0]);
+				PlayMapMusic(0);
 				DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
 			}
 			else
 			{
-				if (!IsMusicStreamPlaying(audio[2]))
-				{
-					StopMusicStream(audio[0]);
-					PlayMusicStream(audio[2]);
-				}
-				UpdateMusicStream(audio[2]);
+				PlayMapMusic(2);
 				DrawTextureEx(maps[6], outsideTownPos, 0.0, mapScale, WHITE);
 			}
 			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0 ||
@@ -1208,23 +1162,12 @@ int main()
 
 			if (isDayTime)
 			{
-				if (!IsMusicStreamPlaying(audio[2]))
-				{
-					StopMusicStream(audio[0]);
-					PlayMusicStream(audio[2]);
-				}
-				UpdateMusicStream(audio[2]);
+				PlayMapMusic(2);
 				DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			else
 			{
-				if (!IsMusicStreamPlaying(audio[5]))
-				{
-					StopMusicStream(audio[2]);
-					StopMusicStream(audio[0]);
-					PlayMusicStream(audio[5]);
-				}
-				UpdateMusicStream(audio[5]);
+				PlayMapMusic(5);
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			if (wasInCave)
@@ -1345,13 +1288,14 @@ int main()
 		}
 		else if (isInCave)
 		{
-			if (!IsMusicStreamPlaying(audio[3]))
+			if (!caveMusicSwitched)
 			{
-				StopMusicStream(audio[0]);
-				StopMusicStream(audio[2]);
-				PlayMusicStream(audio[3]);
+				PlayMapMusic(3);
 			}
-			UpdateMusicStream(audio[3]);
+			else
+			{
+				PlayMapMusic(6);
+			}
 			if (hasFlashlight)
 			{
 				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
@@ -1441,20 +1385,14 @@ int main()
 				enemies[i]->tick(GetFrameTime());
 				if (npcs[6]->getInteractionCount() == 15 && npcs[6]->getAlive())
 				{
+					caveMusicSwitched = true;
 					enemies[i]->setPlanned(true);
 					enemies[i]->setTarget(&jade);
-					if (!IsMusicStreamPlaying(audio[6]))
-					{
-						StopMusicStream(audio[3]);
-						PlayMusicStream(audio[6]);
-					}
-					UpdateMusicStream(audio[6]);
 				}
 
 				else
 				{
 					enemies[i]->setTarget(&hero);
-					UpdateMusicStream(audio[6]);
 				}
 				if (hasDagger)
 				{
@@ -1512,6 +1450,7 @@ int main()
 			}
 			else
 			{
+				PlayMapMusic(9);
 				props[19].Render(hero.getWorldPos());
 				for (int i = 22; i < 32; i++)
 				{
@@ -1545,6 +1484,7 @@ int main()
 		}
 		else if (isInSecretRoom)
 		{
+			PlayMapMusic(9);
 			DrawTextureEx(maps[17], interiorPos, 0.0, 1.5, WHITE);
 			props[20].Render(hero.getWorldPos());
 			props[28].Render(hero.getWorldPos());
@@ -1596,6 +1536,7 @@ int main()
 		}
 		else if (isInSarasHouse)
 		{
+			PlayMapMusic(9);
 			DrawTextureEx(maps[18], interiorPos, 0.0, 2.f, WHITE);
 			props[22].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
@@ -1675,6 +1616,7 @@ int main()
 		}
 		else if (isTheEnd)
 		{
+			playmapmusic(7);
 			DrawText("Thanks for playing my game!", 250, endingTitle, 30, RED);
 			DrawText("You survived and escaped From.", 250, endingTitle + 100, 30, RED);
 			DrawText("Graphics", 250, endingTitle + 150, 30, RED);
@@ -1684,6 +1626,14 @@ int main()
 		}
 		else
 		{
+			if (!isYellowDead)
+			{
+				PlayMapMusic(1);
+			}
+			else
+			{
+				PlayMapMusic(8);
+			}
 			DrawTextureEx(maps[14], interiorPos, 0.0, 3.f, WHITE);
 			if (hero.getWorldPos().x < 28 || hero.getWorldPos().y < 10 ||
 				hero.getWorldPos().x > 538 || hero.getWorldPos().y > 800 ||
@@ -1825,7 +1775,8 @@ int main()
 	}
 
 	// cleanup
-
+	UnloadAllMusic();
+	CloseAudioDevice();
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
 	return 0;
