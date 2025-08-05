@@ -168,7 +168,7 @@ int main()
 		Prop{Vector2{100.f, 130.f}, LoadTexture("desk.png"), 0.6, false, 0, 0, 0, 0},
 		Prop{Vector2{550.f, 20.f}, LoadTexture("desk-2.png"), 0.6, false, 70, 0, 0, 0},
 		Prop{Vector2{800.f, 600.f}, LoadTexture("desk-3.png"), 0.5, false, 0, 0, 0, 0},
-		Prop{Vector2{500.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
+		Prop{Vector2{200.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{65.f, 150.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -10}};
 	// render enemy
@@ -290,6 +290,7 @@ int main()
 	bool yellowStartMapDialogAdded{};
 	bool isTheEnd{};
 	bool caveMusicSwitched{};
+	bool enemyInHouse{};
 
 	hero.setHasDagger(hasDagger);
 	int endingTitle = 200;
@@ -1000,7 +1001,15 @@ int main()
 			if (hero.getWorldPos().x < -339 && hero.getWorldPos().y > -201 &&
 				hero.getWorldPos().y < -135)
 			{
-				DrawText("Press E to go downstairs.", 250, 250, 20, BLACK);
+				if(hasKey){
+					conversation("Let's try to get into that house!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else if(hasMedkit && enemyInHouse) {
+					conversation("What is that noise?", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else {
+					conversation("I don't think anything else is here.", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				if (IsKeyPressed(KEY_E))
 				{
 					isUpstairs = false;
@@ -1616,7 +1625,7 @@ int main()
 		}
 		else if (isTheEnd)
 		{
-			playmapmusic(7);
+			PlayMapMusic(7);
 			DrawText("Thanks for playing my game!", 250, endingTitle, 30, RED);
 			DrawText("You survived and escaped From.", 250, endingTitle + 100, 30, RED);
 			DrawText("Graphics", 250, endingTitle + 150, 30, RED);
