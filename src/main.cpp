@@ -291,6 +291,7 @@ int main()
 	bool isTheEnd{};
 	bool caveMusicSwitched{};
 	bool enemyInHouse{};
+	bool byTheDoor{};
 
 	hero.setHasDagger(hasDagger);
 	int endingTitle = 200;
@@ -508,7 +509,14 @@ int main()
 			{
 				// draw the map for daytime
 				DrawTextureEx(maps[0], mapPos, 0.0, mapScale, WHITE);
-				PlayMapMusic(0);
+				if (!talkedToWoman && byTheDoor)
+				{
+					PlayMapMusic(12);
+				}
+				else
+				{
+					PlayMapMusic(0);
+				}
 			}
 			else
 			{
@@ -635,6 +643,7 @@ int main()
 				hero.getWorldPos().y <= house_two_entry_height)
 			{
 				conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
+				byTheDoor = true;
 				if (IsKeyPressed(KEY_E))
 				{
 					if (hasKey)
@@ -652,6 +661,10 @@ int main()
 						interactionWithDoors = 1;
 					}
 				}
+			}
+			else
+			{
+				byTheDoor = false;
 			}
 			if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
 					hero.getWorldPos().y <= house_one_entry_height ||
@@ -737,18 +750,29 @@ int main()
 					hero.undoMovement();
 				}
 				props[32].Render(hero.getWorldPos());
-				if (hero.getWorldPos().x < 140 && hero.getWorldPos().x > -65 && hero.getWorldPos().y > -170)
+				if (enemyInHouse)
+				{
+					npcs[3]->tick(GetFrameTime());
+				}
+				if (hero.getWorldPos().x < -222 && hero.getWorldPos().x > -400 && hero.getWorldPos().y < 100)
 				{
 
-					conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (!fellIntoCave)
+					{
+						conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					else
+					{
+						conversation("I'll stay away from this hole!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
 				}
-				if (hero.getWorldPos().x < 125 && hero.getWorldPos().x > -40 && hero.getWorldPos().y > -160 && hero.getWorldPos().y < 0)
+				if (hero.getWorldPos().x < -220 && hero.getWorldPos().x > -340 && hero.getWorldPos().y > -141 && hero.getWorldPos().y < 10)
 				{
 					hero.undoMovement();
 				}
-				if (hero.getWorldPos().x < 70 && hero.getWorldPos().x > 10 && hero.getWorldPos().y > -180 && hero.getWorldPos().y < -160)
+				if (hero.getWorldPos().x < -220 && hero.getWorldPos().x > -295 && hero.getWorldPos().y > -180 && hero.getWorldPos().y < -140)
 				{
-					if (metYellow)
+					if (metYellow || enemyInHouse)
 					{
 						if (IsKeyPressed(KEY_E))
 						{
@@ -757,14 +781,23 @@ int main()
 							isInCave = true;
 							hasFallen = true;
 							fellIntoCave = true;
+							enemyInHouse = false;
 							hero.setWorldPos(1800.f, 500.f);
 							hero.setSpeed(2.f);
 						}
 					}
 				}
+				if (hero.getWorldPos().x > -114 && hero.getWorldPos().x < 30 && hero.getWorldPos().y < -200)
+				{
+					conversation("These are really old books!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				if (hero.getWorldPos().x > 130 && hero.getWorldPos().y < -200)
+				{
+					conversation("How long have these people been here?", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				if (hero.getWorldPos().x < -420 && hero.getWorldPos().y < -185)
 				{
-					DrawText("Press E to go upstairs.", 250, 250, 20, BLACK);
+					conversation("Is anybody upstairs?", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						isUpstairs = true;
@@ -1001,13 +1034,16 @@ int main()
 			if (hero.getWorldPos().x < -339 && hero.getWorldPos().y > -201 &&
 				hero.getWorldPos().y < -135)
 			{
-				if(hasKey){
+				if (hasKey && !talkedToWoman)
+				{
 					conversation("Let's try to get into that house!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				else if(hasMedkit && enemyInHouse) {
+				else if (hasMedkit && enemyInHouse)
+				{
 					conversation("What is that noise?", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				else {
+				else
+				{
 					conversation("I don't think anything else is here.", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 				if (IsKeyPressed(KEY_E))
@@ -1020,24 +1056,29 @@ int main()
 			}
 			if (hero.getWorldPos().x > -125 && hero.getWorldPos().y > 15)
 			{
-				conversation("Huh? A purse? Something's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (!hasKey)
 				{
-					hasKey = true;
+					conversation("Huh? A purse? Something's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						hasKey = true;
+					}
 				}
 			}
 			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
 			{
-				if (talkedToWoman)
+				if (talkedToWoman && hasFlashlight)
 				{
 					conversation("There is something under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						hasMedkit = true;
+						enemyInHouse = true;
 						npcs[4]->setCurrentFrame(5);
 					}
 				}
-				else{
+				else
+				{
 					conversation("It's too dark to see anything!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}

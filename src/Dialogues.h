@@ -212,9 +212,9 @@ inline std::vector<std::string> heroInteractionWithBookInTemple = {
 inline std::vector<std::string> womanInTheHouse = {
     "Arrrgh...",
     "Please help me...",
-    "My meds... They're in the medkit!",
+    "There's a flashlight in the drawer!",
+    "I need the medkit!",
     "It's under... my bed.",
-    "There's a flashlight in the drawer — you'll need it!",
     "Please,hurry!",
     "The baby is coming!"};
 
