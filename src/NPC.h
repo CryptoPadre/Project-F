@@ -12,22 +12,28 @@ public:
     void talk();
     void setInteractionCount();
     void clearInteractionCount() { interactionCount = 0; }
-    void setTarget(Character *character) { hero = character; }
+    void setTarget(Character *character) { hero = character; useCustomTarget = false; }
     void setAttack(bool attack) { willAttack = attack; }
-    bool getAttack(){return willAttack;}
+    bool getAttack() { return willAttack; }
     void setCurrentFrame(int frame) { currentFrame = frame; }
     void advanceDialogue();
     void resetDialogue();
-    void setCanAttack(bool Attack){canAttack = Attack;}
+    void setCanAttack(bool Attack) { canAttack = Attack; }
     const std::vector<std::string> &getDialogues() const { return NPCDialog; }
     virtual void tick(float deltaTime) override;
     virtual Vector2 getScreenPos() override;
     bool isDay{};
     int getInteractionCount() { return interactionCount; }
     bool isInHouse{};
-    bool getIsTalking(){ return isTalking;}
+    bool getIsTalking() { return isTalking; }
+    void setTarget(Vector2 newTarget)
+    {
+        target = newTarget;
+        useCustomTarget = true;
+    }
 
 private:
+    bool useCustomTarget = false;
     int currentDialogIndex = 0;
     bool finishedTalking = false;
     bool isHuman{};
@@ -37,6 +43,7 @@ private:
     float radius{50.f};
     int interactionCount = 0;
     Character *hero;
+    Vector2 target;
     int danceFrame = 0;
     float danceFrameTime = 0.0f;
     float danceFrameDuration = 0.3f;
@@ -55,8 +62,8 @@ private:
     bool deathAnimDone{};
     bool deathAnimStarted{};
     bool isAttacking{};
-	float attackTimer = 0.0f;
-	int attackFrame = 5;
-	int attackTotalFrames = 6;
-	float attackFrameDuration = 0.2f;
+    float attackTimer = 0.0f;
+    int attackFrame = 5;
+    int attackTotalFrames = 6;
+    float attackFrameDuration = 0.2f;
 };

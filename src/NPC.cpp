@@ -81,11 +81,12 @@ void NPC::tick(float deltaTime)
     {
         BaseCharacter::tick(deltaTime);
     }
+    Vector2 targetPos = useCustomTarget ? target : hero->getScreenPos();
 
     float dx = hero->getScreenPos().x - getScreenPos().x;
     float dy = hero->getScreenPos().y - getScreenPos().y;
 
-    if (Vector2Distance(hero->getScreenPos(), getScreenPos()) > 150.f)
+    if (Vector2Distance(targetPos, getScreenPos()) > 150.f)
     {
         if (abs(dx) > abs(dy))
         {
@@ -186,10 +187,10 @@ void NPC::tick(float deltaTime)
        }
     } */
 
-    if (interactionCount > 0 && !isHuman)
+    if (interactionCount > 0 && !isHuman || useCustomTarget)
     {
         texture = walk;
-        velocity = Vector2Subtract(hero->getScreenPos(), getScreenPos());
+        velocity = Vector2Subtract(targetPos, getScreenPos());
 
         // Determine animation row based on direction
         if (fabs(velocity.x) > fabs(velocity.y))
@@ -199,6 +200,11 @@ void NPC::tick(float deltaTime)
         else
         {
             currentRow = (velocity.y > 0) ? 2 : 0; // Down or Up
+        }
+        if (Vector2Length(velocity) < 5.f)
+        {
+            velocity = {};
+            useCustomTarget = false;
         }
     }
     if (isInHouse && isHuman)
@@ -228,19 +234,4 @@ void NPC::addDialog(const std::vector<std::string> &dialogs)
 {
     for (const auto &dialog : dialogs)
         NPCDialog.push_back(dialog);
-}
-
-void NPC::advanceDialogue()
-{
-    if (!finishedTalking && isTalking)
-    {
-        currentDialogIndex++;
-    }
-}
-
-void NPC::resetDialogue()
-{
-    currentDialogIndex = 0;
-    finishedTalking = false;
-    interactionCount = -1;
 }

@@ -35,6 +35,7 @@ int main()
 	// music in game
 	LoadAllMusic();
 	// draw hero
+	Vector2 targetPoint = {1000.f,1000.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -429,7 +430,8 @@ int main()
 			npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
 			boydDialogKid = true;
 		}
-		if(hasFlashlight && !jadeDialogTwoAdded){
+		if (hasFlashlight && !jadeDialogTwoAdded)
+		{
 			npcs[6]->addDialog(jadeDialogTwo);
 			jadeDialogTwoAdded = true;
 		}
@@ -791,7 +793,8 @@ int main()
 							hero.setWorldPos(1800.f, 500.f);
 							hero.setSpeed(2.f);
 							npcs[3]->setAttack(false);
-							if(hasFlashlight){
+							if (hasFlashlight)
+							{
 								npcs[6]->setWorldPos(2000.f, 2000.f);
 							}
 						}
@@ -1062,7 +1065,8 @@ int main()
 					currentInterior = HOUSE_ONE;
 					isInside = true;
 					hero.setWorldPos(-449.f, -198.f);
-					if(enemyInHouse){
+					if (enemyInHouse)
+					{
 						npcs[3]->setWorldPos(30.f, 600.f);
 					}
 				}
@@ -1165,7 +1169,8 @@ int main()
 						isOutsideTown = false;
 						randomValue = GetRandomValue(1, 4);
 						hero.setWorldPos(1260.f, 785.f);
-						if(hasFlashlight){
+						if (hasFlashlight)
+						{
 							npcs[6]->setWorldPos(2000.f, 2000.f);
 						}
 					}
@@ -1246,6 +1251,7 @@ int main()
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
+			hero.tick(GetFrameTime());
 			if (wasInCave)
 			{
 				npcs[1]->tick(GetFrameTime());
@@ -1260,7 +1266,6 @@ int main()
 					npcs[1]->undoMovement();
 				}
 			}
-			hero.tick(GetFrameTime());
 			if (metYellow && wasInCave)
 			{
 				npcs[6]->tick(GetFrameTime());
@@ -1269,8 +1274,15 @@ int main()
 				{
 					npcs[6]->setInteractionCount();
 				}
-				if(npcs[6]->getInteractionCount() == 8){
+				if (npcs[6]->getInteractionCount() == 8)
+				{
 					hasKey = true;
+				}
+				if(IsKeyPressed(KEY_SPACE)){
+					npcs[6]->setTarget(targetPoint);
+				}
+				else if (IsKeyPressed(KEY_E)){
+					npcs[6]->setTarget(&hero);
 				}
 			}
 			if (!talkedToKid && !wasInCave)
@@ -1342,12 +1354,15 @@ int main()
 			}
 			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
 			{
-				conversation("I should go back to the road.", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
+				if (!isYellowDead)
 				{
-					isOutsideCave = false;
-					isOutsideTown = true;
-					hero.setWorldPos(90.f, 750.f);
+					conversation("I should go back to the road.", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						isOutsideCave = false;
+						isOutsideTown = true;
+						hero.setWorldPos(90.f, 750.f);
+					}
 				}
 			}
 			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1915 && hero.getWorldPos().y < 1950)
@@ -1379,13 +1394,16 @@ int main()
 		}
 		else if (isInCave)
 		{
-			if (!caveMusicSwitched)
+			if (!caveMusicSwitched && !isYellowDead)
 			{
 				PlayMapMusic(3);
 			}
+			else if(caveMusicSwitched && !isYellowDead){
+				PlayMapMusic(6);
+			}
 			else
 			{
-				PlayMapMusic(6);
+				PlayMapMusic(12);
 			}
 			if (hasFlashlight)
 			{
@@ -1474,7 +1492,7 @@ int main()
 					npcs[6]->setAlive(false);
 				}
 				enemies[i]->tick(GetFrameTime());
-				if (npcs[6]->getInteractionCount() == 20 && npcs[6]->getAlive())
+				if (npcs[6]->getInteractionCount() == 23 && npcs[6]->getAlive())
 				{
 					caveMusicSwitched = true;
 					enemies[i]->setPlanned(true);
