@@ -38,13 +38,14 @@ int main()
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
+	// jade cave pos 2000.f 2000.f
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false};
 	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true};
 	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-hurt.png"), LoadTexture("baby-attack.png"), false};
-	NPC jade{Vector2{2000.f, 2000.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
+	NPC jade{Vector2{840.f, 700.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
 	NPC *npcs[7]{
 		&boyd,
 		&sara,
@@ -244,16 +245,16 @@ int main()
 		enemy->setCameraTarget(&hero);
 	}
 	// 400 200
-	hero.setWorldPos(400.f, 200.f);
+	hero.setWorldPos(400.f, 600.f);
 	// Check if character is inside a house / outside the town / starting the game
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
-	bool isOutsideCave{};
+	bool isOutsideCave{true};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
 	bool wasInSarasHouse{};
@@ -273,10 +274,11 @@ int main()
 	bool dialogsAfterFight{};
 	bool boydDialogKid{};
 	bool boydDialogAfterBook{};
+	bool jadeDialogTwoAdded{};
 	bool wasInCave{};
 	bool isYellowDead{};
 	bool metYellow{};
-	bool metSara{};
+	bool metSara{true};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
@@ -427,7 +429,10 @@ int main()
 			npcs[0]->addDialog(boydDialoguesAfterInteractionWithKid);
 			boydDialogKid = true;
 		}
-
+		if(hasFlashlight && !jadeDialogTwoAdded){
+			npcs[6]->addDialog(jadeDialogTwo);
+			jadeDialogTwoAdded = true;
+		}
 		// Beginning of the game
 		if (isGameStart)
 		{
@@ -494,7 +499,7 @@ int main()
 				}
 				if (hero.getWorldPos().y < 370.f)
 				{
-					npcs[3]->setAttack();
+					npcs[3]->setAttack(true);
 					yellowWarningCounter++;
 				}
 				npcs[3]->tick(GetFrameTime());
@@ -511,7 +516,7 @@ int main()
 				DrawTextureEx(maps[0], mapPos, 0.0, mapScale, WHITE);
 				if (!talkedToWoman && byTheDoor)
 				{
-					PlayMapMusic(12);
+					PlayMapMusic(11);
 				}
 				else
 				{
@@ -753,6 +758,7 @@ int main()
 				if (enemyInHouse)
 				{
 					npcs[3]->tick(GetFrameTime());
+					npcs[3]->setAttack(true);
 				}
 				if (hero.getWorldPos().x < -222 && hero.getWorldPos().x > -400 && hero.getWorldPos().y < 100)
 				{
@@ -784,6 +790,10 @@ int main()
 							enemyInHouse = false;
 							hero.setWorldPos(1800.f, 500.f);
 							hero.setSpeed(2.f);
+							npcs[3]->setAttack(false);
+							if(hasFlashlight){
+								npcs[6]->setWorldPos(2000.f, 2000.f);
+							}
 						}
 					}
 				}
@@ -874,7 +884,7 @@ int main()
 					npcs[5]->tick(GetFrameTime());
 					if (Vector2Distance(npcs[5]->getScreenPos(), hero.getScreenPos()) < 150.f)
 					{
-						npcs[5]->setAttack();
+						npcs[5]->setAttack(true);
 					}
 					else
 					{
@@ -1052,6 +1062,9 @@ int main()
 					currentInterior = HOUSE_ONE;
 					isInside = true;
 					hero.setWorldPos(-449.f, -198.f);
+					if(enemyInHouse){
+						npcs[3]->setWorldPos(30.f, 600.f);
+					}
 				}
 			}
 			if (hero.getWorldPos().x > -125 && hero.getWorldPos().y > 15)
@@ -1152,6 +1165,9 @@ int main()
 						isOutsideTown = false;
 						randomValue = GetRandomValue(1, 4);
 						hero.setWorldPos(1260.f, 785.f);
+						if(hasFlashlight){
+							npcs[6]->setWorldPos(2000.f, 2000.f);
+						}
 					}
 				}
 				else
@@ -1210,14 +1226,24 @@ int main()
 		else if (isOutsideCave)
 		{
 
-			if (isDayTime)
+			if (isYellowDead)
+			{
+				PlayMapMusic(12);
+			}
+			else if (isDayTime && !isYellowDead)
 			{
 				PlayMapMusic(2);
-				DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			else
 			{
 				PlayMapMusic(5);
+			}
+			if (isDayTime)
+			{
+				DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
+			}
+			else
+			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
 			if (wasInCave)
@@ -1235,6 +1261,18 @@ int main()
 				}
 			}
 			hero.tick(GetFrameTime());
+			if (metYellow && wasInCave)
+			{
+				npcs[6]->tick(GetFrameTime());
+				npcs[6]->talk();
+				if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
+				{
+					npcs[6]->setInteractionCount();
+				}
+				if(npcs[6]->getInteractionCount() == 8){
+					hasKey = true;
+				}
+			}
 			if (!talkedToKid && !wasInCave)
 			{
 				npcs[3]->tick(GetFrameTime());
@@ -1265,7 +1303,6 @@ int main()
 
 			props[7].Render(hero.getWorldPos());
 
-			props[8].Render(hero.getWorldPos());
 			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
 								   hero.GetCollisionRec()) ||
 				hero.getWorldPos().x > 1295 ||
@@ -1294,10 +1331,14 @@ int main()
 					}
 				}
 			}
-			if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
-				hero.getWorldPos().y < 435)
+			if (!isDayTime)
 			{
-				conversation("Hello Charles! Come here, I know the way out!", 680.f, 60.f);
+				props[8].Render(hero.getWorldPos());
+				if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
+					hero.getWorldPos().y < 435)
+				{
+					conversation("Hello Charles! Come here, I know the way out!", 680.f, 60.f);
+				}
 			}
 			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
 			{
@@ -1433,7 +1474,7 @@ int main()
 					npcs[6]->setAlive(false);
 				}
 				enemies[i]->tick(GetFrameTime());
-				if (npcs[6]->getInteractionCount() == 15 && npcs[6]->getAlive())
+				if (npcs[6]->getInteractionCount() == 20 && npcs[6]->getAlive())
 				{
 					caveMusicSwitched = true;
 					enemies[i]->setPlanned(true);
@@ -1666,12 +1707,11 @@ int main()
 		}
 		else if (isTheEnd)
 		{
-			PlayMapMusic(7);
+			PlayMapMusic(12);
 			DrawText("Thanks for playing my game!", 250, endingTitle, 30, RED);
 			DrawText("You survived and escaped From.", 250, endingTitle + 100, 30, RED);
 			DrawText("Graphics", 250, endingTitle + 150, 30, RED);
 			DrawText("Music", 250, endingTitle + 200, 30, RED);
-
 			endingTitle -= 0.5f;
 		}
 		else
@@ -1731,7 +1771,7 @@ int main()
 			{
 				if (Vector2Distance(hero.getScreenPos(), npcs[3]->getScreenPos()) > 150.f)
 				{
-					npcs[3]->setAttack();
+					npcs[3]->setAttack(true);
 				}
 			}
 			if (npcs[3]->getAttack())

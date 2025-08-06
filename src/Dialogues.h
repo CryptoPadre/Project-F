@@ -219,22 +219,34 @@ inline std::vector<std::string> womanInTheHouse = {
     "The baby is coming!"};
 
     inline std::vector<std::string> jadeDialog {
-        "Grhhh...",
-        "Who are..",
-        "...you?",
-        "The scroll!",
-        "You must find it.",
+        "Oh... you are new!",
+        "So you read my notes!",
+        "I am not dead.",
+        "Just pretty busy.",
+        "We must find that scroll.",
         "We can escape with that!",
-        "The kids help you!",
-        "Now go and find it!"
+        "Here, take this key!",
+        "There was a flashlight in the temple.",
+        "But Fatima is locked inside.",
+        "Get that flashlight if you want to escape!"
     };
+
+    inline std::vector<std::string> jadeDialogTwo {
+        "What happened?",
+        "He was chasing you?",
+        "We don't have much time then.",
+        "We must hurry!"
+    };
+
 
     inline std::vector<std::string> jadeDialogAfterScroll {
         "You found it!",
-        "I don't understant it.",
+        "I don't understand it.",
         "Wait...",
         "I have seen this symbol.",
         "On a bottle...",
+        "Let's get to Sara's house first.",
+        "She might have something for your leg.",
         "No no no noooo.",
         "Run! They know we are here!"
     };

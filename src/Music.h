@@ -3,7 +3,7 @@
 
 #include "raylib.h"
 
-extern Music audio[14];
+extern Music audio[13];
 extern int currentMusicIndex;
 
 void LoadAllMusic();

@@ -1,6 +1,6 @@
 #include "Music.h"
 
-Music audio[14];
+Music audio[13];
 int currentMusicIndex = -1;
 
 void LoadAllMusic()
@@ -16,9 +16,8 @@ void LoadAllMusic()
     audio[8] = LoadMusicStream("this-is-suspense-end-of-the-line.mp3");
     audio[9] = LoadMusicStream("horror-suspense.mp3");
     audio[10] = LoadMusicStream("reversegibberish.mp3");
-    audio[11] = LoadMusicStream("man-scream.mp3");
-    audio[12] = LoadMusicStream("demonic-woman-scream.mp3");
-    audio[13] = LoadMusicStream("ending.mp3");
+    audio[11] = LoadMusicStream("demonic-woman-scream.mp3");
+    audio[12] = LoadMusicStream("ending.mp3");
 }
 
 void UnloadAllMusic()
