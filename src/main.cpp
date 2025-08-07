@@ -36,6 +36,7 @@ int main()
 	LoadAllMusic();
 	// draw hero
 	Vector2 targetPoint = {200.f, 1800.f};
+	Vector2 targetPointOutsideCave = {1200.f, 2000.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -148,8 +149,8 @@ int main()
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 140, 100, 0, 0},
-		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 140, 100, 0, 0},
+		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 40, 10, 0, 0} /* 490*/,
+		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 20, 10, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4, false, 0, 0, 0, 0},
@@ -246,24 +247,24 @@ int main()
 		enemy->setCameraTarget(&hero);
 	}
 	// 400 200
-	hero.setWorldPos(350.f, 200.f);
+	hero.setWorldPos(350.f, 500.f);
 	// Check if character is inside a house / outside the town / starting the game
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
-	bool isOutsideCave{};
+	bool isOutsideCave{true};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
 	bool wasInSarasHouse{};
 	bool hasFlashlight{};
 	bool isEndGame{};
-	bool hasStarted{};
+	bool hasStarted{true};
 	bool isDayTime{true};
-	bool hasTalisman{};
+	bool hasTalisman{true};
 	bool hasMedkit{};
 	bool hasKey{};
 	bool hasScroll{};
@@ -279,7 +280,7 @@ int main()
 	bool wasInCave{};
 	bool isYellowDead{};
 	bool metYellow{};
-	bool metSara{};
+	bool metSara{true};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
@@ -1194,6 +1195,8 @@ int main()
 						{
 							npcs[6]->setWorldPos(2000.f, 2000.f);
 						}
+						enemies[1]->setWorldPos(150.f, 150.f);
+						enemies[0]->setWorldPos(150.f, 150.f);
 					}
 				}
 				else
@@ -1267,12 +1270,30 @@ int main()
 			if (isDayTime)
 			{
 				DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
+				npcs[6]->setTarget(&hero);
 			}
 			else
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
+				npcs[6]->setTarget(targetPointOutsideCave);
 			}
-			hero.tick(GetFrameTime());
+			if (hero.getWorldPos().y > 1781)
+			{
+				props[7].Render(hero.getWorldPos());
+				hero.tick(GetFrameTime());
+			}
+			else
+			{
+				hero.tick(GetFrameTime());
+				props[7].Render(hero.getWorldPos());
+			}
+			if (hero.getWorldPos().x > 915 && hero.getWorldPos().x < 1059 && hero.getWorldPos().y > 1779 && hero.getWorldPos().y < 1820 ||
+				hero.getWorldPos().x > 1295 ||
+				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
+				hero.getWorldPos().y > 2010)
+			{
+				hero.undoMovement();
+			}
 			if (wasInCave)
 			{
 				npcs[1]->tick(GetFrameTime());
@@ -1327,16 +1348,6 @@ int main()
 				}
 			}
 
-			props[7].Render(hero.getWorldPos());
-
-			if (CheckCollisionRecs(props[7].GetCollisionRec(hero.getWorldPos()),
-								   hero.GetCollisionRec()) ||
-				hero.getWorldPos().x > 1295 ||
-				hero.getWorldPos().y < 400 || hero.getWorldPos().x < 90 ||
-				hero.getWorldPos().y > 2010)
-			{
-				hero.undoMovement();
-			}
 			if (hero.getWorldPos().x < 690 && hero.getWorldPos().x > 640 &&
 				hero.getWorldPos().y < 435)
 			{
@@ -1365,6 +1376,13 @@ int main()
 				{
 					conversation("Hello Charles! Come here, I know the way out!", 680.f, 60.f);
 				}
+				enemies[1]->tick(GetFrameTime());
+				enemies[0]->tick(GetFrameTime());
+				if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), enemies[1]->GetCollisionRec()))
+				{
+					enemies[0]->resolveCollision(enemies[1]->getWorldPos());
+					enemies[1]->resolveCollision(enemies[0]->getWorldPos());
+				}
 			}
 			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
 			{
@@ -1379,7 +1397,7 @@ int main()
 					}
 				}
 			}
-			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1915 && hero.getWorldPos().y < 1950)
+			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1830 && hero.getWorldPos().y < 1910)
 			{
 				if (hasScroll && talkedToKid && !isYellowDead)
 				{
@@ -1427,6 +1445,13 @@ int main()
 			else
 			{
 				DrawTextureEx(maps[10], mapPos, 0.0, 3.f, WHITE);
+			}
+			for (int i = 10; i < 12; i++)
+			{
+				props[i].Render(hero.getWorldPos());
+				if(CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+					hero.undoMovement();
+				}
 			}
 			if (!hasScroll)
 			{
@@ -1487,7 +1512,6 @@ int main()
 			}
 			hero.tick(GetFrameTime());
 			npcs[6]->tick(GetFrameTime());
-			npcs[6]->setSpeed(4);
 			npcs[6]->talk();
 			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
@@ -1517,6 +1541,7 @@ int main()
 						enemies[i]->setPlanned(true);
 						enemies[i]->setTarget(&jade);
 						npcs[6]->setTarget(targetPoint);
+						npcs[6]->setSpeed(4);
 					}
 
 					else
@@ -1547,10 +1572,6 @@ int main()
 						enemies[j]->resolveCollision(enemies[i]->getWorldPos());
 					}
 				}
-			}
-			for (int i = 10; i < 12; i++)
-			{
-				props[i].Render(hero.getWorldPos());
 			}
 
 			if (hero.getWorldPos().x > 1750 && hero.getWorldPos().x < 1820 && hero.getWorldPos().y < 540 && hero.getWorldPos().y > 480 && inCaveCounter < heroInCave.size())
