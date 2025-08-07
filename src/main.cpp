@@ -35,7 +35,7 @@ int main()
 	// music in game
 	LoadAllMusic();
 	// draw hero
-	Vector2 targetPoint = {1000.f,1000.f};
+	Vector2 targetPoint = {200.f, 1800.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -195,8 +195,8 @@ int main()
 	Enemy caveMonster14{Vector2{1550.f, 2650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster15{Vector2{1050.f, 2400.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster16{Vector2{1850.f, 1200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster17{Vector2{1950.f, 2200.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
-	Enemy caveMonster18{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster17{Vector2{1950.f, 2400.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
+	Enemy caveMonster18{Vector2{1700.f, 1550.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster19{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster20{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster21{Vector2{1700.f, 1850.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-sleep.png"), LoadTexture("cave-monster-sleep.png"), true};
@@ -246,16 +246,16 @@ int main()
 		enemy->setCameraTarget(&hero);
 	}
 	// 400 200
-	hero.setWorldPos(400.f, 600.f);
+	hero.setWorldPos(350.f, 200.f);
 	// Check if character is inside a house / outside the town / starting the game
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
-	bool isOutsideCave{true};
+	bool isOutsideCave{};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
 	bool wasInSarasHouse{};
@@ -279,7 +279,7 @@ int main()
 	bool wasInCave{};
 	bool isYellowDead{};
 	bool metYellow{};
-	bool metSara{true};
+	bool metSara{};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
@@ -551,6 +551,10 @@ int main()
 				{
 					conversation("I shoud look around in town.", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
+				else if (talkedToWoman && !hasMedkit)
+				{
+					conversation("This ain't right. I need to help her!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				else
 				{
 					conversation("This way I might get back to the car.", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -765,9 +769,13 @@ int main()
 				if (hero.getWorldPos().x < -222 && hero.getWorldPos().x > -400 && hero.getWorldPos().y < 100)
 				{
 
-					if (!fellIntoCave)
+					if (!fellIntoCave && !enemyInHouse)
 					{
 						conversation("What the hell is that hole?", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					else if (!fellIntoCave && enemyInHouse)
+					{
+						conversation("Hurry get in the hole!", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
 					else
 					{
@@ -866,10 +874,17 @@ int main()
 				props[34].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x > 65 && hero.getWorldPos().x < 130 && hero.getWorldPos().y < -210)
 				{
-					conversation("Ok, now I have a flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
-					if (IsKeyPressed(KEY_E))
+					if (!hasFlashlight)
 					{
-						hasFlashlight = true;
+						conversation("Ok, now I have a flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
+						if (IsKeyPressed(KEY_E))
+						{
+							hasFlashlight = true;
+						}
+					}
+					else
+					{
+						conversation("Letters to Ellis?", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
 				}
 				npcs[4]->tick(GetFrameTime());
@@ -1038,6 +1053,7 @@ int main()
 		{
 			PlayMapMusic(7);
 			DrawTextureEx(maps[9], interiorPos, 0.0, mapScale, WHITE);
+			props[33].Render(hero.getWorldPos());
 			if (hero.getWorldPos().x < -439 || hero.getWorldPos().x > -85 ||
 				hero.getWorldPos().y > 54 || hero.getWorldPos().y < -220 ||
 				hero.getWorldPos().x > -185 && hero.getWorldPos().y < -90)
@@ -1071,6 +1087,7 @@ int main()
 					}
 				}
 			}
+			/*
 			if (hero.getWorldPos().x > -125 && hero.getWorldPos().y > 15)
 			{
 				if (!hasKey)
@@ -1082,6 +1099,7 @@ int main()
 					}
 				}
 			}
+				*/
 			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
 			{
 				if (talkedToWoman && hasFlashlight)
@@ -1094,12 +1112,15 @@ int main()
 						npcs[4]->setCurrentFrame(5);
 					}
 				}
+				else if (hasMedkit)
+				{
+					conversation("No monster under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				else
 				{
-					conversation("It's too dark to see anything!", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("This bed does not look so comfy!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
-			props[33].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
 		}
 		// Map if hero tries to leave the town
@@ -1278,17 +1299,10 @@ int main()
 				{
 					hasKey = true;
 				}
-				if(IsKeyPressed(KEY_SPACE)){
-					npcs[6]->setTarget(targetPoint);
-				}
-				else if (IsKeyPressed(KEY_E)){
-					npcs[6]->setTarget(&hero);
-				}
 			}
 			if (!talkedToKid && !wasInCave)
 			{
 				npcs[3]->tick(GetFrameTime());
-				npcs[3]->setCurrentRow(3);
 				npcs[3]->talk();
 				if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 				{
@@ -1398,7 +1412,8 @@ int main()
 			{
 				PlayMapMusic(3);
 			}
-			else if(caveMusicSwitched && !isYellowDead){
+			else if (caveMusicSwitched && !isYellowDead)
+			{
 				PlayMapMusic(6);
 			}
 			else
@@ -1470,7 +1485,9 @@ int main()
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
+			hero.tick(GetFrameTime());
 			npcs[6]->tick(GetFrameTime());
+			npcs[6]->setSpeed(4);
 			npcs[6]->talk();
 			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
@@ -1480,34 +1497,38 @@ int main()
 			{
 				npcs[6]->setInteractionCount();
 			}
-			for (int i = 3; i < 22; i++)
+			if (!isYellowDead)
 			{
+				for (int i = 3; i < 22; i++)
+				{
 
-				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
-				{
-					hero.setAlive(true);
-				}
-				if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), npcs[6]->GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
-				{
-					npcs[6]->setAlive(false);
-				}
-				enemies[i]->tick(GetFrameTime());
-				if (npcs[6]->getInteractionCount() == 23 && npcs[6]->getAlive())
-				{
-					caveMusicSwitched = true;
-					enemies[i]->setPlanned(true);
-					enemies[i]->setTarget(&jade);
-				}
-
-				else
-				{
-					enemies[i]->setTarget(&hero);
-				}
-				if (hasDagger)
-				{
-					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && enemies[i]->hasAwaken() && IsKeyPressed(KEY_SPACE))
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
 					{
-						enemies[i]->setAlive(false);
+						hero.setAlive(true);
+					}
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), npcs[6]->GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
+					{
+						npcs[6]->setAlive(false);
+					}
+					enemies[i]->tick(GetFrameTime());
+					if (npcs[6]->getInteractionCount() == 23 && npcs[6]->getAlive())
+					{
+						caveMusicSwitched = true;
+						enemies[i]->setPlanned(true);
+						enemies[i]->setTarget(&jade);
+						npcs[6]->setTarget(targetPoint);
+					}
+
+					else
+					{
+						enemies[i]->setTarget(&hero);
+					}
+					if (hasDagger)
+					{
+						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && enemies[i]->hasAwaken() && IsKeyPressed(KEY_SPACE))
+						{
+							enemies[i]->setAlive(false);
+						}
 					}
 				}
 			}
@@ -1541,7 +1562,6 @@ int main()
 					hasFallen = false;
 				}
 			}
-			hero.tick(GetFrameTime());
 		}
 		else if (isGameOver)
 		{
@@ -1564,6 +1584,10 @@ int main()
 				for (int i = 22; i < 32; i++)
 				{
 					enemies[i]->tick(GetFrameTime());
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.undoMovement();
+					}
 				}
 				hero.tick(GetFrameTime());
 				if (hero.getWorldPos().y < 500)
@@ -1598,7 +1622,7 @@ int main()
 			props[20].Render(hero.getWorldPos());
 			props[28].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
-			if (hero.getWorldPos().y < -352 || hero.getWorldPos().x > -90 || hero.getWorldPos().x < -491 || hero.getWorldPos().y > 71)
+			if (hero.getWorldPos().y < -352 || hero.getWorldPos().x > -90 || hero.getWorldPos().x < -491 || hero.getWorldPos().y > 71 || hero.getWorldPos().x > -145 && hero.getWorldPos().y < -337)
 			{
 				hero.undoMovement();
 			}

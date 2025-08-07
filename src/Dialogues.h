@@ -254,5 +254,5 @@ inline std::vector<std::string> womanInTheHouse = {
     inline std::vector<std::string> interactionWithPotion {
         "It is some very strong balsam.",
         "Let's put some on my leg!",
-        "I don't need this right now!"
+        "I may need this later!"
     } ;
