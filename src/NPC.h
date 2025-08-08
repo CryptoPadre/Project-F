@@ -31,6 +31,7 @@ public:
         target = newTarget;
         useCustomTarget = true;
     }
+    int getDialogSize(){ return NPCDialog.size() - 1;}
 
 private:
     bool useCustomTarget = false;

@@ -11,6 +11,7 @@ class Enemy : public BaseCharacter{
     void setTarget(BaseCharacter* character){target = character;}
     void setCameraTarget(BaseCharacter* cam) { cameraTarget = cam; }
     bool hasAwaken(){return isAwake;}
+    void setAwaken(bool reset){ isAwake = reset;}
     void setPlanned(bool awake){ planned = awake;}
     virtual Vector2 getScreenPos() override;
     bool isCaveMonster{};

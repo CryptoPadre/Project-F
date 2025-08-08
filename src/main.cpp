@@ -37,6 +37,7 @@ int main()
 	// draw hero
 	Vector2 targetPoint = {200.f, 1800.f};
 	Vector2 targetPointOutsideCave = {1200.f, 2000.f};
+	Vector2 targetBoyd = {700.f, 1000.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -138,7 +139,7 @@ int main()
 	Rectangle srcEnd = {0, 0, (float)maps[16].width, (float)maps[16].height};
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
-	Prop props[35]{
+	Prop props[36]{
 		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
@@ -173,7 +174,8 @@ int main()
 		Prop{Vector2{800.f, 600.f}, LoadTexture("desk-3.png"), 0.5, false, 0, 0, 0, 0},
 		Prop{Vector2{200.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{65.f, 150.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -10}};
+		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -10},
+		Prop{Vector2{0.f, 0.f}, LoadTexture("temple_key.png"), 0.25, false, 0, 0, 0, 0}};
 	// render enemy
 	// 410 , 330 extra for cave monster
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
@@ -247,29 +249,29 @@ int main()
 		enemy->setCameraTarget(&hero);
 	}
 	// 400 200
-	hero.setWorldPos(350.f, 500.f);
+	hero.setWorldPos(290.f, 210.f);
 	// Check if character is inside a house / outside the town / starting the game
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{};
+	bool isGameStart{true};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
-	bool isOutsideCave{true};
+	bool isOutsideCave{};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
 	bool wasInSarasHouse{};
 	bool hasFlashlight{};
 	bool isEndGame{};
-	bool hasStarted{true};
+	bool hasStarted{};
 	bool isDayTime{true};
-	bool hasTalisman{true};
+	bool hasTalisman{};
 	bool hasMedkit{};
 	bool hasKey{};
 	bool hasScroll{};
 	bool hasDagger{};
-	bool hasRustyKey{};
+	bool hasRustyKey{true};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool saraDialogDayTwo{};
@@ -280,7 +282,7 @@ int main()
 	bool wasInCave{};
 	bool isYellowDead{};
 	bool metYellow{};
-	bool metSara{true};
+	bool metSara{};
 	bool talkedBeforeFight{};
 	bool metYellowAtCar{};
 	bool talkedToWoman{};
@@ -296,6 +298,9 @@ int main()
 	bool caveMusicSwitched{};
 	bool enemyInHouse{};
 	bool byTheDoor{};
+	bool metJade{};
+	bool hasBattery{};
+	bool hasTempleKey{};
 
 	hero.setHasDagger(hasDagger);
 	int endingTitle = 200;
@@ -477,13 +482,35 @@ int main()
 			}
 			if (hero.getWorldPos().x > 145 && hero.getWorldPos().x < 300 && hero.getWorldPos().y < 285)
 			{
-				if (heroStartMapCounter < heroTextStartMap.size())
+				if (heroStartMapCounter < heroTextStartMap.size() && !metJade)
 				{
 					conversation(heroTextStartMap[heroStartMapCounter], hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 
 						heroStartMapCounter++;
+					}
+				}
+				else if (metJade && !hasFlashlight)
+				{
+					if (!hasBattery)
+					{
+						conversation("Here they are! Now, get that flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					if (IsKeyPressed(KEY_E))
+					{
+						hasBattery = true;
+					}
+				}
+				else if (metJade && hasFlashlight)
+				{
+					if (!hasBattery)
+					{
+						conversation("Here they are! Now, let's find that scroll!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					if (IsKeyPressed(KEY_E))
+					{
+						hasBattery = true;
 					}
 				}
 			}
@@ -506,6 +533,10 @@ int main()
 					yellowWarningCounter++;
 				}
 				npcs[3]->tick(GetFrameTime());
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.setAlive(false);
+				}
 			}
 
 			hero.tick(GetFrameTime());
@@ -678,10 +709,32 @@ int main()
 			{
 				byTheDoor = false;
 			}
-			if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
-					hero.getWorldPos().y <= house_one_entry_height ||
+			if (
 				hero.getWorldPos().x >= temple_entry_width_min &&
-					hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
+				hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
+			{
+				if (!hasStarted)
+				{
+					conversation("I should talk to that man first.", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else if (!hasTempleKey)
+				{
+					conversation("It's locked!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else
+				{
+					if (IsKeyPressed(KEY_E))
+					{
+						currentInterior = TEMPLE;
+						isInside = true;
+						isInTown = false;
+						hero.setWorldPos(0.f, 270.f);
+						interactionWithDoors = 0;
+					}
+				}
+			}
+			if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
+				hero.getWorldPos().y <= house_one_entry_height)
 			{
 				if (!hasStarted)
 				{
@@ -689,29 +742,14 @@ int main()
 				}
 				else
 				{
-					conversation("Let's see what's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
-
 					if (IsKeyPressed(KEY_E))
 					{
-						if (hero.getWorldPos().x >= house_one_entry_width_min && hero.getWorldPos().x <= house_one_entry_width_max &&
-							hero.getWorldPos().y <= house_one_entry_height)
-						{
 
-							currentInterior = HOUSE_ONE;
-							isInside = true;
-							isInTown = false;
-							hero.setWorldPos(-387.f, 320.f);
-							interactionWithDoors = 0;
-						}
-						if (hero.getWorldPos().x >= temple_entry_width_min &&
-							hero.getWorldPos().x <= temple_entry_width_max && hero.getWorldPos().y <= temple_entry_height)
-						{
-							currentInterior = TEMPLE;
-							isInside = true;
-							isInTown = false;
-							hero.setWorldPos(0.f, 270.f);
-							interactionWithDoors = 0;
-						}
+						currentInterior = HOUSE_ONE;
+						isInside = true;
+						isInTown = false;
+						hero.setWorldPos(-387.f, 320.f);
+						interactionWithDoors = 0;
 					}
 				}
 			}
@@ -1088,19 +1126,19 @@ int main()
 					}
 				}
 			}
-			/*
+
 			if (hero.getWorldPos().x > -125 && hero.getWorldPos().y > 15)
 			{
-				if (!hasKey)
+				if (!hasTempleKey)
 				{
-					conversation("Huh? A purse? Something's inside!", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("What's that? An old key?", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
-						hasKey = true;
+						hasTempleKey = true;
 					}
 				}
 			}
-				*/
+
 			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
 			{
 				if (talkedToWoman && hasFlashlight)
@@ -1275,7 +1313,6 @@ int main()
 			else
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
-				npcs[6]->setTarget(targetPointOutsideCave);
 			}
 			if (hero.getWorldPos().y > 1781)
 			{
@@ -1308,7 +1345,7 @@ int main()
 					npcs[1]->undoMovement();
 				}
 			}
-			if (metYellow && wasInCave)
+			if (metYellow && wasInCave && npcs[6]->getAlive())
 			{
 				npcs[6]->tick(GetFrameTime());
 				npcs[6]->talk();
@@ -1319,6 +1356,7 @@ int main()
 				if (npcs[6]->getInteractionCount() == 8)
 				{
 					hasKey = true;
+					metJade = true;
 				}
 			}
 			if (!talkedToKid && !wasInCave)
@@ -1365,11 +1403,28 @@ int main()
 						wasInCave = true;
 						npcs[3]->setWorldPos(750.f, 800.f);
 						hero.setWorldPos(1055.f, 27.f);
+						if (hasScroll && metJade)
+						{
+							for (int i = 3; i < 22; i++)
+							{
+								int x = 400.f;
+								int y = 400.f;
+								if (enemies[i]->hasAwaken())
+								{
+									enemies[i]->setAwaken(false);
+									enemies[i]->setWorldPos(x, y);
+								}
+								x += 100;
+								y += 100;
+							}
+						}
 					}
 				}
 			}
+
 			if (!isDayTime)
 			{
+				npcs[6]->setTarget(targetPointOutsideCave);
 				props[8].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
 					hero.getWorldPos().y < 435)
@@ -1449,7 +1504,8 @@ int main()
 			for (int i = 10; i < 12; i++)
 			{
 				props[i].Render(hero.getWorldPos());
-				if(CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec())){
+				if (CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
+				{
 					hero.undoMovement();
 				}
 			}
@@ -1474,6 +1530,7 @@ int main()
 					}
 				}
 			}
+
 			if (hero.getWorldPos().y < 5 || hero.getWorldPos().y > 2400 ||
 				hero.getWorldPos().x < 0 || hero.getWorldPos().x > 2065)
 			{
@@ -1535,6 +1592,14 @@ int main()
 						npcs[6]->setAlive(false);
 					}
 					enemies[i]->tick(GetFrameTime());
+					if (!hasScroll)
+					{
+						enemies[i]->setSpeed(5);
+					}
+					else
+					{
+						enemies[i]->setSpeed(2);
+					}
 					if (npcs[6]->getInteractionCount() == 23 && npcs[6]->getAlive())
 					{
 						caveMusicSwitched = true;
@@ -1813,13 +1878,19 @@ int main()
 				{
 					npcs[0]->setInteractionCount();
 				}
+				if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+				}
+				if (npcs[0]->getInteractionCount() == npcs[0]->getDialogSize())
+				{
+					npcs[0]->setTarget(targetBoyd);
+				}
 			}
 
 			hero.tick(GetFrameTime());
 			npcs[3]->tick(GetFrameTime());
-			npcs[3]->setCurrentRow(0);
 			npcs[3]->talk();
-
 			if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 			{
 
@@ -1842,6 +1913,7 @@ int main()
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
 					hero.setAlive(true);
+					hero.undoMovement();
 				}
 			}
 			if (hasDagger && npcs[3]->getAttack())
@@ -1922,6 +1994,13 @@ int main()
 			float scale = props[24].GetScale();
 			Vector2 rustyKeyPos = {330.f, (float)GetScreenHeight() - tex.height * scale};
 			DrawTextureEx(tex, rustyKeyPos, 0.f, scale, WHITE);
+		}
+		if (hasTempleKey)
+		{
+			Texture2D tex = props[35].GetTexture();
+			float scale = props[35].GetScale();
+			Vector2 templeKeyPos = {360.f, (float)GetScreenHeight() - tex.height * scale};
+			DrawTextureEx(tex, templeKeyPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();

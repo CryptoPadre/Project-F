@@ -36,7 +36,6 @@ inline std::vector<std::string> boydDialoguesAfterReadingTheBook = {
     "He never returned!"};
 
 inline std::vector<std::string> boydDialoguesAfterInteractionWithKid = {
-    "Have you seen a kid?",
     "You've been here before...",
     "You died. You returned...",
     "You will die again...",
@@ -161,7 +160,7 @@ inline std::vector<std::string> heroTextStartMap = {
 
 inline std::vector<std::string> heroInCave = {
     "Oh my leg!",
-    "What the hell is this place?",
+    "Is it the cave?",
     "What? Is it sleeping?",
     "I need to get out quickly and silently!"};
 
@@ -226,9 +225,12 @@ inline std::vector<std::string> womanInTheHouse = {
         "We must find that scroll.",
         "We can escape with that!",
         "Here, take this key!",
-        "There was a flashlight in the temple.",
-        "But Fatima is locked inside.",
-        "Get that flashlight if you want to escape!"
+        "There's a flashlight in the temple.",
+        "If you get some batteries, we can use it.",
+        "You have them in your car?",
+        "Jackpot!",
+        "However… there's a tiny problem.",
+        "Fatima is locked inside the temple.",
     };
 
     inline std::vector<std::string> jadeDialogTwo {
@@ -254,5 +256,5 @@ inline std::vector<std::string> womanInTheHouse = {
     inline std::vector<std::string> interactionWithPotion {
         "It is some very strong balsam.",
         "Let's put some on my leg!",
-        "I may need this later!"
+        "I might need this again later!"
     } ;
