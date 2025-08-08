@@ -175,7 +175,7 @@ int main()
 		Prop{Vector2{200.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{65.f, 150.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -10},
-		Prop{Vector2{0.f, 0.f}, LoadTexture("temple_key.png"), 0.25, false, 0, 0, 0, 0}};
+		Prop{Vector2{0.f, 0.f}, LoadTexture("temple_key.png"), 0.2, false, 0, 0, 0, 0}};
 	// render enemy
 	// 410 , 330 extra for cave monster
 	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
@@ -249,12 +249,13 @@ int main()
 		enemy->setCameraTarget(&hero);
 	}
 	// 400 200
-	hero.setWorldPos(290.f, 210.f);
+	hero.setWorldPos(400.f, 200.f);
 	// Check if character is inside a house / outside the town / starting the game
+	bool isInMainMenu{true};
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
-	bool isGameStart{true};
+	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
 	bool isInCave{};
@@ -271,7 +272,7 @@ int main()
 	bool hasKey{};
 	bool hasScroll{};
 	bool hasDagger{};
-	bool hasRustyKey{true};
+	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
 	bool saraDialogDayTwo{};
@@ -301,6 +302,7 @@ int main()
 	bool metJade{};
 	bool hasBattery{};
 	bool hasTempleKey{};
+	bool hasInteract{};
 
 	hero.setHasDagger(hasDagger);
 	int endingTitle = 200;
@@ -374,6 +376,10 @@ int main()
 	int templeBookInteraction = 0;
 
 	int startMapCounter = 0;
+
+	const char *title = "A fanmade game based on the FROM series.";
+	int fontSize = 30;
+	int textWidth = MeasureText(title, fontSize);
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -442,7 +448,32 @@ int main()
 			jadeDialogTwoAdded = true;
 		}
 		// Beginning of the game
-		if (isGameStart)
+		if (isInMainMenu)
+		{
+			PlayMapMusic(10);
+			DrawText(title, screenWidth/2 - textWidth/2, 50, fontSize, RED);
+			DrawText("How to Play", 250, 80, 30, RED);
+			DrawText("W - Up", 250, 120, 20, RED);
+			DrawText("S - Down", 250, 150, 20, RED);
+			DrawText("A - Left", 250, 180, 20, RED);
+			DrawText("D - Right", 250, 210, 20, RED);
+			DrawText("E - Interact", 250, 240, 20, RED);
+			DrawText("Space - Attack", 250, 270, 20, RED);
+			hero.tick(GetFrameTime());
+			DrawText("Press ENTER to start the game", 200, 500, 40, RED);
+			if(IsKeyPressed(KEY_E)){
+				hasInteract = true;
+			}
+			if(hasInteract){
+				conversation("Ready to return?", hero.getScreenPos().x,hero.getScreenPos().y);
+			}
+			if (IsKeyPressed(KEY_ENTER))
+			{
+				isInMainMenu = false;
+				isGameStart = true;
+			}
+		}
+		else if (isGameStart)
 		{
 			PlayMapMusic(0);
 			if (isDayTime)
@@ -1999,7 +2030,7 @@ int main()
 		{
 			Texture2D tex = props[35].GetTexture();
 			float scale = props[35].GetScale();
-			Vector2 templeKeyPos = {360.f, (float)GetScreenHeight() - tex.height * scale};
+			Vector2 templeKeyPos = {360.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
 			DrawTextureEx(tex, templeKeyPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
