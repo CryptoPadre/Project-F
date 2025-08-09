@@ -339,6 +339,8 @@ int main()
 	int closed_house_width_max = 1000;
 	int closed_house_height = 355;
 
+	int mainMenuInteract{};
+
 	enum InteriorType
 	{
 		NONE,
@@ -452,20 +454,27 @@ int main()
 		{
 			PlayMapMusic(10);
 			DrawText(title, screenWidth/2 - textWidth/2, 50, fontSize, RED);
-			DrawText("How to Play", 250, 80, 30, RED);
-			DrawText("W - Up", 250, 120, 20, RED);
-			DrawText("S - Down", 250, 150, 20, RED);
-			DrawText("A - Left", 250, 180, 20, RED);
-			DrawText("D - Right", 250, 210, 20, RED);
-			DrawText("E - Interact", 250, 240, 20, RED);
-			DrawText("Space - Attack", 250, 270, 20, RED);
+			DrawText("How to Play", 180, 160, 30, RED);
+			DrawText("W - Up", 210, 210, 20, RED);
+			DrawText("S - Down", 210, 310, 20, RED);
+			DrawText("A - Left", 120, 260, 20, RED);
+			DrawText("D - Right", 290, 260, 20, RED);
+			DrawText("E - Interact", 500, 220, 20, RED);
+			DrawText("Space - Attack", 500, 260, 20, RED);
+			DrawText("Press ENTER to start the game", 190, 500, 40, RED);
 			hero.tick(GetFrameTime());
-			DrawText("Press ENTER to start the game", 200, 500, 40, RED);
 			if(IsKeyPressed(KEY_E)){
 				hasInteract = true;
+				mainMenuInteract ++;
 			}
-			if(hasInteract){
+			if(hasInteract && mainMenuInteract <= 1){
 				conversation("Ready to return?", hero.getScreenPos().x,hero.getScreenPos().y);
+			}
+			if(mainMenuInteract == 2 && hasInteract){
+				conversation("You think you can survive here...", hero.getScreenPos().x,hero.getScreenPos().y);
+			}
+			if(mainMenuInteract == 3 && hasInteract){
+				conversation("...and escape again?", hero.getScreenPos().x,hero.getScreenPos().y);
 			}
 			if (IsKeyPressed(KEY_ENTER))
 			{
@@ -1973,10 +1982,11 @@ int main()
 				}
 			}
 		}
-
+/*
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
 		DrawText(TextFormat("Random value: %d", randomValue), 190, 200, 20, RED);
+		*/
 		if (hasTalisman)
 		{
 			Texture2D tex = props[12].GetTexture();
