@@ -35,7 +35,7 @@ int main()
 	// music in game
 	LoadAllMusic();
 	// draw hero
-	Vector2 targetPoint = {200.f, 1800.f};
+	Vector2 targetPoint = {100.f, 2000.f};
 	Vector2 targetPointOutsideCave = {1200.f, 2000.f};
 	Vector2 targetBoyd = {700.f, 1000.f};
 	Character hero{screenWidth, screenHeight};
@@ -149,8 +149,8 @@ int main()
 		Prop{Vector2{520.f, 330.f}, LoadTexture("car-2.png"), 0.35, false, 100, 40, 0, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{500.f, 220.f}, LoadTexture("hole.png"), 0.5, false, 30, 30, 0, 0},
-		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 40, 10, 0, 0} /* 490*/,
+		Prop{Vector2{0.f, 0.f}, LoadTexture("batteries.png"), 0.2, false, 0, 0, 0, 0},
+		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 40, 10, 0, 0},
 		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 20, 10, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25, false, 0, 0, 0, 0},
@@ -453,7 +453,7 @@ int main()
 		if (isInMainMenu)
 		{
 			PlayMapMusic(10);
-			DrawText(title, screenWidth/2 - textWidth/2, 50, fontSize, RED);
+			DrawText(title, screenWidth / 2 - textWidth / 2, 50, fontSize, RED);
 			DrawText("How to Play", 180, 160, 30, RED);
 			DrawText("W - Up", 210, 210, 20, RED);
 			DrawText("S - Down", 210, 310, 20, RED);
@@ -463,23 +463,28 @@ int main()
 			DrawText("Space - Attack", 500, 260, 20, RED);
 			DrawText("Press ENTER to start the game", 190, 500, 40, RED);
 			hero.tick(GetFrameTime());
-			if(IsKeyPressed(KEY_E)){
+			if (IsKeyPressed(KEY_E))
+			{
 				hasInteract = true;
-				mainMenuInteract ++;
+				mainMenuInteract++;
 			}
-			if(hasInteract && mainMenuInteract <= 1){
-				conversation("Ready to return?", hero.getScreenPos().x,hero.getScreenPos().y);
+			if (hasInteract && mainMenuInteract <= 1)
+			{
+				conversation("Ready to return?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
-			if(mainMenuInteract == 2 && hasInteract){
-				conversation("You think you can survive here...", hero.getScreenPos().x,hero.getScreenPos().y);
+			if (mainMenuInteract == 2 && hasInteract)
+			{
+				conversation("You think you can survive here...", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
-			if(mainMenuInteract == 3 && hasInteract){
-				conversation("...and escape again?", hero.getScreenPos().x,hero.getScreenPos().y);
+			if (mainMenuInteract == 3 && hasInteract)
+			{
+				conversation("...and escape again?", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 			if (IsKeyPressed(KEY_ENTER))
 			{
 				isInMainMenu = false;
 				isGameStart = true;
+				hero.setWorldPos(290.f, 200.f);
 			}
 		}
 		else if (isGameStart)
@@ -512,7 +517,6 @@ int main()
 			}
 			if (hero.getWorldPos().y >= 1410)
 			{
-				DrawText("Press E to enter the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = false;
@@ -608,7 +612,6 @@ int main()
 				hero.getWorldPos().y > town_exit_height_min &&
 				hero.getWorldPos().y < town_exit_height_max)
 			{
-				DrawText("Press E to go back to the car.", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = true;
@@ -839,11 +842,17 @@ int main()
 				{
 					hero.undoMovement();
 				}
+				hero.tick(GetFrameTime());
 				props[32].Render(hero.getWorldPos());
 				if (enemyInHouse)
 				{
 					npcs[3]->tick(GetFrameTime());
 					npcs[3]->setAttack(true);
+					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.undoMovement();
+						hero.setAlive(false);
+					}
 				}
 				if (hero.getWorldPos().x < -222 && hero.getWorldPos().x > -400 && hero.getWorldPos().y < 100)
 				{
@@ -928,7 +937,6 @@ int main()
 			case HOUSE_TWO:
 				PlayMapMusic(4);
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
-
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
 				{
@@ -938,7 +946,6 @@ int main()
 				if (hero.getWorldPos().x >= -134 && hero.getWorldPos().x <= -23 &&
 					hero.getWorldPos().y >= 310)
 				{
-					DrawText("Press E to exit the house", 250, 250, 20, WHITE);
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;
@@ -951,6 +958,7 @@ int main()
 				props[27].Render(hero.getWorldPos());
 				props[30].Render(hero.getWorldPos());
 				props[34].Render(hero.getWorldPos());
+				hero.tick(GetFrameTime());
 				if (hero.getWorldPos().x > 65 && hero.getWorldPos().x < 130 && hero.getWorldPos().y < -210)
 				{
 					if (!hasFlashlight)
@@ -1019,7 +1027,6 @@ int main()
 				if (hero.getWorldPos().x >= -28 && hero.getWorldPos().x <= 28 &&
 					hero.getWorldPos().y >= 260)
 				{
-					DrawText("Press E to exit the temple", 250, 250, 20, WHITE);
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;
@@ -1068,6 +1075,15 @@ int main()
 						templeBookInteraction++;
 					}
 				}
+				if (!boxOpen)
+				{
+					props[25].Render(hero.getWorldPos());
+				}
+				else
+				{
+					props[26].Render(hero.getWorldPos());
+				}
+				hero.tick(GetFrameTime());
 				if (boydDialogAfterBook && !isYellowDead)
 				{
 					npcs[0]->tick(GetFrameTime());
@@ -1082,14 +1098,6 @@ int main()
 						hero.undoMovement();
 						npcs[0]->undoMovement();
 					}
-				}
-				if (!boxOpen)
-				{
-					props[25].Render(hero.getWorldPos());
-				}
-				else
-				{
-					props[26].Render(hero.getWorldPos());
 				}
 				if (hero.getWorldPos().x > 20 && hero.getWorldPos().x < 60 && hero.getWorldPos().y < -140)
 				{
@@ -1126,13 +1134,13 @@ int main()
 			default:
 				break;
 			}
-			hero.tick(GetFrameTime());
 		}
 		else if (isUpstairs)
 		{
 			PlayMapMusic(7);
 			DrawTextureEx(maps[9], interiorPos, 0.0, mapScale, WHITE);
 			props[33].Render(hero.getWorldPos());
+			hero.tick(GetFrameTime());
 			if (hero.getWorldPos().x < -439 || hero.getWorldPos().x > -85 ||
 				hero.getWorldPos().y > 54 || hero.getWorldPos().y < -220 ||
 				hero.getWorldPos().x > -185 && hero.getWorldPos().y < -90)
@@ -1200,7 +1208,6 @@ int main()
 					conversation("This bed does not look so comfy!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
-			hero.tick(GetFrameTime());
 		}
 		// Map if hero tries to leave the town
 		else if (isOutsideTown)
@@ -1302,7 +1309,6 @@ int main()
 			if (
 				hero.getWorldPos().x < 560 && hero.getWorldPos().y > 1350)
 			{
-				DrawText("Press E to return to the town", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
 					isOutsideTown = false;
@@ -1312,7 +1318,6 @@ int main()
 			}
 			if (hero.getWorldPos().y < 10 && hero.getWorldPos().x < 600)
 			{
-				DrawText("Press E to exit!", 250, 250, 20, BLACK);
 				if (IsKeyPressed(KEY_E))
 				{
 					isOutsideTown = false;
@@ -1398,6 +1403,10 @@ int main()
 					hasKey = true;
 					metJade = true;
 				}
+				if (!isDayTime)
+				{
+					npcs[6]->setTarget(targetPointOutsideCave);
+				}
 			}
 			if (!talkedToKid && !wasInCave)
 			{
@@ -1464,7 +1473,6 @@ int main()
 
 			if (!isDayTime)
 			{
-				npcs[6]->setTarget(targetPointOutsideCave);
 				props[8].Render(hero.getWorldPos());
 				if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
 					hero.getWorldPos().y < 435)
@@ -1533,7 +1541,7 @@ int main()
 			{
 				PlayMapMusic(12);
 			}
-			if (hasFlashlight)
+			if (hasFlashlight && hasBattery)
 			{
 				DrawTextureEx(maps[13], mapPos, 0.0, 3.f, WHITE);
 			}
@@ -1549,7 +1557,7 @@ int main()
 					hero.undoMovement();
 				}
 			}
-			if (!hasScroll)
+			if (!hasScroll && hasFlashlight && hasBattery)
 			{
 
 				props[18].Render(hero.getWorldPos());
@@ -1640,7 +1648,7 @@ int main()
 					{
 						enemies[i]->setSpeed(2);
 					}
-					if (npcs[6]->getInteractionCount() == 23 && npcs[6]->getAlive())
+					if (npcs[6]->getInteractionCount() == 25 && npcs[6]->getAlive())
 					{
 						caveMusicSwitched = true;
 						enemies[i]->setPlanned(true);
@@ -1982,11 +1990,11 @@ int main()
 				}
 			}
 		}
-/*
+
 		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
 		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
 		DrawText(TextFormat("Random value: %d", randomValue), 190, 200, 20, RED);
-		*/
+
 		if (hasTalisman)
 		{
 			Texture2D tex = props[12].GetTexture();
@@ -2042,6 +2050,13 @@ int main()
 			float scale = props[35].GetScale();
 			Vector2 templeKeyPos = {360.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
 			DrawTextureEx(tex, templeKeyPos, 0.f, scale, WHITE);
+		}
+		if (hasBattery)
+		{
+			Texture2D tex = props[9].GetTexture();
+			float scale = props[9].GetScale();
+			Vector2 batteriesPos = {410.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
+			DrawTextureEx(tex, batteriesPos, 0.f, scale, WHITE);
 		}
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
