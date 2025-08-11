@@ -558,8 +558,9 @@ int main()
 					}
 				}
 			}
-			if (talkedToKid && !hasDagger)
+			if (metYellow && !hasDagger)
 			{
+				npcs[3]->tick(GetFrameTime());
 				npcs[3]->talk();
 
 				if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
@@ -571,15 +572,22 @@ int main()
 					conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 					metYellowAtCar = true;
 				}
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+					npcs[3]->undoMovement();
+				}
 				if (hero.getWorldPos().y < 370.f)
 				{
 					npcs[3]->setAttack(true);
 					yellowWarningCounter++;
 				}
-				npcs[3]->tick(GetFrameTime());
-				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				if (npcs[3]->getAttack())
 				{
-					hero.setAlive(false);
+					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.setAlive(false);
+					}
 				}
 			}
 
@@ -841,6 +849,7 @@ int main()
 						hero.getWorldPos().y < 280)
 				{
 					hero.undoMovement();
+					npcs[3]->undoMovement();
 				}
 				hero.tick(GetFrameTime());
 				props[32].Render(hero.getWorldPos());
@@ -1227,6 +1236,8 @@ int main()
 			{
 				hero.undoMovement();
 			}
+			props[4].Render(hero.getWorldPos());
+			hero.tick(GetFrameTime());
 			if (metYellow || hasScroll)
 			{
 
@@ -1244,7 +1255,6 @@ int main()
 					{
 						talkedToKid = true;
 						npcs[3]->setWorldPos(850.f, 750.f);
-						npcs[3]->setCurrentRow(2);
 					}
 				}
 			}
@@ -1263,7 +1273,6 @@ int main()
 				hero.undoMovement();
 				npcs[1]->undoMovement();
 			}
-			props[4].Render(hero.getWorldPos());
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
 			{
@@ -1333,7 +1342,6 @@ int main()
 					outsideHouseCounter++;
 				}
 			}
-			hero.tick(GetFrameTime());
 		}
 		else if (isOutsideCave)
 		{
@@ -1956,14 +1964,17 @@ int main()
 					npcs[3]->setAttack(true);
 				}
 			}
-			if (npcs[3]->getAttack())
+
+			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
-				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+
+				hero.undoMovement();
+				if (npcs[3]->getAttack())
 				{
 					hero.setAlive(true);
-					hero.undoMovement();
 				}
 			}
+
 			if (hasDagger && npcs[3]->getAttack())
 			{
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
