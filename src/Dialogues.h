@@ -258,3 +258,9 @@ inline std::vector<std::string> womanInTheHouse = {
         "Let's put some on my leg!",
         "I might need this again later!"
     } ;
+
+    inline std::vector<std::string> interactionWithClock {
+        "Why would anyone need a clock here?",
+        "Something is hidden between the clogs!",
+        "Another key?"
+    } ;

@@ -35,8 +35,8 @@ int main()
 	// music in game
 	LoadAllMusic();
 	// draw hero
-	Vector2 targetPoint = {-200.f, 0.f};
-	Vector2 targetBoyd = {700.f, 1000.f};
+	Vector2 targetPoint = {-300.f, 300.f};
+	Vector2 targetBoyd = {600.f, 300.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -338,6 +338,7 @@ int main()
 	int closed_house_height = 355;
 
 	int mainMenuInteract{};
+	int interactionWithClockCounter{};
 
 	enum InteriorType
 	{
@@ -881,7 +882,7 @@ int main()
 				}
 				if (hero.getWorldPos().x < -220 && hero.getWorldPos().x > -295 && hero.getWorldPos().y > -180 && hero.getWorldPos().y < -140)
 				{
-					if (metYellow || enemyInHouse)
+					if (metYellow && enemyInHouse)
 					{
 						if (IsKeyPressed(KEY_E))
 						{
@@ -1042,7 +1043,8 @@ int main()
 							hero.setWorldPos(temple_entry_width_min, temple_entry_height);
 						}
 					}
-					else{
+					else
+					{
 						conversation("It's locked!", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
 				}
@@ -1188,14 +1190,8 @@ int main()
 
 			if (hero.getWorldPos().x > -125 && hero.getWorldPos().y > 15)
 			{
-				if (!hasTempleKey)
-				{
-					conversation("What's that? An old key?", hero.getScreenPos().x, hero.getScreenPos().y);
-					if (IsKeyPressed(KEY_E))
-					{
-						hasTempleKey = true;
-					}
-				}
+
+				conversation("Someone left their weed here!", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 
 			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
@@ -1291,8 +1287,12 @@ int main()
 						{
 							npcs[6]->setWorldPos(2000.f, 2000.f);
 						}
-						enemies[1]->setWorldPos(150.f, 150.f);
-						enemies[0]->setWorldPos(150.f, 150.f);
+						if (!metYellow)
+						{
+							npcs[3]->setWorldPos(1200.f, 2100.f);
+						}
+						enemies[1]->setWorldPos(150.f, 850.f);
+						enemies[0]->setWorldPos(150.f, 850.f);
 					}
 				}
 				else
@@ -1363,11 +1363,37 @@ int main()
 			if (isDayTime)
 			{
 				DrawTextureEx(maps[11], outsideTownPos, 0.0, 3.f, WHITE);
-				npcs[6]->setTarget(&hero);
 			}
 			else
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
+			}
+			if (!isDayTime)
+			{
+				props[8].Render(hero.getWorldPos());
+				if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
+					hero.getWorldPos().y < 435)
+				{
+					conversation("Hello Charles! Come here, I know the way out!", 680.f, 60.f);
+				}
+				if (metJade)
+				{
+					enemies[1]->tick(GetFrameTime());
+					enemies[0]->tick(GetFrameTime());
+					if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), hero.GetCollisionRec()) ||
+						CheckCollisionRecs(enemies[1]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.setAlive(false);
+					}
+					if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), hero.getDaggerCollisionRec()))
+					{
+						enemies[0]->setAlive(false);
+					}
+					if (CheckCollisionRecs(enemies[1]->GetCollisionRec(), hero.getDaggerCollisionRec()))
+					{
+						enemies[1]->setAlive(false);
+					}
+				}
 			}
 			if (hero.getWorldPos().y > 1781)
 			{
@@ -1439,7 +1465,7 @@ int main()
 				{
 					conversation("There is no way I will go in there!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				else if (!hasFlashlight || !hasBattery)
+				else if (metYellow && !hasFlashlight && !hasBattery)
 				{
 					conversation("I need to get that flashlight working!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
@@ -1468,25 +1494,6 @@ int main()
 							x += 100;
 							y += 100;
 						}
-					}
-				}
-			}
-			if (!isDayTime)
-			{
-				props[8].Render(hero.getWorldPos());
-				if (hero.getWorldPos().x < 1180 && hero.getWorldPos().x > 1050 &&
-					hero.getWorldPos().y < 435)
-				{
-					conversation("Hello Charles! Come here, I know the way out!", 680.f, 60.f);
-				}
-				if (metJade)
-				{
-					enemies[1]->tick(GetFrameTime());
-					enemies[0]->tick(GetFrameTime());
-					if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), enemies[1]->GetCollisionRec()))
-					{
-						enemies[0]->resolveCollision(enemies[1]->getWorldPos());
-						enemies[1]->resolveCollision(enemies[0]->getWorldPos());
 					}
 				}
 			}
@@ -1651,7 +1658,7 @@ int main()
 					{
 						enemies[i]->setSpeed(2);
 					}
-					if (npcs[6]->getInteractionCount() == 25 && npcs[6]->getAlive())
+					if (npcs[6]->getInteractionCount() >= 24 && npcs[6]->getAlive())
 					{
 						caveMusicSwitched = true;
 						enemies[i]->setPlanned(true);
@@ -1799,9 +1806,17 @@ int main()
 					}
 				}
 			}
-			if (hero.getWorldPos().x > -110 && hero.getWorldPos().y < -310)
+			if (hero.getWorldPos().x > -110 && hero.getWorldPos().y < -310 && interactionWithClockCounter < interactionWithClock.size() - 1)
 			{
-				conversation("Why would anyone need a clock here?", hero.getScreenPos().x, hero.getScreenPos().y);
+				conversation(interactionWithClock[interactionWithClockCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					interactionWithClockCounter++;
+					if (interactionWithClockCounter == 3)
+					{
+						hasTempleKey = true;
+					}
+				}
 			}
 		}
 		else if (isInSarasHouse)
@@ -1962,8 +1977,7 @@ int main()
 
 			if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
-
-				hero.undoMovement();
+				hero.setAlive(true);
 			}
 
 			if (hasDagger && npcs[3]->getAttack())
