@@ -637,7 +637,10 @@ int main()
 				}
 				else
 				{
-					conversation("This way I might get back to the car.", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (!metSara)
+					{
+						conversation("This way I might get back to the car.", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
 					if (IsKeyPressed(KEY_E))
 					{
 						isOutsideTown = true;
@@ -684,6 +687,13 @@ int main()
 					{
 						hero.setAlive(true);
 					}
+					if (hasDagger)
+					{
+						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()))
+						{
+							enemies[i]->setAlive(false);
+						}
+					}
 				}
 			}
 			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
@@ -719,7 +729,7 @@ int main()
 				{
 					if (CheckCollisionRecs(props[i].GetCollisionRec(hero.getWorldPos()), enemy->GetCollisionRec()))
 					{
-						enemy->undoMovement();
+						enemy->resolveCollision(props[i].getWorldPos());
 					}
 				}
 				for (auto npc : npcs)
@@ -893,7 +903,7 @@ int main()
 							fellIntoCave = true;
 							enemyInHouse = false;
 							hero.setWorldPos(1800.f, 500.f);
-							hero.setSpeed(2.f);
+							hero.setSpeed(2.5);
 							npcs[3]->setAttack(false);
 							if (hasFlashlight && hasBattery)
 							{
@@ -1001,10 +1011,21 @@ int main()
 					{
 						conversation("Moooother!", npcs[5]->getScreenPos().x + 30, npcs[5]->getScreenPos().y + 20);
 					}
+					if (CheckCollisionRecs(npcs[5]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.setAlive(true);
+					}
 				}
 				if (CheckCollisionRecs(npcs[4]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
+				}
+				if (hasDagger)
+				{
+					if (CheckCollisionRecs(npcs[5]->GetCollisionRec(), hero.getDaggerCollisionRec()))
+					{
+						npcs[5]->setAlive(false);
+					}
 				}
 				if (CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
 				{
@@ -1806,13 +1827,13 @@ int main()
 					}
 				}
 			}
-			if (hero.getWorldPos().x > -110 && hero.getWorldPos().y < -310 && interactionWithClockCounter < interactionWithClock.size() - 1)
+			if (hero.getWorldPos().x > -110 && hero.getWorldPos().y < -310 && interactionWithClockCounter <= interactionWithClock.size() - 1)
 			{
 				conversation(interactionWithClock[interactionWithClockCounter], hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
 					interactionWithClockCounter++;
-					if (interactionWithClockCounter == 3)
+					if (interactionWithClockCounter == 2)
 					{
 						hasTempleKey = true;
 					}
