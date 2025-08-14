@@ -642,6 +642,9 @@ int main()
 				{
 					conversation("This ain't right. I need to help her!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
+				else if (!hasTempleKey){
+					conversation("I should get into that temple!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				else
 				{
 					if (!metSara)
