@@ -36,7 +36,7 @@ int main()
 	LoadAllMusic();
 	// draw hero
 	Vector2 targetPoint = {-300.f, 300.f};
-	Vector2 targetBoyd = {600.f, 300.f};
+	Vector2 targetBoyd = {550.f, 750.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -516,11 +516,18 @@ int main()
 			}
 			if (hero.getWorldPos().y >= 1410)
 			{
-				if (IsKeyPressed(KEY_E))
+				if (startMapCounter > 0 && !hasBattery)
 				{
-					isGameStart = false;
-					isInTown = true;
-					hero.setWorldPos(90.f, 1100.f);
+					conversation("I should get those batteries!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else
+				{
+					if (IsKeyPressed(KEY_E))
+					{
+						isGameStart = false;
+						isInTown = true;
+						hero.setWorldPos(90.f, 1100.f);
+					}
 				}
 			}
 			if (hero.getWorldPos().x > 145 && hero.getWorldPos().x < 300 && hero.getWorldPos().y < 285)
@@ -914,7 +921,14 @@ int main()
 				}
 				if (hero.getWorldPos().x > -114 && hero.getWorldPos().x < 30 && hero.getWorldPos().y < -200)
 				{
-					conversation("These are really old books!", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (!hasTempleKey)
+					{
+						conversation("These are really old books! What's that?", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					if (IsKeyPressed(KEY_E))
+					{
+						hasTempleKey = true;
+					}
 				}
 				if (hero.getWorldPos().x > 130 && hero.getWorldPos().y < -200)
 				{
@@ -1273,6 +1287,7 @@ int main()
 					if (npcs[2]->getInteractionCount() == 1)
 					{
 						talkedToKid = true;
+
 						npcs[3]->setWorldPos(850.f, 750.f);
 					}
 				}
@@ -1343,9 +1358,19 @@ int main()
 			{
 				if (IsKeyPressed(KEY_E))
 				{
-					isOutsideTown = false;
-					isInTown = true;
-					hero.setWorldPos(1700, 1150);
+					if (metJade && !hasBattery)
+					{
+						isOutsideTown = false;
+						isGameStart = true;
+						hero.setWorldPos(400.f, 1330.f);
+						startMapCounter++;
+					}
+					else
+					{
+						isOutsideTown = false;
+						isInTown = true;
+						hero.setWorldPos(1700, 1150);
+					}
 				}
 			}
 			if (hero.getWorldPos().y < 10 && hero.getWorldPos().x < 600)
@@ -1486,7 +1511,7 @@ int main()
 				{
 					conversation("There is no way I will go in there!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				else if (metYellow && !hasFlashlight && !hasBattery)
+				else if (metJade && !hasFlashlight && !hasBattery)
 				{
 					conversation("I need to get that flashlight working!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
@@ -1520,15 +1545,19 @@ int main()
 			}
 			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
 			{
-				if (!isYellowDead)
+				if (!isYellowDead && metJade && !hasFlashlight)
 				{
-					conversation("I should go back to the road.", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("I need to get that flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						isOutsideCave = false;
 						isOutsideTown = true;
 						hero.setWorldPos(90.f, 750.f);
 					}
+				}
+				if (!wasInCave)
+				{
+					conversation("What could be in that cave?", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
 			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1830 && hero.getWorldPos().y < 1910)
@@ -1632,6 +1661,8 @@ int main()
 					hero.setWorldPos(650.f, 435.f);
 					wasInCave = true;
 					npcs[1]->setWorldPos(1200.f, 2100.f);
+					enemies[0]->setWorldPos(200.f, 500.f);
+					enemies[1]->setWorldPos(200.f, 500.f);
 				}
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
@@ -1835,7 +1866,7 @@ int main()
 					interactionWithClockCounter++;
 					if (interactionWithClockCounter == 2)
 					{
-						hasTempleKey = true;
+						hasRustyKey = true;
 					}
 				}
 			}
@@ -1855,7 +1886,10 @@ int main()
 			}
 			if (hero.getWorldPos().x < -110 && hero.getWorldPos().x > -187 && hero.getWorldPos().y > 70)
 			{
-				conversation("It can't be!", hero.getScreenPos().x, hero.getScreenPos().y);
+				if (!wasInSarasHouse)
+				{
+					conversation("It can't be!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				if (IsKeyPressed(KEY_E))
 				{
 					isInSarasHouse = false;
@@ -1866,11 +1900,7 @@ int main()
 			}
 			if (hero.getWorldPos().x > -40 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 15 && !hasRustyKey)
 			{
-				conversation("An old rusty key?", hero.getScreenPos().x, hero.getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
-				{
-					hasRustyKey = true;
-				}
+				conversation("This smells strong!", hero.getScreenPos().x, hero.getScreenPos().y);
 			}
 			if (hero.getWorldPos().x > -313 && hero.getWorldPos().x < -300 && hero.getWorldPos().y > -50 && hero.getWorldPos().y < 10)
 			{
