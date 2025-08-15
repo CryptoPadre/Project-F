@@ -122,7 +122,12 @@ void NPC::tick(float deltaTime)
             if (Vector2Length(velocity) < radius)
             {
                 velocity = {};
-                texture = die;
+                if(changeAnime){
+                    texture = die;
+                }
+                else {
+                    texture = interact;
+                }
                 attackTimer += GetFrameTime();
                 if (attackTimer >= attackFrameDuration)
                 {

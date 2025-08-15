@@ -46,7 +46,7 @@ int main()
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false};
 	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true};
-	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-attack.png"),  LoadTexture("baby-hurt.png"),false};
+	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-attack.png"), LoadTexture("baby-hurt.png"), true};
 	NPC jade{Vector2{840.f, 700.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
 	NPC *npcs[7]{
 		&boyd,
@@ -649,7 +649,7 @@ int main()
 				{
 					conversation("I should get into that temple!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				else if(wasInTemple)
+				else if (wasInTemple)
 				{
 					if (!metSara)
 					{
@@ -1044,7 +1044,8 @@ int main()
 						{
 							conversation("Moooother!", npcs[5]->getScreenPos().x + 30, npcs[5]->getScreenPos().y + 20);
 						}
-						else if(hitCounterBaby == 1){
+						else if (hitCounterBaby == 1)
+						{
 							conversation("Bearing the curse...", npcs[5]->getScreenPos().x + 30, npcs[5]->getScreenPos().y + 20);
 						}
 					}
@@ -1062,9 +1063,11 @@ int main()
 					if (CheckCollisionRecs(npcs[5]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 					{
 						npcs[5]->setCanAttack(false);
-						hitCounterBaby ++;
+						npcs[5]->changeAnime = true;
+						hitCounterBaby++;
 					}
-					if(hitCounterBaby  > 1){
+					if (hitCounterBaby > 1)
+					{
 						npcs[5]->setAlive(false);
 					}
 				}
@@ -1812,7 +1815,8 @@ int main()
 						hero.undoMovement();
 					}
 				}
-				if(hero.getWorldPos().y > 970){
+				if (hero.getWorldPos().y > 970)
+				{
 					hero.undoMovement();
 				}
 				hero.tick(GetFrameTime());

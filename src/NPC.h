@@ -32,6 +32,7 @@ public:
         useCustomTarget = true;
     }
     int getDialogSize(){ return NPCDialog.size() - 1;}
+    bool changeAnime{};
 
 private:
     bool useCustomTarget = false;
