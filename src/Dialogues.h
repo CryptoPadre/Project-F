@@ -108,7 +108,9 @@ inline std::vector<std::string> kidDialogScroll = {
     "You die, you left, you return!",
     "The only escape is thru the tree"};
 
-inline std::vector<std::string> yellowDialogScroll = {
+inline std::vector<std::string> yellowDialogStartMap = {
+    "You don't remember me, do you?",
+    "Of course not. No one ever does.",
     "You did this to yourself.",
     "You arrived early.",
     "Boyd knows... but he doesn't remember.",
@@ -119,10 +121,6 @@ inline std::vector<std::string> yellowDialogScroll = {
     "Forgetting who we were...",
     "Destroying who we could be...",
     "Blaming who we'll become..."};
-
-inline std::vector<std::string> yellowDialogStartMap = {
-    "You don't remember me, do you?",
-    "Of course not. No one ever does."};
 
 inline std::vector<std::string> yellowWarning = {
     "I'd turn back!"};
@@ -217,50 +215,49 @@ inline std::vector<std::string> womanInTheHouse = {
     "Please,hurry!",
     "The baby is coming!"};
 
-    inline std::vector<std::string> jadeDialog {
-        "Oh... you are new!",
-        "So you read my notes!",
-        "I am not dead.",
-        "Just pretty busy.",
-        "We must find that scroll.",
-        "We can escape with that!",
-        "Here, take this key!",
-        "There's a flashlight in the temple.",
-        "If you get some batteries, we can use it.",
-        "You have them in your car?",
-        "Jackpot!",
-        "However… there's a tiny problem.",
-        "Fatima is locked inside the temple.",
-    };
+inline std::vector<std::string> jadeDialog{
+    "Oh... you are new!",
+    "So you read my notes!",
+    "I am not dead.",
+    "Just pretty busy.",
+    "We must find that scroll.",
+    "We can escape with that!",
+    "Here, take this key!",
+    "There's a flashlight in the temple.",
+    "If you get some batteries, we can use it.",
+    "You have them in your car?",
+    "Jackpot!",
+    "However… there's a tiny problem.",
+    "Fatima is locked inside the temple.",
+};
 
-    inline std::vector<std::string> jadeDialogTwo {
-        "What happened?",
-        "He was chasing you?",
-        "We don't have much time then.",
-        "We must hurry!"
-    };
+inline std::vector<std::string> jadeDialogTwo{
+    "What happened?",
+    "Is he chasing you?",
+    "He might think that you have the dagger.",
+    "We don't have much time then.",
+    "We must hurry!"};
 
+inline std::vector<std::string> jadeDialogAfterScroll{
+    "You found it!",
+    "I don't understand it.",
+    "Wait...",
+    "I have seen this symbol.",
+    "On a bottle...",
+    "Let's get to Sara's house first.",
+    "She might have something for your leg.",
+    "Then we can get the key to the box.",
+    "It is in...",
+    "Did you hear that?",
+    "No no no noooo.",
+    "Run! They know we are here!"};
 
-    inline std::vector<std::string> jadeDialogAfterScroll {
-        "You found it!",
-        "I don't understand it.",
-        "Wait...",
-        "I have seen this symbol.",
-        "On a bottle...",
-        "Let's get to Sara's house first.",
-        "She might have something for your leg.",
-        "No no no noooo.",
-        "Run! They know we are here!"
-    };
+inline std::vector<std::string> interactionWithPotion{
+    "It is some very strong balsam.",
+    "Let's put some on my leg!",
+    "I might need this again later!"};
 
-    inline std::vector<std::string> interactionWithPotion {
-        "It is some very strong balsam.",
-        "Let's put some on my leg!",
-        "I might need this again later!"
-    } ;
-
-    inline std::vector<std::string> interactionWithClock {
-        "Why would anyone need a clock here?",
-        "Something is hidden between the clogs!",
-        "Another key?"
-    } ;
+inline std::vector<std::string> interactionWithClock{
+    "Why would anyone need a clock here?",
+    "Something is hidden between the clogs!",
+    "Another key?"};

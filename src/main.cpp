@@ -267,10 +267,10 @@ int main()
 	bool hasStarted{};
 	bool isDayTime{true};
 	bool hasTalisman{};
-	bool hasMedkit{true};
-	bool hasKey{true};
+	bool hasMedkit{};
+	bool hasKey{};
 	bool hasScroll{};
-	bool hasDagger{true};
+	bool hasDagger{};
 	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
@@ -1661,7 +1661,6 @@ int main()
 						{
 							hasScroll = true;
 							npcs[2]->addDialog(kidDialogScroll);
-							npcs[3]->addDialog(yellowDialogScroll);
 							npcs[6]->addDialog(jadeDialogAfterScroll);
 							scrollDialogAdded = true;
 						}
@@ -1740,7 +1739,7 @@ int main()
 					{
 						enemies[i]->setSpeed(2);
 					}
-					if (npcs[6]->getInteractionCount() >= 24 && npcs[6]->getAlive())
+					if (npcs[6]->getInteractionCount() >= 28 && npcs[6]->getAlive())
 					{
 						caveMusicSwitched = true;
 						enemies[i]->setPlanned(true);
