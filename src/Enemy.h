@@ -16,6 +16,8 @@ class Enemy : public BaseCharacter{
     virtual Vector2 getScreenPos() override;
     bool isCaveMonster{};
     bool isStanding{};
+    void setHitCounter(){ hitCounter++;}
+    int getHitCounter(){ return hitCounter;}
     private:
     BaseCharacter* target;
     BaseCharacter* cameraTarget;
@@ -32,6 +34,7 @@ class Enemy : public BaseCharacter{
 	int attackTotalFrames = 6;
 	float attackFrameDuration = 0.2f;
     bool planned{};
+    int hitCounter{};
     
 };
 

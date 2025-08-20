@@ -36,7 +36,7 @@ int main()
 	LoadAllMusic();
 	// draw hero
 	Vector2 targetPoint = {-300.f, 300.f};
-	Vector2 targetBoyd = {550.f, 550.f};
+	Vector2 targetBoyd = {550.f, 650.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -270,7 +270,7 @@ int main()
 	bool hasMedkit{};
 	bool hasKey{};
 	bool hasScroll{};
-	bool hasDagger{};
+	bool hasDagger{true};
 	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
@@ -712,12 +712,16 @@ int main()
 					}
 					if (hasDagger)
 					{
-						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()))
+						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
+						{
+							enemies[i]->setHitCounter();
+						}
+						if (enemies[i]->getHitCounter() > 2)
 						{
 							enemies[i]->setAlive(false);
 						}
 					}
-				}
+								}
 			}
 			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
