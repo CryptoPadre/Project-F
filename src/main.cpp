@@ -41,10 +41,10 @@ int main()
 	// draw NPCs
 	// yellow original pos 1200 2100
 	// jade cave pos 2000.f 2000.f
-	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-hurt.png"), LoadTexture("boyd-hurt.png"), true};
+	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-attack.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false};
-	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true};
+	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-attack.png"), LoadTexture("yellow-magic.png"), true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true};
 	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-attack.png"), LoadTexture("baby-hurt.png"), true};
 	NPC jade{Vector2{840.f, 700.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
@@ -270,7 +270,7 @@ int main()
 	bool hasMedkit{};
 	bool hasKey{};
 	bool hasScroll{};
-	bool hasDagger{true};
+	bool hasDagger{};
 	bool hasRustyKey{};
 	bool talkedToKid{};
 	bool boydDialogDayTwo{};
@@ -380,6 +380,8 @@ int main()
 	int templeBookInteraction = 0;
 
 	int startMapCounter = 0;
+
+	int awakeningConversation = 0;
 
 	const char *title = "A fanmade game based on the FROM series.";
 	int fontSize = 30;
@@ -702,7 +704,7 @@ int main()
 				for (int i = 0; i < 3; i++)
 				{
 					enemies[i]->tick(GetFrameTime());
-					if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 150.f)
+					if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 150.f && enemies[i]->getAlive())
 					{
 						conversation("Don't run sweetey!", enemies[i]->getScreenPos().x, enemies[i]->getScreenPos().y);
 					}
@@ -710,18 +712,16 @@ int main()
 					{
 						hero.setAlive(true);
 					}
-					if (hasDagger)
+
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 					{
-						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
-						{
-							enemies[i]->setHitCounter();
-						}
-						if (enemies[i]->getHitCounter() > 2)
-						{
-							enemies[i]->setAlive(false);
-						}
+						enemies[i]->setHitCounter();
 					}
-								}
+					if (enemies[i]->getHitCounter() == 2)
+					{
+						enemies[i]->setAlive(false);
+					}
+				}
 			}
 			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
 			{
@@ -1179,6 +1179,16 @@ int main()
 					{
 						hero.undoMovement();
 						npcs[0]->undoMovement();
+					}
+				}
+				if(!hero.getAlive()){
+					conversation(awakening[awakeningConversation], hero.getScreenPos().x, hero.getScreenPos().y);
+					if(IsKeyPressed(KEY_E) && awakeningConversation <= awakening.size() -1){
+						awakeningConversation++;
+						hasFallen = false;
+					}
+					if(awakeningConversation == 2){
+						hero.setAlive(true);
 					}
 				}
 				if (hero.getWorldPos().x > 20 && hero.getWorldPos().x < 60 && hero.getWorldPos().y < -140)
@@ -1765,7 +1775,22 @@ int main()
 					}
 				}
 			}
-			if (!hero.getAlive())
+			else{
+				npcs[0]->tick(GetFrameTime());
+				if(CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec())){
+					hero.setAlive(false);
+				}
+				if(!hero.getAlive() && isYellowDead){
+					conversation("You can't leave!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
+				}
+				if(IsKeyPressed(KEY_E)){
+					isInCave = false;
+					currentInterior = HOUSE_TWO;
+					isInside = true;
+					hero.setWorldPos(0.f, 100.f);
+				}
+			}
+			if (!hero.getAlive() && !isYellowDead)
 			{
 				isInCave = false;
 				isGameOver = true;
@@ -2024,6 +2049,10 @@ int main()
 						isEndGame = false;
 						isInCave = true;
 						hero.setWorldPos(850.f, 2350.f);
+						npcs[0]->setCanAttack(true);
+						npcs[0]->setAttack(true);
+						npcs[0]->setWorldPos(2400.f,2400.f);
+						npcs[0]->setTarget(&hero);
 					}
 				}
 				npcs[0]->tick(GetFrameTime());

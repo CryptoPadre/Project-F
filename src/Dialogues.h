@@ -2,15 +2,6 @@
 #include <string>
 #include <vector>
 
-/*
-"Some thought he scared them off...",
-    "Others thought he was one of them.",
-    "I didn't know what was scarier...",
-    "Him, walking around in daylight like one of them,",
-    "or the fact that the monsters seemed scared of him.",
-
-*/
-
 // Dialogs for Boyd
 inline std::vector<std::string> boydDialoguesDayOne = {
     "He killed them all.",
@@ -64,8 +55,7 @@ inline std::vector<std::string> boydDialoguesAfterFight = {
     "I sacrificed those kids...",
     "And now they're punishing me.",
     "I'm going to finish this once and for all.",
-    "Take Sara and get to the tree.",
-    "That's your only chance to leave!"};
+    "Take Sara and get to the tree."};
 
 inline std::vector<std::string> kidDialogues = {
     "Sha'val nethi ur'kaan do'marra.",
@@ -261,3 +251,8 @@ inline std::vector<std::string> interactionWithClock{
     "Why would anyone need a clock here?",
     "Something is hidden between the clogs!",
     "Another key?"};
+
+    inline std::vector<std::string> awakening{
+        "My head...",
+        "What the hell is that?",
+        "Are you out of your mind?"};

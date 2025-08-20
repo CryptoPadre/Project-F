@@ -74,7 +74,7 @@ void Enemy::tick(float deltaTime)
         velocity = Vector2Subtract(target->getScreenPos(), getScreenPos());
 
         // Choose texture and direction row
-        if (Vector2Length(velocity) < radius)
+        if (Vector2Length(velocity) < radius && getAlive())
         {
             velocity = {};
             texture = interact;
