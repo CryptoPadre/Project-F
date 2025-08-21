@@ -44,7 +44,7 @@ int main()
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-attack.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false};
-	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-attack.png"), LoadTexture("yellow-magic.png"), true};
+	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-attack.png"), true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true};
 	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-attack.png"), LoadTexture("baby-hurt.png"), true};
 	NPC jade{Vector2{840.f, 700.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
@@ -250,58 +250,58 @@ int main()
 	// 400 200
 	hero.setWorldPos(400.f, 200.f);
 	// Check if character is inside a house / outside the town / starting the game
-	bool isInMainMenu{true};
+	bool isInMainMenu{};
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
 	bool isGameStart{};
 	bool isGameOver{};
 	bool isUpstairs{};
-	bool isInCave{};
+	bool isInCave{true};
 	bool isOutsideCave{};
 	bool isInSecretRoom{};
-	bool isInSarasHouse{};
+	bool isInSarasHouse{true};
 	bool wasInSarasHouse{};
-	bool hasFlashlight{};
+	bool hasFlashlight{true};
 	bool isEndGame{};
-	bool hasStarted{};
+	bool hasStarted{true};
 	bool isDayTime{true};
-	bool hasTalisman{};
-	bool hasMedkit{};
-	bool hasKey{};
-	bool hasScroll{};
-	bool hasDagger{};
-	bool hasRustyKey{};
-	bool talkedToKid{};
-	bool boydDialogDayTwo{};
-	bool saraDialogDayTwo{};
-	bool dialogsAfterFight{};
-	bool boydDialogKid{};
-	bool boydDialogAfterBook{};
-	bool jadeDialogTwoAdded{};
-	bool wasInCave{};
-	bool isYellowDead{};
-	bool metYellow{};
-	bool metSara{};
-	bool talkedBeforeFight{};
-	bool talkedToWoman{};
-	bool scrollDialogAdded{};
+	bool hasTalisman{true};
+	bool hasMedkit{true};
+	bool hasKey{true};
+	bool hasScroll{true};
+	bool hasDagger{true};
+	bool hasRustyKey{true};
+	bool talkedToKid{true};
+	bool boydDialogDayTwo{true};
+	bool saraDialogDayTwo{true};
+	bool dialogsAfterFight{true};
+	bool boydDialogKid{true};
+	bool boydDialogAfterBook{true};
+	bool jadeDialogTwoAdded{true};
+	bool wasInCave{true};
+	bool isYellowDead{true};
+	bool metYellow{true};
+	bool metSara{true};
+	bool talkedBeforeFight{true};
+	bool talkedToWoman{true};
+	bool scrollDialogAdded{true};
 	bool renderEnemy{};
-	bool doorUnlocked{};
-	bool boxOpen{};
-	bool daggerPickedUp{};
+	bool doorUnlocked{true};
+	bool boxOpen{true};
+	bool daggerPickedUp{true};
 	bool hasFallen{};
-	bool fellIntoCave{};
-	bool yellowStartMapDialogAdded{};
+	bool fellIntoCave{true};
+	bool yellowStartMapDialogAdded{true};
 	bool isTheEnd{};
 	bool caveMusicSwitched{};
 	bool enemyInHouse{};
 	bool byTheDoor{};
-	bool metJade{};
-	bool hasBattery{};
-	bool hasTempleKey{};
+	bool metJade{true};
+	bool hasBattery{true};
+	bool hasTempleKey{true};
 	bool hasInteract{};
-	bool wasInTemple{};
+	bool wasInTemple{true};
 
 	hero.setHasDagger(hasDagger);
 	int endingTitle = 200;
@@ -583,11 +583,6 @@ int main()
 				{
 					conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 				}
-				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-					npcs[3]->undoMovement();
-				}
 				if (hero.getWorldPos().y < 370.f)
 				{
 					npcs[3]->setAttack(true);
@@ -597,7 +592,7 @@ int main()
 				{
 					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
-						hero.setAlive(false);
+						hero.setAlive(true);
 					}
 				}
 			}
@@ -1075,6 +1070,18 @@ int main()
 						npcs[5]->setAlive(false);
 					}
 				}
+				if (isYellowDead && awakeningConversation < awakening.size() - 1)
+				{
+					conversation(awakening[awakeningConversation], hero.getScreenPos().x, hero.getScreenPos().y);
+					if (IsKeyPressed(KEY_E))
+					{
+						awakeningConversation++;
+					}
+					if (awakeningConversation == 2)
+					{
+						hasFallen = false;
+					}
+				}
 				if (CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
@@ -1179,16 +1186,6 @@ int main()
 					{
 						hero.undoMovement();
 						npcs[0]->undoMovement();
-					}
-				}
-				if(!hero.getAlive()){
-					conversation(awakening[awakeningConversation], hero.getScreenPos().x, hero.getScreenPos().y);
-					if(IsKeyPressed(KEY_E) && awakeningConversation <= awakening.size() -1){
-						awakeningConversation++;
-						hasFallen = false;
-					}
-					if(awakeningConversation == 2){
-						hero.setAlive(true);
 					}
 				}
 				if (hero.getWorldPos().x > 20 && hero.getWorldPos().x < 60 && hero.getWorldPos().y < -140)
@@ -1537,7 +1534,7 @@ int main()
 				if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 				{
 					npcs[3]->setInteractionCount();
-					if (npcs[3]->getInteractionCount() == 1)
+					if (npcs[3]->getInteractionCount() > 1)
 					{
 						metYellow = true;
 					}
@@ -1555,34 +1552,37 @@ int main()
 				{
 					conversation("There is no way I will go in there!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
-				else if (metJade && !hasFlashlight && !hasBattery)
+				else
 				{
-					conversation("I need to get that flashlight working!", hero.getScreenPos().x, hero.getScreenPos().y);
-				}
-				else if (hasDagger)
-				{
-					conversation("I need to find him!", hero.getScreenPos().x, hero.getScreenPos().y);
-				}
-				if (IsKeyPressed(KEY_E))
-				{
-					isOutsideCave = false;
-					isInCave = true;
-					wasInCave = true;
-					npcs[3]->setWorldPos(750.f, 800.f);
-					hero.setWorldPos(1055.f, 27.f);
-					if (hasScroll && metJade)
+					if (metJade && !hasFlashlight && !hasBattery)
 					{
-						for (int i = 3; i < 22; i++)
+						conversation("I need to get that flashlight working!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					else if (hasDagger)
+					{
+						conversation("I need to find him!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
+					if (IsKeyPressed(KEY_E))
+					{
+						isOutsideCave = false;
+						isInCave = true;
+						wasInCave = true;
+						npcs[3]->setWorldPos(750.f, 800.f);
+						hero.setWorldPos(1055.f, 27.f);
+						if (hasScroll && metJade)
 						{
-							int x = 400.f;
-							int y = 400.f;
-							if (enemies[i]->hasAwaken())
+							for (int i = 3; i < 22; i++)
 							{
-								enemies[i]->setAwaken(false);
-								enemies[i]->setWorldPos(x, y);
+								int x = 400.f;
+								int y = 400.f;
+								if (enemies[i]->hasAwaken())
+								{
+									enemies[i]->setAwaken(false);
+									enemies[i]->setWorldPos(x, y);
+								}
+								x += 100;
+								y += 100;
 							}
-							x += 100;
-							y += 100;
 						}
 					}
 				}
@@ -1775,19 +1775,20 @@ int main()
 					}
 				}
 			}
-			else{
+			else
+			{
 				npcs[0]->tick(GetFrameTime());
-				if(CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec())){
-					hero.setAlive(false);
-				}
-				if(!hero.getAlive() && isYellowDead){
-					conversation("You can't leave!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
-				}
-				if(IsKeyPressed(KEY_E)){
+				if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hasFallen = true;
 					isInCave = false;
-					currentInterior = HOUSE_TWO;
-					isInside = true;
-					hero.setWorldPos(0.f, 100.f);
+						currentInterior = HOUSE_TWO;
+						isInside = true;
+						hero.setWorldPos(0.f, 180.f);
+				}
+				if (isYellowDead)
+				{
+					conversation("You can't leave!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
 				}
 			}
 			if (!hero.getAlive() && !isYellowDead)
@@ -2051,7 +2052,7 @@ int main()
 						hero.setWorldPos(850.f, 2350.f);
 						npcs[0]->setCanAttack(true);
 						npcs[0]->setAttack(true);
-						npcs[0]->setWorldPos(2400.f,2400.f);
+						npcs[0]->setWorldPos(2400.f, 2400.f);
 						npcs[0]->setTarget(&hero);
 					}
 				}
