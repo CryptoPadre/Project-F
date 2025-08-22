@@ -302,6 +302,7 @@ int main()
 	bool hasTempleKey{};
 	bool hasInteract{};
 	bool wasInTemple{};
+	bool talkedToBoydAfterFight{};
 
 	hero.setHasDagger(hasDagger);
 	int endingTitle = 200;
@@ -2086,15 +2087,7 @@ int main()
 				}
 				npcs[0]->tick(GetFrameTime());
 				npcs[0]->talk();
-				if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
-				{
-					npcs[0]->setInteractionCount();
-				}
-				if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-				}
-				if (npcs[0]->getInteractionCount() <= npcs[0]->getDialogSize())
+				if (isYellowDead && talkedToBoydAfterFight)
 				{
 					if (hero.getWorldPos().y > 270)
 					{
@@ -2104,6 +2097,18 @@ int main()
 					{
 						conversation("Let him go. It's time to leave", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
+				}
+				if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
+				{
+					npcs[0]->setInteractionCount();
+					talkedToBoydAfterFight = true;
+				}
+				if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+				}
+				if (npcs[0]->getInteractionCount() == npcs[0]->getDialogSize())
+				{
 					npcs[0]->setTarget(targetBoyd);
 				}
 			}
