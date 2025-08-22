@@ -1812,20 +1812,35 @@ int main()
 				{
 					npcs[0]->tick(GetFrameTime());
 				}
-				if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+				if (npcs[5]->getAlive())
 				{
-					hasFallen = true;
-					isInCave = false;
-					currentInterior = HOUSE_TWO;
-					isInside = true;
-					hero.setWorldPos(0.f, 180.f);
-					npcs[0]->setWorldPos(150.f, 360.f);
-					npcs[0]->setCanAttack(false);
-					npcs[0]->setAttack(false);
+					if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+
+						hasFallen = true;
+						isInCave = false;
+						currentInterior = HOUSE_TWO;
+						isInside = true;
+						hero.setWorldPos(0.f, 180.f);
+						npcs[0]->setWorldPos(150.f, 360.f);
+						npcs[0]->setCanAttack(false);
+						npcs[0]->setAttack(false);
+					}
 				}
-				if (isYellowDead && !hasFallen)
+				else
+				{
+					if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
+					{
+						npcs[0]->setAlive(false);
+					}
+				}
+				if (isYellowDead && !hasFallen && npcs[0]->getAlive())
 				{
 					conversation("You can't leave!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
+				}
+				else
+				{
+					conversation("It shouldn't have ended like this!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
 				}
 			}
 			if (!hero.getAlive() && !isYellowDead)
@@ -2085,9 +2100,7 @@ int main()
 						npcs[0]->setTarget(&hero);
 					}
 				}
-				npcs[0]->tick(GetFrameTime());
-				npcs[0]->talk();
-				if (isYellowDead && talkedToBoydAfterFight)
+				if (talkedToBoydAfterFight)
 				{
 					if (hero.getWorldPos().y > 270)
 					{
@@ -2098,6 +2111,8 @@ int main()
 						conversation("Let him go. It's time to leave", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
 				}
+				npcs[0]->tick(GetFrameTime());
+				npcs[0]->talk();
 				if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
 				{
 					npcs[0]->setInteractionCount();
