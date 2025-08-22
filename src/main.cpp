@@ -699,7 +699,7 @@ int main()
 				for (int i = 0; i < 3; i++)
 				{
 					enemies[i]->tick(GetFrameTime());
-					if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 150.f && enemies[i]->getAlive())
+					if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 250.f && enemies[i]->getAlive())
 					{
 						conversation("Don't run sweetey!", enemies[i]->getScreenPos().x, enemies[i]->getScreenPos().y);
 					}
@@ -926,7 +926,7 @@ int main()
 							fellIntoCave = true;
 							enemyInHouse = false;
 							hero.setWorldPos(1800.f, 500.f);
-							hero.setSpeed(2.5);
+							hero.setSpeed(2.2);
 							npcs[3]->setAttack(false);
 							if (hasFlashlight && hasBattery)
 							{
@@ -2178,7 +2178,7 @@ int main()
 				}
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
-					hero.undoMovement();
+					hero.resolveCollision(npcs[3]->getWorldPos());
 				}
 			}
 		}
