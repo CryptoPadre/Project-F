@@ -36,7 +36,7 @@ int main()
 	LoadAllMusic();
 	// draw hero
 	Vector2 targetPoint = {-300.f, 300.f};
-	Vector2 targetBoyd = {550.f, 650.f};
+	Vector2 targetBoyd = {550.f, 850.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	// yellow original pos 1200 2100
@@ -1004,7 +1004,6 @@ int main()
 				props[27].Render(hero.getWorldPos());
 				props[30].Render(hero.getWorldPos());
 				props[34].Render(hero.getWorldPos());
-				hero.tick(GetFrameTime());
 				if (hero.getWorldPos().x > 65 && hero.getWorldPos().x < 130 && hero.getWorldPos().y < -210)
 				{
 					if (!hasFlashlight)
@@ -1105,6 +1104,7 @@ int main()
 						}
 					}
 				}
+				hero.tick(GetFrameTime());
 				if (CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
@@ -1616,7 +1616,7 @@ int main()
 			}
 			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
 			{
-				if (!isYellowDead && metJade && !hasFlashlight)
+				if (!isYellowDead && metJade && !talkedToKid)
 				{
 					conversation("I need to get that flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -2066,7 +2066,7 @@ int main()
 			DrawText("Music", 250, endingTitle + 200, 30, RED);
 			endingTitle -= 0.5f;
 		}
-		else
+		else if (isEndGame)
 		{
 			if (!isYellowDead)
 			{
@@ -2097,7 +2097,6 @@ int main()
 						npcs[0]->setCanAttack(true);
 						npcs[0]->setAttack(true);
 						npcs[0]->setWorldPos(1200.f, 2500.f);
-						npcs[0]->setTarget(&hero);
 					}
 				}
 				if (talkedToBoydAfterFight)
@@ -2121,10 +2120,6 @@ int main()
 				if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
-				}
-				if (npcs[0]->getInteractionCount() == npcs[0]->getDialogSize())
-				{
-					npcs[0]->setTarget(targetBoyd);
 				}
 			}
 
@@ -2176,10 +2171,11 @@ int main()
 				{
 					npcs[3]->setCanAttack(false);
 				}
-				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				/* if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
 					hero.resolveCollision(npcs[3]->getWorldPos());
 				}
+					*/
 			}
 		}
 
