@@ -248,9 +248,9 @@ int main()
 		enemy->setCameraTarget(&hero);
 	}
 	// 400 200
-	hero.setWorldPos(400.f, 200.f);
+	hero.setWorldPos(0.f, 0.f);
 	// Check if character is inside a house / outside the town / starting the game
-	bool isInMainMenu{true};
+	bool isInMainMenu{};
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
@@ -261,47 +261,47 @@ int main()
 	bool isOutsideCave{};
 	bool isInSecretRoom{};
 	bool isInSarasHouse{};
-	bool wasInSarasHouse{};
-	bool hasFlashlight{};
-	bool isEndGame{};
+	bool wasInSarasHouse{true};
+	bool hasFlashlight{true};
+	bool isEndGame{true};
 	bool hasStarted{};
 	bool isDayTime{true};
-	bool hasTalisman{};
-	bool hasMedkit{};
-	bool hasKey{};
-	bool hasScroll{};
-	bool hasDagger{};
-	bool hasRustyKey{};
-	bool talkedToKid{};
+	bool hasTalisman{true};
+	bool hasMedkit{true};
+	bool hasKey{true};
+	bool hasScroll{true};
+	bool hasDagger{true};
+	bool hasRustyKey{true};
+	bool talkedToKid{true};
 	bool boydDialogDayTwo{};
 	bool saraDialogDayTwo{};
 	bool dialogsAfterFight{};
 	bool boydDialogKid{};
 	bool boydDialogAfterBook{};
 	bool jadeDialogTwoAdded{};
-	bool wasInCave{};
-	bool isYellowDead{};
-	bool metYellow{};
-	bool metSara{};
+	bool wasInCave{true};
+	bool isYellowDead{true};
+	bool metYellow{true};
+	bool metSara{true};
 	bool talkedBeforeFight{};
-	bool talkedToWoman{};
+	bool talkedToWoman{true};
 	bool scrollDialogAdded{};
 	bool renderEnemy{};
-	bool doorUnlocked{};
-	bool boxOpen{};
-	bool daggerPickedUp{};
+	bool doorUnlocked{true};
+	bool boxOpen{true};
+	bool daggerPickedUp{true};
 	bool hasFallen{};
-	bool fellIntoCave{};
+	bool fellIntoCave{true};
 	bool yellowStartMapDialogAdded{};
 	bool isTheEnd{};
 	bool caveMusicSwitched{};
 	bool enemyInHouse{};
 	bool byTheDoor{};
-	bool metJade{};
-	bool hasBattery{};
-	bool hasTempleKey{};
-	bool hasInteract{};
-	bool wasInTemple{};
+	bool metJade{true};
+	bool hasBattery{true};
+	bool hasTempleKey{true};
+	bool hasInteract{true};
+	bool wasInTemple{true};
 	bool talkedToBoydAfterFight{};
 
 	hero.setHasDagger(hasDagger);
@@ -1804,15 +1804,7 @@ int main()
 			}
 			else
 			{
-				if (hero.getWorldPos().y < 2100)
-				{
-					renderEnemy = true;
-				}
-				if (renderEnemy)
-				{
-					npcs[0]->tick(GetFrameTime());
-				}
-				if (npcs[5]->getAlive())
+				if (!npcs[5]->getAlive())
 				{
 					if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
@@ -1831,16 +1823,22 @@ int main()
 				{
 					if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 					{
+						npcs[0]->setCanAttack(false);
 						npcs[0]->setAlive(false);
 					}
 				}
-				if (isYellowDead && !hasFallen && npcs[0]->getAlive())
+				if (!npcs[3]->getAlive())
 				{
-					conversation("You can't leave!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
-				}
-				else
-				{
-					conversation("It shouldn't have ended like this!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
+					npcs[0]->tick(GetFrameTime());
+					if (npcs[5]->getAlive() && npcs[0]->getAlive())
+					{
+						conversation("You can't leave!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
+					}
+					else if (npcs[0]->getAlive() && !npcs[5]->getAlive())
+					{
+
+						conversation("It shouldn't have ended like this!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
+					}
 				}
 			}
 			if (!hero.getAlive() && !isYellowDead)
@@ -2077,16 +2075,18 @@ int main()
 				PlayMapMusic(8);
 			}
 			DrawTextureEx(maps[14], interiorPos, 0.0, 3.f, WHITE);
-			if (hero.getWorldPos().x < 28 || hero.getWorldPos().y < 10 ||
-				hero.getWorldPos().x > 538 || hero.getWorldPos().y > 800 ||
-				hero.getWorldPos().x < 180 && hero.getWorldPos().y < 530 ||
-				hero.getWorldPos().x > 390 && hero.getWorldPos().y < 530)
+			/*
+						if (hero.getWorldPos().x < 28 || hero.getWorldPos().y < 10 ||
+							hero.getWorldPos().x > 538 || hero.getWorldPos().y > 800 ||
+							hero.getWorldPos().x < 180 && hero.getWorldPos().y < 530 ||
+							hero.getWorldPos().x > 390 && hero.getWorldPos().y < 530)
+						{
+							hero.undoMovement();
+						}
+			*/
+			if (hero.getWorldPos().x > 243 && hero.getWorldPos().x < 320 && hero.getWorldPos().y < 40)
 			{
-				hero.undoMovement();
-			}
-			if (isYellowDead)
-			{
-				if (hero.getWorldPos().x > 243 && hero.getWorldPos().x < 320 && hero.getWorldPos().y < 40)
+				if (isYellowDead)
 				{
 					conversation("Let's go back to the tree", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -2096,35 +2096,35 @@ int main()
 						hero.setWorldPos(850.f, 2350.f);
 						npcs[0]->setCanAttack(true);
 						npcs[0]->setAttack(true);
-						npcs[0]->setWorldPos(1200.f, 2500.f);
+						npcs[0]->setWorldPos(1330.f, 2500.f);
 					}
 				}
-				if (talkedToBoydAfterFight)
+				else
 				{
-					if (hero.getWorldPos().y > 270)
-					{
-						hero.undoMovement();
-					}
-					if (hero.getWorldPos().y > 250)
-					{
-						conversation("Let him go. It's time to leave", hero.getScreenPos().x, hero.getScreenPos().y);
-					}
-				}
-				npcs[0]->tick(GetFrameTime());
-				npcs[0]->talk();
-				if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
-				{
-					npcs[0]->setInteractionCount();
-					talkedToBoydAfterFight = true;
-				}
-				if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
+					conversation("I can't go back!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 			}
 
-			hero.tick(GetFrameTime());
-			npcs[3]->tick(GetFrameTime());
+			npcs[0]->tick(GetFrameTime());
+			npcs[0]->talk();
+			if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
+			{
+				npcs[0]->setInteractionCount();
+			}
+			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+			}
+			if (hero.getScreenPos().y < npcs[3]->getScreenPos().y)
+			{
+				hero.tick(GetFrameTime());
+				npcs[3]->tick(GetFrameTime());
+			}
+			else
+			{
+				npcs[3]->tick(GetFrameTime());
+				hero.tick(GetFrameTime());
+			}
 			npcs[3]->talk();
 			if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 			{
@@ -2171,11 +2171,10 @@ int main()
 				{
 					npcs[3]->setCanAttack(false);
 				}
-				/* if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
 					hero.resolveCollision(npcs[3]->getWorldPos());
 				}
-					*/
 			}
 		}
 
