@@ -136,13 +136,13 @@ int main()
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
 	Prop props[36]{
-		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, -20, 0, 10, 0},
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, 0, 0, 10, 0},
 		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
 		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
 		Prop{Vector2{1200.f, 190.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 100, 200},
 		Prop{Vector2{1050.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
-		Prop{Vector2{520.f, 330.f}, LoadTexture("car-2.png"), 0.35, false, 100, 40, 0, 0},
+		Prop{Vector2{520.f, 330.f}, LoadTexture("car-2.png"), 0.35, false, 100, 20, -20, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("batteries.png"), 0.2, false, 0, 0, 0, 0},
@@ -247,7 +247,7 @@ int main()
 	// 400 200
 	hero.setWorldPos(400.f, 200.f);
 	// Check if character is inside a house / outside the town / starting the game
-	bool isInMainMenu{true};
+	bool isInMainMenu{};
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
@@ -289,7 +289,7 @@ int main()
 	bool hasFallen{};
 	bool fellIntoCave{};
 	bool yellowStartMapDialogAdded{};
-	bool isTheEnd{};
+	bool isTheEnd{true};
 	bool caveMusicSwitched{};
 	bool enemyInHouse{};
 	bool byTheDoor{};
@@ -301,7 +301,20 @@ int main()
 	bool talkedToBoydAfterFight{};
 
 	hero.setHasDagger(hasDagger);
-	int endingTitle = 200;
+	int endingTitle = GetScreenHeight();
+	int lineSpacing = 30;
+	const char *credits[] = {
+		"Thanks for playing my game!",
+		"You survived and escaped From.",
+		"Music used from Pixabay.com",
+		"Graphics are not created or owned by me.",
+		"Graphics were used from Itch.io, Pinterest,",
+		"and generated with ChatGPT.",
+		"Playable character, NPCs, enemies were",
+		"created via Liberated Pixel Cup generator:",
+		"https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/",
+		"Game powered by Raylib. Maps created with Tiled."};
+	int numCredits = sizeof(credits) / sizeof(credits[0]);
 	float leftY = 840;
 	float rightY = 1240;
 
@@ -590,7 +603,8 @@ int main()
 						hero.setAlive(true);
 					}
 				}
-				else {
+				else
+				{
 					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
 						hero.undoMovement();
@@ -719,11 +733,6 @@ int main()
 						enemies[i]->setAlive(false);
 					}
 				}
-			}
-			if (CheckCollisionRecs(npcs[0]->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-				npcs[0]->undoMovement();
 			}
 			if (hero.getScreenPos().y < npcs[0]->getScreenPos().y)
 			{
@@ -1095,7 +1104,7 @@ int main()
 						npcs[0]->setCanAttack(false);
 						npcs[0]->setAlive(false);
 					}
-					if (npcs[5]->getAlive())
+					if (npcs[5]->getAlive() && npcs[0]->getAlive())
 					{
 						conversation("Ellis is hungry!", npcs[0]->getScreenPos().x, npcs[0]->getScreenPos().y);
 					}
@@ -1318,7 +1327,7 @@ int main()
 
 			if (hero.getWorldPos().x > -195 && hero.getWorldPos().y < -75)
 			{
-				if (talkedToWoman && hasFlashlight)
+				if (!hasMedkit && talkedToWoman && hasFlashlight)
 				{
 					conversation("There is something under the bed!", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -1407,7 +1416,6 @@ int main()
 			{
 				if (metSara)
 				{
-					conversation("Where does this road lead?", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
 					{
 						isOutsideCave = true;
@@ -1762,8 +1770,8 @@ int main()
 					hero.setWorldPos(650.f, 435.f);
 					wasInCave = true;
 					npcs[1]->setWorldPos(1450.f, 2270.f);
-					enemies[0]->setWorldPos(200.f, 500.f);
-					enemies[1]->setWorldPos(200.f, 500.f);
+					enemies[0]->setWorldPos(250.f, 500.f);
+					enemies[1]->setWorldPos(250.f, 1000.f);
 				}
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
@@ -1800,7 +1808,7 @@ int main()
 					{
 						enemies[i]->setSpeed(2);
 					}
-					if (npcs[6]->getInteractionCount() >= 28 && npcs[6]->getAlive())
+					if (npcs[6]->getInteractionCount() >= 29 && npcs[6]->getAlive())
 					{
 						caveMusicSwitched = true;
 						enemies[i]->setPlanned(true);
@@ -1877,10 +1885,6 @@ int main()
 				hero.tick(GetFrameTime());
 			}
 			npcs[6]->talk();
-			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-			}
 			if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
 			{
 				npcs[6]->setInteractionCount();
@@ -2097,10 +2101,24 @@ int main()
 		else if (isTheEnd)
 		{
 			PlayMapMusic(12);
-			DrawText("Thanks for playing my game!", 250, endingTitle, 30, RED);
-			DrawText("You survived and escaped From.", 250, endingTitle + 100, 30, RED);
-			DrawText("Graphics", 250, endingTitle + 150, 30, RED);
-			DrawText("Music", 250, endingTitle + 200, 30, RED);
+
+			for (int i = 0; i < numCredits; i++)
+			{
+				int y = endingTitle + i * lineSpacing;
+				DrawText(credits[i], 250, y, 20, RED);
+			}
+
+			// move upwards every frame
+			endingTitle -= 1; 
+
+			// check when last line is gone
+			int lastLineY = endingTitle + (numCredits - 1) * lineSpacing;
+			if (lastLineY < 0)
+			{
+				// All credits off screen
+				// e.g., return to menu or quit
+			}
+
 			endingTitle -= 0.5f;
 		}
 		else if (isEndGame)

@@ -29,10 +29,10 @@ void BaseCharacter::resolveCollision(Vector2 otherPos)
 Rectangle BaseCharacter::GetCollisionRec()
 {
     return Rectangle{
-        getScreenPos().x + 50,
-        getScreenPos().y + 50,
-        width / scale ,
-        height / scale + 30};
+        getScreenPos().x + 30,
+        getScreenPos().y + 25,
+        width / scale + 35,
+        height / scale + 75};
 }
 
 void BaseCharacter::tick(float deltaTime)
@@ -147,8 +147,8 @@ void BaseCharacter::tick(float deltaTime)
         deathAnimDone = false;
         getUpFrame = 5;
     }
-    DrawRectangleLines(getScreenPos().x + 50,
-                       getScreenPos().y + 50,
-                       width / scale ,
-                       height / scale + 30, RED);
+    DrawRectangleLines(getScreenPos().x + 35,
+                       getScreenPos().y + 25,
+                       width / scale + 25,
+                       height / scale + 40, RED);
 }
