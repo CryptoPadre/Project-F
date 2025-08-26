@@ -41,7 +41,7 @@ int main()
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-attack.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false};
-	NPC yellow{Vector2{1200.f, 2100.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-hurt.png"), true};
+	NPC yellow{Vector2{1200.f, 2130.f}, LoadTexture("yellow-walk.png"), LoadTexture("yellow-magic.png"), LoadTexture("yellow-hurt.png"), true};
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true};
 	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-attack.png"), LoadTexture("baby-hurt.png"), true};
 	NPC jade{Vector2{840.f, 700.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
@@ -1357,27 +1357,6 @@ int main()
 				hero.undoMovement();
 			}
 			props[4].Render(hero.getWorldPos());
-			if (metYellow || hasScroll)
-			{
-
-				npcs[2]->tick(GetFrameTime());
-				npcs[2]->talk();
-				if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-					npcs[2]->undoMovement();
-				}
-				if (IsKeyPressed(KEY_E) && npcs[2]->getIsTalking())
-				{
-					npcs[2]->setInteractionCount();
-					if (npcs[2]->getInteractionCount() == 1)
-					{
-						talkedToKid = true;
-
-						npcs[3]->setWorldPos(850.f, 750.f);
-					}
-				}
-			}
 			if (hero.getScreenPos().y < npcs[1]->getScreenPos().y)
 			{
 				hero.tick(GetFrameTime());
@@ -1401,6 +1380,27 @@ int main()
 			{
 				hero.undoMovement();
 				npcs[1]->undoMovement();
+			}
+			if (metYellow || hasScroll)
+			{
+
+				npcs[2]->tick(GetFrameTime());
+				npcs[2]->talk();
+				if (CheckCollisionRecs(npcs[2]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+					npcs[2]->undoMovement();
+				}
+				if (IsKeyPressed(KEY_E) && npcs[2]->getIsTalking())
+				{
+					npcs[2]->setInteractionCount();
+					if (npcs[2]->getInteractionCount() == 1)
+					{
+						talkedToKid = true;
+
+						npcs[3]->setWorldPos(850.f, 750.f);
+					}
+				}
 			}
 			if (hero.getWorldPos().x < 95 && hero.getWorldPos().y > 715 &&
 				hero.getWorldPos().y < 870)
@@ -1834,7 +1834,7 @@ int main()
 						currentInterior = HOUSE_TWO;
 						isInside = true;
 						hero.setWorldPos(0.f, 180.f);
-						npcs[0]->setWorldPos(150.f, 360.f);
+						npcs[0]->setWorldPos(180.f, 420.f);
 						npcs[0]->setCanAttack(false);
 						npcs[0]->setAttack(false);
 					}
