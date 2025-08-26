@@ -146,8 +146,8 @@ int main()
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("batteries.png"), 0.2, false, 0, 0, 0, 0},
-		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 40, 10, 0, 0},
-		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 20, 10, 0, 0},
+		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 80, 10, 0, 0},
+		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 60, 10, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4, false, 0, 0, 0, 0},
@@ -590,6 +590,12 @@ int main()
 						hero.setAlive(true);
 					}
 				}
+				else {
+					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.undoMovement();
+					}
+				}
 			}
 			hero.tick(GetFrameTime());
 		}
@@ -1028,16 +1034,6 @@ int main()
 						conversation("Letters to Ellis?", hero.getScreenPos().x, hero.getScreenPos().y);
 					}
 				}
-				npcs[4]->tick(GetFrameTime());
-				npcs[4]->talk();
-				if (IsKeyPressed(KEY_E) && npcs[4]->getIsTalking())
-				{
-					npcs[4]->setInteractionCount();
-				}
-				if (npcs[4]->getInteractionCount() >= womanInTheHouse.size() - 1)
-				{
-					talkedToWoman = true;
-				}
 				if (hasMedkit)
 				{
 					npcs[5]->tick(GetFrameTime());
@@ -1113,7 +1109,25 @@ int main()
 						}
 					}
 				}
-				hero.tick(GetFrameTime());
+				if (hero.getScreenPos().y < npcs[4]->getScreenPos().y)
+				{
+					hero.tick(GetFrameTime());
+					npcs[4]->tick(GetFrameTime());
+				}
+				else
+				{
+					npcs[4]->tick(GetFrameTime());
+					hero.tick(GetFrameTime());
+				}
+				npcs[4]->talk();
+				if (IsKeyPressed(KEY_E) && npcs[4]->getIsTalking())
+				{
+					npcs[4]->setInteractionCount();
+				}
+				if (npcs[4]->getInteractionCount() >= womanInTheHouse.size() - 1)
+				{
+					talkedToWoman = true;
+				}
 				if (CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
@@ -1764,16 +1778,6 @@ int main()
 					hero.setWorldPos(282.f, 12.f);
 				}
 			}
-			npcs[6]->tick(GetFrameTime());
-			npcs[6]->talk();
-			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
-			{
-				hero.undoMovement();
-			}
-			if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
-			{
-				npcs[6]->setInteractionCount();
-			}
 			if (npcs[3]->getAlive())
 			{
 				for (int i = 3; i < 22; i++)
@@ -1862,7 +1866,25 @@ int main()
 				isInCave = false;
 				isGameOver = true;
 			}
-			hero.tick(GetFrameTime());
+			if (hero.getScreenPos().y < npcs[6]->getScreenPos().y)
+			{
+				hero.tick(GetFrameTime());
+				npcs[6]->tick(GetFrameTime());
+			}
+			else
+			{
+				npcs[6]->tick(GetFrameTime());
+				hero.tick(GetFrameTime());
+			}
+			npcs[6]->talk();
+			if (CheckCollisionRecs(npcs[6]->GetCollisionRec(), hero.GetCollisionRec()))
+			{
+				hero.undoMovement();
+			}
+			if (IsKeyPressed(KEY_E) && npcs[6]->getIsTalking())
+			{
+				npcs[6]->setInteractionCount();
+			}
 			for (int i = 3; i < 22; i++)
 			{
 				for (int j = i + 1; j < 22; j++)
