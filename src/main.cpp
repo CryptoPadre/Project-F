@@ -247,7 +247,7 @@ int main()
 	// 400 200
 	hero.setWorldPos(400.f, 200.f);
 	// Check if character is inside a house / outside the town / starting the game
-	bool isInMainMenu{};
+	bool isInMainMenu{true};
 	bool isInTown{};
 	bool isInside{};
 	bool isOutsideTown{};
@@ -289,7 +289,7 @@ int main()
 	bool hasFallen{};
 	bool fellIntoCave{};
 	bool yellowStartMapDialogAdded{};
-	bool isTheEnd{true};
+	bool isTheEnd{};
 	bool caveMusicSwitched{};
 	bool enemyInHouse{};
 	bool byTheDoor{};
@@ -301,20 +301,36 @@ int main()
 	bool talkedToBoydAfterFight{};
 
 	hero.setHasDagger(hasDagger);
-	int endingTitle = GetScreenHeight();
-	int lineSpacing = 30;
-	const char *credits[] = {
-		"Thanks for playing my game!",
-		"You survived and escaped From.",
-		"Music used from Pixabay.com",
-		"Graphics are not created or owned by me.",
-		"Graphics were used from Itch.io, Pinterest,",
-		"and generated with ChatGPT.",
-		"Playable character, NPCs, enemies were",
-		"created via Liberated Pixel Cup generator:",
-		"https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/",
-		"Game powered by Raylib. Maps created with Tiled."};
+	typedef struct
+	{
+		const char *text;
+		int fontSize;
+		Color color;
+		int extraSpacing;
+	} CreditLine;
+
+	CreditLine credits[] = {
+		{"You survived and escaped From", 50, RED, 150},
+		{"Game created based on the FROM series", 40, RED, 150},
+		{"Created by Tamas Gavlider", 30, RED, 110},
+		{"Music from Pixabay.com", 20, RED, 40},
+		{"Graphics are not created or owned by me.", 20, RED, 40},
+		{"Graphics were used from Itch.io, Pinterest,", 20, RED, 40},
+		{"or generated with ChatGPT.", 20, RED, 40},
+		{"Playable character, NPCs, enemies were", 20, RED, 40},
+		{"created via Liberated Pixel Cup generator:", 20, RED, 40},
+		{"https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/", 15, RED, 130},
+		{"Game powered by", 25, RED, 30},
+		{"Raylib", 40, RED, 130},
+		{"Maps created with", 25, RED, 30},
+		{"Tiled", 40, RED, 130},
+		{"Thanks for playing my game!", 50, RED, 30},
+	};
 	int numCredits = sizeof(credits) / sizeof(credits[0]);
+
+	int lineSpacing = 40;
+	int endingTitle = GetScreenHeight();
+
 	float leftY = 840;
 	float rightY = 1240;
 
@@ -395,7 +411,7 @@ int main()
 
 	const char *title = "A fanmade game based on the FROM series.";
 	int fontSize = 30;
-	int textWidth = MeasureText(title, fontSize);
+	int titleWidth = MeasureText(title, fontSize);
 	// set target fps
 	SetTargetFPS(60);
 	// game loop
@@ -466,7 +482,7 @@ int main()
 		if (isInMainMenu)
 		{
 			PlayMapMusic(10);
-			DrawText(title, screenWidth / 2 - textWidth / 2, 50, fontSize, RED);
+			DrawText(title, screenWidth / 2 - titleWidth / 2, 50, fontSize, RED);
 			DrawText("How to Play", 180, 160, 30, RED);
 			DrawText("W - Up", 210, 210, 20, RED);
 			DrawText("S - Down", 210, 310, 20, RED);
@@ -624,6 +640,10 @@ int main()
 				{
 					PlayMapMusic(11);
 				}
+				else if (!npcs[3]->getAlive())
+				{
+					PlayMapMusic(12);
+				}
 				else
 				{
 					PlayMapMusic(0);
@@ -633,7 +653,14 @@ int main()
 			{
 				// draw the map for nighttime
 				DrawTextureEx(maps[1], mapPos, 0.0, mapScale, WHITE);
-				PlayMapMusic(5);
+				if (!npcs[3]->getAlive())
+				{
+					PlayMapMusic(12);
+				}
+				else
+				{
+					PlayMapMusic(5);
+				}
 			}
 
 			if (hero.getWorldPos().x < 80 &&
@@ -698,7 +725,7 @@ int main()
 				hero.undoMovement();
 			}
 			// render enemies after props to make sure they cannot cross them
-			if (!isDayTime)
+			if (!isDayTime && npcs[3]->getAlive())
 			{
 				// Set collision with enemies
 				for (int i = 0; i < 3; i++)
@@ -1005,7 +1032,14 @@ int main()
 				}
 				break;
 			case HOUSE_TWO:
-				PlayMapMusic(4);
+				if (npcs[3]->getAlive())
+				{
+					PlayMapMusic(4);
+				}
+				else
+				{
+					PlayMapMusic(12);
+				}
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
@@ -1352,13 +1386,23 @@ int main()
 		{
 			if (isDayTime)
 			{
-				PlayMapMusic(0);
 				DrawTextureEx(maps[4], outsideTownPos, 0.0, mapScale, WHITE);
 			}
 			else
 			{
-				PlayMapMusic(2);
 				DrawTextureEx(maps[6], outsideTownPos, 0.0, mapScale, WHITE);
+			}
+			if (isDayTime && npcs[3]->getAlive())
+			{
+				PlayMapMusic(0);
+			}
+			else if (!npcs[3]->getAlive())
+			{
+				PlayMapMusic(0);
+			}
+			else
+			{
+				PlayMapMusic(2);
 			}
 			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0 ||
 				hero.getWorldPos().x > 675 && hero.getWorldPos().y < 235)
@@ -2102,24 +2146,24 @@ int main()
 		{
 			PlayMapMusic(12);
 
+			int currentY = endingTitle;
+
 			for (int i = 0; i < numCredits; i++)
 			{
-				int y = endingTitle + i * lineSpacing;
-				DrawText(credits[i], 250, y, 20, RED);
+
+				int textWidth = MeasureText(credits[i].text, credits[i].fontSize);
+				int x = (GetScreenWidth() - textWidth) / 2;
+
+				DrawText(credits[i].text, x, currentY, credits[i].fontSize, credits[i].color);
+
+				currentY += lineSpacing + credits[i].extraSpacing;
 			}
 
-			// move upwards every frame
-			endingTitle -= 1; 
+			endingTitle -= 1;
 
-			// check when last line is gone
-			int lastLineY = endingTitle + (numCredits - 1) * lineSpacing;
-			if (lastLineY < 0)
+			if (currentY < 0)
 			{
-				// All credits off screen
-				// e.g., return to menu or quit
 			}
-
-			endingTitle -= 0.5f;
 		}
 		else if (isEndGame)
 		{

@@ -29,10 +29,10 @@ void BaseCharacter::resolveCollision(Vector2 otherPos)
 Rectangle BaseCharacter::GetCollisionRec()
 {
     return Rectangle{
-        getScreenPos().x + 30,
+        getScreenPos().x + 35,
         getScreenPos().y + 25,
-        width / scale + 35,
-        height / scale + 75};
+        width / scale + 25,
+        height / scale + 40};
 }
 
 void BaseCharacter::tick(float deltaTime)
