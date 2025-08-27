@@ -78,7 +78,11 @@ inline std::vector<std::string> saraDialoguesDayTwo = {
     "The many, many sad endings...",
     "I thought I was safe... but then I remembered.",
     "I feel their pain, I hear them screaming...",
-    "He makes them suffer."};
+    "He makes them suffer.",
+    "What happened to your leg?",
+    "Put some balsam on it.",
+    "It will help.",
+    "It's on the table."};
 
 inline std::vector<std::string> saraDialoguesDayAfterFight = {
     "You?",
@@ -252,7 +256,7 @@ inline std::vector<std::string> interactionWithClock{
     "Something is hidden between the clogs!",
     "Another key?"};
 
-    inline std::vector<std::string> awakening{
-        "My head...",
-        "What the hell is that?",
-        "Are you out of your mind?"};
+inline std::vector<std::string> awakening{
+    "My head...",
+    "What the hell is that?",
+    "Are you out of your mind?"};

@@ -36,6 +36,7 @@ int main()
 	LoadAllMusic();
 	// draw hero
 	Vector2 targetPoint = {-300.f, 300.f};
+	Vector2 targetAfterDeath = {1000.f, 0.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-attack.png"), LoadTexture("boyd-hurt.png"), true};
@@ -45,14 +46,16 @@ int main()
 	NPC woman{Vector2{150.f, 250.f}, LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), LoadTexture("woman-hurt.png"), true};
 	NPC baby{Vector2{210.f, 250.f}, LoadTexture("baby-walk.png"), LoadTexture("baby-attack.png"), LoadTexture("baby-hurt.png"), true};
 	NPC jade{Vector2{840.f, 700.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
-	NPC *npcs[7]{
+	NPC random{Vector2{8000.f, 8000.f}, LoadTexture("jade-walk.png"), LoadTexture("jade-hurt.png"), LoadTexture("jade-hurt.png"), true};
+	NPC *npcs[8]{
 		&boyd,
 		&sara,
 		&kid,
 		&yellow,
 		&woman,
 		&baby,
-		&jade};
+		&jade,
+		&random};
 	for (auto npc : npcs)
 	{
 		npc->setTarget(&hero);
@@ -301,6 +304,23 @@ int main()
 	bool talkedToBoydAfterFight{};
 
 	hero.setHasDagger(hasDagger);
+	typedef struct
+	{
+		const char *text;
+		int fontSize;
+		Color color;
+		int extraSpacing;
+	} GameOverLine;
+
+	GameOverLine dialog[] = {
+		{"Oh look he just woke up!", 40, RED, 100},
+		{"You are very lucky!", 40, RED, 100},
+		{"Not many could survive such a crash.", 35, RED, 80},
+		{"That tree almost squeezed you.", 35, RED, 80},
+		{"You should always remember how lucky you are Mr...", 30, RED, 70},
+		{"What is your name?", 40, RED, 100},
+	};
+	int numIntroDialog = sizeof(dialog) / sizeof(dialog[0]);
 	typedef struct
 	{
 		const char *text;
@@ -616,7 +636,7 @@ int main()
 				{
 					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
-						hero.setAlive(true);
+						hero.setAlive(false);
 					}
 				}
 				else
@@ -748,9 +768,17 @@ int main()
 					}
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
-						hero.setAlive(true);
+						hero.setAlive(false);
 					}
-
+					if (!hero.getAlive())
+					{
+						enemies[i]->setTarget(&random);
+						if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 600.f)
+						{
+							isInTown = false;
+							isGameOver = true;
+						}
+					}
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 					{
 						enemies[i]->setHitCounter();
@@ -816,7 +844,10 @@ int main()
 			if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
 				hero.getWorldPos().y <= house_two_entry_height)
 			{
-				conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
+				if (npcs[0]->getAlive())
+				{
+					conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
+				}
 				byTheDoor = true;
 				if (IsKeyPressed(KEY_E))
 				{
@@ -1117,7 +1148,7 @@ int main()
 						npcs[5]->setAlive(false);
 					}
 				}
-				if (!npcs[3]->getAlive() && awakeningConversation < awakening.size() - 1)
+				if (!npcs[3]->getAlive() && awakeningConversation <= awakening.size() - 1)
 				{
 					conversation(awakening[awakeningConversation], hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E) && awakeningConversation <= awakening.size() - 1)
@@ -1232,6 +1263,7 @@ int main()
 								isInSarasHouse = true;
 								randomValue = GetRandomValue(1, 2);
 								hero.setWorldPos(-150.f, -275.f);
+								npcs[1]->setWorldPos(80.f, 20.f);
 							}
 							else
 							{
@@ -1396,13 +1428,13 @@ int main()
 			{
 				PlayMapMusic(0);
 			}
-			else if (!npcs[3]->getAlive())
+			else if (!isDayTime && npcs[3]->getAlive())
 			{
-				PlayMapMusic(0);
+				PlayMapMusic(2);
 			}
 			else
 			{
-				PlayMapMusic(2);
+				PlayMapMusic(12);
 			}
 			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0 ||
 				hero.getWorldPos().x > 675 && hero.getWorldPos().y < 235)
@@ -1474,7 +1506,11 @@ int main()
 						{
 							npcs[3]->setWorldPos(1450.f, 2250.f);
 						}
-						enemies[1]->setWorldPos(150.f, 850.f);
+						if (!npcs[3]->getAlive())
+						{
+							npcs[1]->setWorldPos(1450.f, 2270.f);
+						}
+						enemies[1]->setWorldPos(150.f, 700.f);
 						enemies[0]->setWorldPos(150.f, 850.f);
 					}
 				}
@@ -1493,6 +1529,7 @@ int main()
 						isInSarasHouse = true;
 						isOutsideTown = false;
 						hero.setWorldPos(-150.f, 50.f);
+						npcs[1]->setWorldPos(20.f, 20.f);
 					}
 				}
 				else
@@ -1527,6 +1564,7 @@ int main()
 					isOutsideTown = false;
 					isGameStart = true;
 					hero.setWorldPos(400.f, 1330.f);
+					startMapCounter++;
 				}
 			}
 			if (hero.getWorldPos().x > 840 && hero.getWorldPos().x < 920 && hero.getWorldPos().y < 270 && outsideHouseCounter <= interactionWithHouseOutsideTown.size() - 1)
@@ -1623,7 +1661,7 @@ int main()
 				hero.tick(GetFrameTime());
 				props[7].Render(hero.getWorldPos());
 			}
-			if (wasInCave)
+			if (!npcs[3]->getAlive())
 			{
 				npcs[1]->tick(GetFrameTime());
 				npcs[1]->talk();
@@ -1733,6 +1771,15 @@ int main()
 					{
 						isOutsideCave = false;
 						isTheEnd = true;
+						hasDagger = false;
+						hasTalisman = false;
+						hasFlashlight = false;
+						hasBattery = false;
+						hasKey = false;
+						hasMedkit = false;
+						hasRustyKey = false;
+						hasScroll = false;
+						hasTempleKey = false;
 					}
 				}
 				else
@@ -1958,16 +2005,38 @@ int main()
 		else if (isGameOver)
 		{
 
-			if (randomValue == 5)
+			if (!talkedToKid)
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
 				DrawText("You may escape in another life.", screenWidth / 6, screenHeight / 2, 40, RED);
 			}
-			else if (randomValue == 6)
+			else if (talkedToKid && npcs[3]->getAlive())
 			{
 
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
-				DrawText("Oh you woke up! You are very lucky!", screenWidth / 6, screenHeight / 2, 40, RED);
+				// Scrolling text
+				static int introY = GetScreenHeight(); // start from bottom once
+				int currentY = introY;
+
+				for (int i = 0; i < numIntroDialog; i++)
+				{
+					int textWidth = MeasureText(dialog[i].text, dialog[i].fontSize);
+					int x = (GetScreenWidth() - textWidth) / 2;
+
+					DrawText(dialog[i].text, x, currentY, dialog[i].fontSize, dialog[i].color);
+
+					currentY += lineSpacing + dialog[i].extraSpacing;
+				}
+
+				// move upward
+				introY -= 1;
+
+				// optional: when all text scrolled off screen, reset or trigger next scene
+				if (currentY < 0)
+				{
+					// e.g., switch state, reset introY, etc.
+					// introY = GetScreenHeight();
+				}
 			}
 			else
 			{
@@ -2045,6 +2114,7 @@ int main()
 					{
 						isInSecretRoom = false;
 						isInSarasHouse = true;
+						npcs[1]->setWorldPos(80.f, 20.f);
 						randomValue = GetRandomValue(1, 2);
 						hero.setWorldPos(-150.f, -275.f);
 					}
@@ -2076,11 +2146,25 @@ int main()
 			{
 				hero.undoMovement();
 			}
+			if (npcs[3]->getAlive())
+			{
+				npcs[1]->tick(GetFrameTime());
+				npcs[1]->talk();
+				if (IsKeyPressed(KEY_E) && npcs[1]->getIsTalking())
+				{
+					npcs[1]->setInteractionCount();
+				}
+				if (CheckCollisionRecs(npcs[1]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.undoMovement();
+					npcs[1]->undoMovement();
+				}
+			}
 			if (hero.getWorldPos().x < -110 && hero.getWorldPos().x > -187 && hero.getWorldPos().y > 70)
 			{
 				if (!wasInSarasHouse)
 				{
-					conversation("It can't be!", hero.getScreenPos().x, hero.getScreenPos().y);
+					conversation("I have to find him!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
 				if (IsKeyPressed(KEY_E))
 				{
@@ -2241,7 +2325,7 @@ int main()
 				}
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
-					hero.setAlive(true);
+					hero.setAlive(false);
 				}
 			}
 			if (hasDagger && npcs[3]->getAttack())
