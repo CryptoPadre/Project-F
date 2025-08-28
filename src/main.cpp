@@ -36,7 +36,7 @@ int main()
 	LoadAllMusic();
 	// draw hero
 	Vector2 targetPoint = {-300.f, 300.f};
-	Vector2 targetAfterDeath = {1000.f, 0.f};
+	Vector2 targetAfterDeath = {1000.f, 1000.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-attack.png"), LoadTexture("boyd-hurt.png"), true};
@@ -173,13 +173,13 @@ int main()
 		Prop{Vector2{800.f, 600.f}, LoadTexture("desk-3.png"), 0.5, false, 0, 0, 0, 0},
 		Prop{Vector2{200.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{65.f, 150.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -10},
+		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -30},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("temple_key.png"), 0.2, false, 0, 0, 0, 0}};
 	// render enemy
 	// 410 , 330 extra for cave monster
-	Enemy she{Vector2{2000.f, 1000.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
-	Enemy he{Vector2{2200.f, 1000.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
-	Enemy monster{Vector2{2100.f, 1000.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
+	Enemy she{Vector2{1500.f, 1400.f}, LoadTexture("monster-she-walk.png"), LoadTexture("monster-she-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
+	Enemy he{Vector2{2200.f, 1200.f}, LoadTexture("monster-he-walk.png"), LoadTexture("monster-he-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
+	Enemy monster{Vector2{1000.f, 1700.f}, LoadTexture("monster-walk.png"), LoadTexture("monster-attack.png"), LoadTexture("cave-monster-sleep.png"), false};
 	Enemy caveMonster{Vector2{610.f, 650.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster1{Vector2{490.f, 1440.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
 	Enemy caveMonster2{Vector2{560.f, 1340.f}, LoadTexture("cave-monster-walk.png"), LoadTexture("cave-monster-attack.png"), LoadTexture("cave-monster-sleep.png"), true};
@@ -646,6 +646,16 @@ int main()
 						hero.undoMovement();
 					}
 				}
+				if (!hero.getAlive())
+				{
+					npcs[3]->setAttack(false);
+					npcs[3]->setTarget(targetAfterDeath);
+					if (Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 300.f)
+					{
+						isInTown = false;
+						isGameOver = true;
+					}
+				}
 			}
 			hero.tick(GetFrameTime());
 		}
@@ -772,8 +782,9 @@ int main()
 					}
 					if (!hero.getAlive())
 					{
+						isDayTime = false;
 						enemies[i]->setTarget(&random);
-						if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 600.f)
+						if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 700.f)
 						{
 							isInTown = false;
 							isGameOver = true;
@@ -1128,7 +1139,16 @@ int main()
 					}
 					if (CheckCollisionRecs(npcs[5]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
-						hero.setAlive(true);
+						hero.setAlive(false);
+					}
+					if (!hero.getAlive())
+					{
+						npcs[5]->setTarget(targetAfterDeath);
+						if (Vector2Distance(npcs[5]->getScreenPos(), hero.getScreenPos()) > 200.f)
+						{
+							isInTown = false;
+							isGameOver = true;
+						}
 					}
 				}
 				if (CheckCollisionRecs(npcs[4]->GetCollisionRec(), hero.GetCollisionRec()))
@@ -1616,13 +1636,27 @@ int main()
 					{
 						hero.setAlive(false);
 					}
-					if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), hero.getDaggerCollisionRec()))
+					if (!hero.getAlive())
 					{
-						enemies[0]->setAlive(false);
+						enemies[0]->setTarget(&random);
+						enemies[1]->setTarget(&random);
+						if (Vector2Distance(enemies[0]->getScreenPos(), hero.getScreenPos()) > 600.f ||
+							Vector2Distance(enemies[1]->getScreenPos(), hero.getScreenPos()) > 600.f)
+						{
+							isInTown = false;
+							isGameOver = true;
+						}
 					}
-					if (CheckCollisionRecs(enemies[1]->GetCollisionRec(), hero.getDaggerCollisionRec()))
+					if (hasDagger)
 					{
-						enemies[1]->setAlive(false);
+						if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
+						{
+							enemies[0]->setAlive(false);
+						}
+						if (CheckCollisionRecs(enemies[1]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
+						{
+							enemies[1]->setAlive(false);
+						}
 					}
 				}
 			}
@@ -1884,7 +1918,15 @@ int main()
 
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
 					{
-						hero.setAlive(true);
+						hero.setAlive(false);
+					}
+					if (!hero.getAlive())
+					{
+						if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 600.f)
+						{
+							isInTown = false;
+							isGameOver = true;
+						}
 					}
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), npcs[6]->GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
 					{
@@ -2005,7 +2047,7 @@ int main()
 		else if (isGameOver)
 		{
 
-			if (!talkedToKid)
+			if (!hero.getAlive())
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
 				DrawText("You may escape in another life.", screenWidth / 6, screenHeight / 2, 40, RED);
@@ -2326,6 +2368,15 @@ int main()
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 				{
 					hero.setAlive(false);
+				}
+				if (!hero.getAlive())
+				{
+					npcs[3]->setTarget(targetAfterDeath);
+					if (Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 300.f)
+					{
+						isInTown = false;
+						isGameOver = true;
+					}
 				}
 			}
 			if (hasDagger && npcs[3]->getAttack())
