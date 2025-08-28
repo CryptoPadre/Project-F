@@ -139,18 +139,18 @@ int main()
 	Rectangle destEnd = {0, 0, (float)screenWidth, (float)screenHeight};
 	// Render props
 	Prop props[36]{
-		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, 0, 0, 10, 0},
-		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 55, 0, 50, 80},
-		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 55, 0, 40, 40},
-		Prop{Vector2{1200.f, 190.f}, LoadTexture("house-4.png"), 0.8, true, 45, 0, 100, 200},
-		Prop{Vector2{1050.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, -20, 0, 10, 0},
+		Prop{Vector2{1800.f, 10.f}, LoadTexture("house.png"), 3.f, true, 15, 0, 10, 0},
+		Prop{Vector2{350.f, 180.f}, LoadTexture("temple.png"), 4.f, true, 75, 0, 50, 80},
+		Prop{Vector2{780.f, 190.f}, LoadTexture("house_type.png"), 0.6, true, 85, 0, 40, 40},
+		Prop{Vector2{1200.f, 190.f}, LoadTexture("house-4.png"), 0.8, true, 65, 0, 100, 200},
+		Prop{Vector2{1050.f, 30.f}, LoadTexture("house-3.png"), 1.f, true, 0, 0, 10, 0},
 		Prop{Vector2{570.f, -150.f}, LoadTexture("fallen_tree.png"), 1.f, false, 0, 0, 0, 0},
 		Prop{Vector2{520.f, 330.f}, LoadTexture("car-2.png"), 0.35, false, 100, 20, -20, 0},
 		Prop{Vector2{1330.f, 1850.f}, LoadTexture("bottle-tree.png"), 1.5, false, 30, 30, 0, 0},
 		Prop{Vector2{1590.f, 480.f}, LoadTexture("ghost.png"), 0.5, false, 30, 30, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("batteries.png"), 0.2, false, 0, 0, 0, 0},
-		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 80, 10, 0, 0},
-		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 60, 10, 0, 0},
+		Prop{Vector2{490.f, 2300.f}, LoadTexture("ghost_kids.png"), 0.3, false, 105, 10, 0, 0},
+		Prop{Vector2{900.f, 2220.f}, LoadTexture("ghost_kid.png"), 0.2, false, 85, 10, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("talisman.png"), 3.f, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("flashlight.png"), 0.25, false, 0, 0, 0, 0},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("key.png"), 0.4, false, 0, 0, 0, 0},
@@ -173,7 +173,7 @@ int main()
 		Prop{Vector2{800.f, 600.f}, LoadTexture("desk-3.png"), 0.5, false, 0, 0, 0, 0},
 		Prop{Vector2{200.f, 220.f}, LoadTexture("ladder.png"), 0.4, false, 0, 0, 0, 0},
 		Prop{Vector2{65.f, 150.f}, LoadTexture("stairs.png"), 0.4, false, 0, 0, 0, 0},
-		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 0, 0, 20, -30},
+		Prop{Vector2{300.f, -40.f}, LoadTexture("stove.png"), 0.6, false, 20, 30, 20, -30},
 		Prop{Vector2{0.f, 0.f}, LoadTexture("temple_key.png"), 0.2, false, 0, 0, 0, 0}};
 	// render enemy
 	// 410 , 330 extra for cave monster
@@ -805,19 +805,25 @@ int main()
 				hero.tick(GetFrameTime());
 				if (!boydDialogAfterBook)
 				{
-					npcs[0]->tick(GetFrameTime());
-					npcs[0]->isDay = isDayTime;
-					npcs[0]->talk();
+					if (!hasTempleKey)
+					{
+						npcs[0]->tick(GetFrameTime());
+						npcs[0]->isDay = isDayTime;
+						npcs[0]->talk();
+					}
 				}
 			}
 			else
 			{
 				if (!boydDialogAfterBook)
-				{
-					npcs[0]->tick(GetFrameTime());
-					npcs[0]->isDay = isDayTime;
-					npcs[0]->talk();
-				}
+					if (!hasTempleKey)
+					{
+						{
+							npcs[0]->tick(GetFrameTime());
+							npcs[0]->isDay = isDayTime;
+							npcs[0]->talk();
+						}
+					}
 				hero.tick(GetFrameTime());
 			}
 			if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
@@ -1019,7 +1025,7 @@ int main()
 							fellIntoCave = true;
 							enemyInHouse = false;
 							hero.setWorldPos(1800.f, 500.f);
-							hero.setSpeed(2.2);
+							hero.setSpeed(2.3);
 							npcs[3]->setAttack(false);
 							if (hasFlashlight && hasBattery)
 							{
@@ -1084,7 +1090,7 @@ int main()
 				}
 				DrawTextureEx(maps[3], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -456 || hero.getWorldPos().x > 160 ||
-					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -270)
+					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -250)
 				{
 					hero.undoMovement();
 				}
@@ -1222,6 +1228,7 @@ int main()
 				{
 					talkedToWoman = true;
 				}
+				/*
 				if (CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
 				{
 					hero.undoMovement();
@@ -1234,7 +1241,7 @@ int main()
 				{
 					hero.undoMovement();
 				}
-
+*/
 				break;
 			case TEMPLE:
 				PlayMapMusic(7);
@@ -1939,7 +1946,7 @@ int main()
 					}
 					else
 					{
-						enemies[i]->setSpeed(2);
+						enemies[i]->setSpeed(1.9);
 					}
 					if (npcs[6]->getInteractionCount() >= 29 && npcs[6]->getAlive())
 					{
@@ -2052,7 +2059,7 @@ int main()
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
 				DrawText("You may escape in another life.", screenWidth / 6, screenHeight / 2, 40, RED);
 			}
-			else if (talkedToKid && npcs[3]->getAlive())
+			else if (talkedToKid && npcs[3]->getAlive() && !hasScroll)
 			{
 
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);

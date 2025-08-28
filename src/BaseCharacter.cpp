@@ -30,7 +30,7 @@ Rectangle BaseCharacter::GetCollisionRec()
 {
     return Rectangle{
         getScreenPos().x + 35,
-        getScreenPos().y + 25,
+        getScreenPos().y + 15,
         width / scale + 25,
         height / scale + 40};
 }
@@ -148,7 +148,7 @@ void BaseCharacter::tick(float deltaTime)
         getUpFrame = 5;
     }
     DrawRectangleLines(getScreenPos().x + 35,
-                       getScreenPos().y + 25,
+                       getScreenPos().y + 15,
                        width / scale + 25,
                        height / scale + 40, RED);
 }
