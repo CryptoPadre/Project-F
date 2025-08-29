@@ -48,7 +48,7 @@ inline std::vector<std::string> boydDialoguesAfterFight = {
     "I killed Tabitha,",
     "Julie,",
     "Victor,",
-    "Ethan, Jade, Donna, Fatima, Henry!",
+    "Ethan, Donna, Henry!",
     "What the hell am I?",
     "Why is this happening?",
     "Oh, I remember...",

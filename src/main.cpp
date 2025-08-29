@@ -1143,9 +1143,12 @@ int main()
 							conversation("Daaaad...", npcs[5]->getScreenPos().x + 30, npcs[5]->getScreenPos().y + 20);
 						}
 					}
-					if (CheckCollisionRecs(npcs[5]->GetCollisionRec(), hero.GetCollisionRec()))
+					if (npcs[5]->getAlive())
 					{
-						hero.setAlive(false);
+						if (CheckCollisionRecs(npcs[5]->GetCollisionRec(), hero.GetCollisionRec()))
+						{
+							hero.setAlive(false);
+						}
 					}
 					if (!hero.getAlive())
 					{
@@ -1525,7 +1528,7 @@ int main()
 						isOutsideTown = false;
 						randomValue = GetRandomValue(1, 4);
 						hero.setWorldPos(1260.f, 785.f);
-						if (hasFlashlight)
+						if (hasFlashlight && npcs[6]->getAlive())
 						{
 							npcs[6]->setWorldPos(2000.f, 2000.f);
 						}
@@ -2319,6 +2322,20 @@ int main()
 			}
 			if (!npcs[3]->getAlive())
 			{
+				if (afterFightCounter < yellowDialogAfterFight.size() - 1)
+					conversation(yellowDialogAfterFight[afterFightCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
+				if (IsKeyPressed(KEY_E))
+				{
+					afterFightCounter++;
+				}
+				if (Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 180.f)
+				{
+					npcs[3]->setCanAttack(false);
+				}
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.resolveCollision(npcs[3]->getWorldPos());
+				}
 				if (hero.getWorldPos().x > 243 && hero.getWorldPos().x < 320 && hero.getWorldPos().y < 40)
 				{
 
@@ -2372,10 +2389,6 @@ int main()
 				{
 					npcs[3]->setAttack(true);
 				}
-				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.setAlive(false);
-				}
 				if (!hero.getAlive())
 				{
 					npcs[3]->setTarget(targetAfterDeath);
@@ -2388,6 +2401,10 @@ int main()
 			}
 			if (hasDagger && npcs[3]->getAttack())
 			{
+				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				{
+					hero.setAlive(false);
+				}
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 				{
 					hitCounter++;
@@ -2395,23 +2412,6 @@ int main()
 				if (hitCounter == 10)
 				{
 					npcs[3]->setAlive(false);
-				}
-			}
-			if (!npcs[3]->getAlive())
-			{
-				if (afterFightCounter < yellowDialogAfterFight.size() - 1)
-					conversation(yellowDialogAfterFight[afterFightCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
-				if (IsKeyPressed(KEY_E))
-				{
-					afterFightCounter++;
-				}
-				if (Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 180.f)
-				{
-					npcs[3]->setCanAttack(false);
-				}
-				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
-				{
-					hero.resolveCollision(npcs[3]->getWorldPos());
 				}
 			}
 		}
