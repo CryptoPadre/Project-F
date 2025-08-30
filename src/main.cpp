@@ -387,6 +387,8 @@ int main()
 	int mainMenuInteract{};
 	int interactionWithClockCounter{};
 
+	int deathTimer = 0;
+
 	enum InteriorType
 	{
 		NONE,
@@ -614,50 +616,99 @@ int main()
 					}
 				}
 			}
-			if (metYellow)
+			if (hero.getScreenPos().y < npcs[3]->getScreenPos().y)
 			{
-				npcs[3]->tick(GetFrameTime());
-				npcs[3]->talk();
+				hero.tick(GetFrameTime());
 
-				if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
+				if (metYellow)
 				{
-					npcs[3]->setInteractionCount();
-				}
-				if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f && yellowWarningCounter <= yellowWarning.size())
-				{
-					conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
-				}
-				if (hero.getWorldPos().y < 370.f)
-				{
-					npcs[3]->setAttack(true);
-					yellowWarningCounter++;
-				}
-				if (npcs[3]->getAttack())
-				{
-					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+					npcs[3]->tick(GetFrameTime());
+					npcs[3]->talk();
+
+					if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
 					{
-						hero.setAlive(false);
+						npcs[3]->setInteractionCount();
 					}
-				}
-				else
-				{
-					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+					if (hero.getWorldPos().y > 350.f && hero.getWorldPos().y < 400.f && yellowWarningCounter <= yellowWarning.size())
 					{
-						hero.undoMovement();
+						conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 					}
-				}
-				if (!hero.getAlive())
-				{
-					npcs[3]->setAttack(false);
-					npcs[3]->setTarget(targetAfterDeath);
-					if (Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 300.f)
+					if (hero.getWorldPos().y < 300.f)
 					{
-						isInTown = false;
-						isGameOver = true;
+						npcs[3]->setAttack(true);
+						yellowWarningCounter++;
+					}
+					if (npcs[3]->getAttack())
+					{
+						if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+						{
+							hero.setAlive(false);
+						}
+					}
+					else
+					{
+						if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+						{
+							hero.undoMovement();
+						}
+					}
+					if (!hero.getAlive())
+					{
+						deathTimer++;
+						if (deathTimer == 600)
+						{
+							isInTown = false;
+							isGameOver = true;
+						}
 					}
 				}
 			}
-			hero.tick(GetFrameTime());
+			else
+			{
+				if (metYellow)
+				{
+					npcs[3]->tick(GetFrameTime());
+					npcs[3]->talk();
+
+					if (IsKeyPressed(KEY_E) && npcs[3]->getIsTalking())
+					{
+						npcs[3]->setInteractionCount();
+					}
+					if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f && yellowWarningCounter <= yellowWarning.size())
+					{
+						conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
+					}
+					if (hero.getWorldPos().y < 370.f)
+					{
+						npcs[3]->setAttack(true);
+						yellowWarningCounter++;
+					}
+					if (npcs[3]->getAttack())
+					{
+						if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+						{
+							hero.setAlive(false);
+						}
+					}
+					else
+					{
+						if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+						{
+							hero.undoMovement();
+						}
+					}
+					if (!hero.getAlive())
+					{
+						deathTimer++;
+						if (deathTimer == 600)
+						{
+							isInTown = false;
+							isGameOver = true;
+						}
+					}
+				}
+				hero.tick(GetFrameTime());
+			}
 		}
 		// World map changing between daytime/nighttime
 		else if (isInTown)
@@ -754,52 +805,6 @@ int main()
 			{
 				hero.undoMovement();
 			}
-			// render enemies after props to make sure they cannot cross them
-			if (!isDayTime && npcs[3]->getAlive())
-			{
-				// Set collision with enemies
-				for (int i = 0; i < 3; i++)
-				{
-					for (int j = i + 1; j < 3; j++)
-					{
-						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), enemies[j]->GetCollisionRec()))
-						{
-							enemies[i]->resolveCollision(enemies[j]->getWorldPos());
-							enemies[j]->resolveCollision(enemies[i]->getWorldPos());
-						}
-					}
-				}
-				for (int i = 0; i < 3; i++)
-				{
-					enemies[i]->tick(GetFrameTime());
-					if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 250.f && enemies[i]->getAlive())
-					{
-						conversation("Don't run sweetey!", enemies[i]->getScreenPos().x, enemies[i]->getScreenPos().y);
-					}
-					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()))
-					{
-						hero.setAlive(false);
-					}
-					if (!hero.getAlive())
-					{
-						isDayTime = false;
-						enemies[i]->setTarget(&random);
-						if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 700.f)
-						{
-							isInTown = false;
-							isGameOver = true;
-						}
-					}
-					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
-					{
-						enemies[i]->setHitCounter();
-					}
-					if (enemies[i]->getHitCounter() == 2)
-					{
-						enemies[i]->setAlive(false);
-					}
-				}
-			}
 			if (hero.getScreenPos().y < npcs[0]->getScreenPos().y)
 			{
 				hero.tick(GetFrameTime());
@@ -825,6 +830,52 @@ int main()
 						}
 					}
 				hero.tick(GetFrameTime());
+			}
+			// render enemies after props to make sure they cannot cross them
+			if (!isDayTime && npcs[3]->getAlive())
+			{
+				// Set collision with enemies
+				for (int i = 0; i < 3; i++)
+				{
+					for (int j = i + 1; j < 3; j++)
+					{
+						if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), enemies[j]->GetCollisionRec()))
+						{
+							enemies[i]->resolveCollision(enemies[j]->getWorldPos());
+							enemies[j]->resolveCollision(enemies[i]->getWorldPos());
+						}
+					}
+				}
+				for (int i = 0; i < 3; i++)
+				{
+					enemies[i]->tick(GetFrameTime());
+					if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 250.f && enemies[i]->getAlive())
+					{
+						conversation("Don't run sweetey!", enemies[i]->getScreenPos().x, enemies[i]->getScreenPos().y);
+					}
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[i]->getAlive())
+					{
+						hero.setAlive(false);
+					}
+					if (!hero.getAlive())
+					{
+						deathTimer++;
+						isDayTime = false;
+						if (deathTimer == 600)
+						{
+							isInTown = false;
+							isGameOver = true;
+						}
+					}
+					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
+					{
+						enemies[i]->setHitCounter();
+					}
+					if (enemies[i]->getHitCounter() == 2)
+					{
+						enemies[i]->setAlive(false);
+					}
+				}
 			}
 			if (IsKeyPressed(KEY_E) && npcs[0]->getIsTalking())
 			{
@@ -1152,10 +1203,11 @@ int main()
 					}
 					if (!hero.getAlive())
 					{
-						npcs[5]->setTarget(targetAfterDeath);
-						if (Vector2Distance(npcs[5]->getScreenPos(), hero.getScreenPos()) > 200.f)
+						deathTimer++;
+						if (deathTimer == 600)
 						{
-							isInTown = false;
+							isInside = false;
+							currentInterior = NONE;
 							isGameOver = true;
 						}
 					}
@@ -1189,6 +1241,16 @@ int main()
 						hasFallen = false;
 					}
 				}
+				if (hero.getScreenPos().y < npcs[4]->getScreenPos().y)
+				{
+					hero.tick(GetFrameTime());
+					npcs[4]->tick(GetFrameTime());
+				}
+				else
+				{
+					npcs[4]->tick(GetFrameTime());
+					hero.tick(GetFrameTime());
+				}
 				if (!npcs[3]->getAlive())
 				{
 					npcs[0]->tick(GetFrameTime());
@@ -1212,16 +1274,6 @@ int main()
 						}
 					}
 				}
-				if (hero.getScreenPos().y < npcs[4]->getScreenPos().y)
-				{
-					hero.tick(GetFrameTime());
-					npcs[4]->tick(GetFrameTime());
-				}
-				else
-				{
-					npcs[4]->tick(GetFrameTime());
-					hero.tick(GetFrameTime());
-				}
 				npcs[4]->talk();
 				if (IsKeyPressed(KEY_E) && npcs[4]->getIsTalking())
 				{
@@ -1231,20 +1283,6 @@ int main()
 				{
 					talkedToWoman = true;
 				}
-				/*
-				if (CheckCollisionRecs(props[27].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-				}
-				if (CheckCollisionRecs(props[30].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-				}
-				if (CheckCollisionRecs(props[34].GetCollisionRec(hero.getWorldPos()), hero.GetCollisionRec()))
-				{
-					hero.undoMovement();
-				}
-*/
 				break;
 			case TEMPLE:
 				PlayMapMusic(7);
@@ -1559,7 +1597,7 @@ int main()
 						isInSarasHouse = true;
 						isOutsideTown = false;
 						hero.setWorldPos(-150.f, 50.f);
-						npcs[1]->setWorldPos(20.f, 20.f);
+						npcs[1]->setWorldPos(80.f, 20.f);
 					}
 				}
 				else
@@ -1617,9 +1655,16 @@ int main()
 			{
 				PlayMapMusic(2);
 			}
-			else
+			else if (!isDayTime && npcs[3]->getAlive())
 			{
-				PlayMapMusic(5);
+				if (metJade)
+				{
+					PlayMapMusic(5);
+				}
+				else
+				{
+					PlayMapMusic(2);
+				}
 			}
 			if (isDayTime)
 			{
@@ -1641,19 +1686,20 @@ int main()
 				{
 					enemies[1]->tick(GetFrameTime());
 					enemies[0]->tick(GetFrameTime());
-					if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), hero.GetCollisionRec()) ||
-						CheckCollisionRecs(enemies[1]->GetCollisionRec(), hero.GetCollisionRec()))
+					if (CheckCollisionRecs(enemies[0]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[0]->getAlive())
+					{
+						hero.setAlive(false);
+					}
+					if (CheckCollisionRecs(enemies[1]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[1]->getAlive())
 					{
 						hero.setAlive(false);
 					}
 					if (!hero.getAlive())
 					{
-						enemies[0]->setTarget(&random);
-						enemies[1]->setTarget(&random);
-						if (Vector2Distance(enemies[0]->getScreenPos(), hero.getScreenPos()) > 600.f ||
-							Vector2Distance(enemies[1]->getScreenPos(), hero.getScreenPos()) > 600.f)
+						deathTimer++;
+						if (deathTimer == 600)
 						{
-							isInTown = false;
+							isOutsideCave = false;
 							isGameOver = true;
 						}
 					}
@@ -1932,9 +1978,10 @@ int main()
 					}
 					if (!hero.getAlive())
 					{
-						if (Vector2Distance(enemies[i]->getScreenPos(), hero.getScreenPos()) > 600.f)
+						deathTimer++;
+						if (deathTimer == 600)
 						{
-							isInTown = false;
+							isInCave = false;
 							isGameOver = true;
 						}
 					}
@@ -2014,8 +2061,12 @@ int main()
 			}
 			if (!hero.getAlive() && npcs[3]->getAlive())
 			{
-				isInCave = false;
-				isGameOver = true;
+				deathTimer++;
+				if (deathTimer == 600)
+				{
+					isInTown = false;
+					isGameOver = true;
+				}
 			}
 			if (hero.getScreenPos().y < npcs[6]->getScreenPos().y)
 			{
@@ -2061,10 +2112,12 @@ int main()
 			{
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
 				DrawText("You may escape in another life.", screenWidth / 6, screenHeight / 2, 40, RED);
+				PlayMapMusic(0);
 			}
 			else if (talkedToKid && npcs[3]->getAlive() && !hasScroll)
 			{
 
+				PlayMapMusic(1);
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
 				// Scrolling text
 				static int introY = GetScreenHeight(); // start from bottom once
@@ -2391,10 +2444,10 @@ int main()
 				}
 				if (!hero.getAlive())
 				{
-					npcs[3]->setTarget(targetAfterDeath);
-					if (Vector2Distance(npcs[3]->getScreenPos(), hero.getScreenPos()) > 300.f)
+					deathTimer++;
+					if (deathTimer == 600)
 					{
-						isInTown = false;
+						isEndGame = false;
 						isGameOver = true;
 					}
 				}

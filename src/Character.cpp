@@ -14,6 +14,8 @@ Vector2 Character::getScreenPos()
 {
 	return Vector2{static_cast<float>(windowWidth) / 2.0f - (0.5f * width),
 				   static_cast<float>(windowHeight) / 2.0f - (0.5f * height)};
+
+				
 }
 
 void Character::tick(float deltaTime)
