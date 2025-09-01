@@ -568,6 +568,7 @@ int main()
 			}
 			if (hero.getWorldPos().y >= 1410)
 			{
+				hero.descreaseScreenPosHeight();
 				if (startMapCounter > 0 && !hasBattery)
 				{
 					conversation("I should get those batteries!", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -581,6 +582,9 @@ int main()
 						hero.setWorldPos(90.f, 1100.f);
 					}
 				}
+			}
+			if(hero.getWorldPos().y < 1410) {
+				hero.resetScreenPosHeight();
 			}
 			if (hero.getWorldPos().x > 145 && hero.getWorldPos().x < 300 && hero.getWorldPos().y < 285)
 			{
@@ -799,10 +803,12 @@ int main()
 			{
 				props[i].Render(hero.getWorldPos());
 			}
-			if (hero.getWorldPos().y < 165 || hero.getWorldPos().y > 1411 || hero.getWorldPos().x < 12 ||
+			// hero.getWorldPos().x < 12 ||
+			if (hero.getWorldPos().y < 165 || hero.getWorldPos().y > 1411 ||
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
 				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale)
 			{
+
 				hero.undoMovement();
 			}
 			if (hero.getScreenPos().y < npcs[0]->getScreenPos().y)

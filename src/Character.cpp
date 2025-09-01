@@ -12,10 +12,15 @@ Character::Character(int winWidth, int winHeight) : windowWidth(winWidth),
 
 Vector2 Character::getScreenPos()
 {
-	return Vector2{static_cast<float>(windowWidth) / 2.0f - (0.5f * width),
-				   static_cast<float>(windowHeight) / 2.0f - (0.5f * height)};
+	return Vector2{static_cast<float>(windowWidth) / 2.0f - (screenPosWidth * width),
+				   static_cast<float>(windowHeight) / 2.0f - (screenPosHeight * height)};
+}
 
-				
+void Character::resetScreenPosHeight()
+{
+	if(screenPosHeight < 0.5){
+		screenPosHeight += 0.02;
+	}
 }
 
 void Character::tick(float deltaTime)
@@ -116,7 +121,6 @@ void Character::tick(float deltaTime)
 
 			DrawTexturePro(currentDagger, source, destDagger, origin, 0.f, WHITE);
 
-			
 			DrawRectangleLines(
 				daggerCollisionRec.x,
 				daggerCollisionRec.y,
