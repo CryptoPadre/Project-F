@@ -303,6 +303,13 @@ int main()
 	bool wasInTemple{};
 	bool talkedToBoydAfterFight{};
 
+	bool increaseHeight{};
+	bool decreaseHeight{};
+	bool increaseWidth{};
+	bool decreaseWidth{};
+	bool resetHeight{};
+	bool resetWidth{};
+
 	hero.setHasDagger(hasDagger);
 	typedef struct
 	{
@@ -500,6 +507,30 @@ int main()
 			npcs[6]->addDialog(jadeDialogTwo);
 			jadeDialogTwoAdded = true;
 		}
+		if (increaseHeight)
+		{
+			hero.incrementScreenPosHeight();
+		}
+		if (decreaseHeight)
+		{
+			hero.descreaseScreenPosHeight();
+		}
+		if (increaseWidth)
+		{
+			hero.incrementScreenPosWidth();
+		}
+		if (decreaseWidth)
+		{
+			hero.descreaseScreenPosWidth();
+		}
+		if (resetHeight)
+		{
+			hero.resetScreenPosHeight();
+		}
+		if (resetWidth)
+		{
+			hero.resetScreenPosWidth();
+		}
 		// Beginning of the game
 		if (isInMainMenu)
 		{
@@ -568,7 +599,8 @@ int main()
 			}
 			if (hero.getWorldPos().y >= 1410)
 			{
-				hero.descreaseScreenPosHeight();
+				resetHeight = false;
+				decreaseHeight = true;
 				if (startMapCounter > 0 && !hasBattery)
 				{
 					conversation("I should get those batteries!", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -580,11 +612,15 @@ int main()
 						isGameStart = false;
 						isInTown = true;
 						hero.setWorldPos(90.f, 1100.f);
+						hero.setScreenPosHeight();
+						increaseWidth = true;
 					}
 				}
 			}
-			if(hero.getWorldPos().y < 1410) {
-				hero.resetScreenPosHeight();
+			if (hero.getWorldPos().y < 1410)
+			{
+				decreaseHeight = false;
+				resetHeight = true;
 			}
 			if (hero.getWorldPos().x > 145 && hero.getWorldPos().x < 300 && hero.getWorldPos().y < 285)
 			{
@@ -748,16 +784,23 @@ int main()
 				}
 			}
 
-			if (hero.getWorldPos().x < 80 &&
+			if (hero.getWorldPos().x < 50 &&
 				hero.getWorldPos().y > town_exit_height_min &&
 				hero.getWorldPos().y < town_exit_height_max)
 			{
+
+				increaseWidth = true;
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = true;
 					isInTown = false;
 					hero.setWorldPos(300.f, 1400.f);
+					hero.setScreenPosWidth();
 				}
+			}
+			if (hero.getWorldPos().x > 100){
+				increaseWidth = false;
+				resetWidth = true;
 			}
 			if (hero.getWorldPos().x > town_exit_width_min &&
 				hero.getWorldPos().y > town_exit_height_min && hero.getWorldPos().y < town_exit_height_max)
@@ -784,6 +827,7 @@ int main()
 							isOutsideTown = true;
 							isInTown = false;
 							hero.setWorldPos(340.f, 188.f);
+							hero.setScreenPosWidth();
 						}
 					}
 					else
@@ -793,6 +837,7 @@ int main()
 							isOutsideTown = true;
 							isInTown = false;
 							hero.setWorldPos(340.f, 188.f);
+							hero.setScreenPosWidth();
 						}
 					}
 				}
@@ -803,8 +848,7 @@ int main()
 			{
 				props[i].Render(hero.getWorldPos());
 			}
-			// hero.getWorldPos().x < 12 ||
-			if (hero.getWorldPos().y < 165 || hero.getWorldPos().y > 1411 ||
+			if (hero.getWorldPos().y < 165 || hero.getWorldPos().y > 1411 || hero.getWorldPos().x < 12 ||
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
 				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale)
 			{

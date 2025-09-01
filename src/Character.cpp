@@ -18,8 +18,25 @@ Vector2 Character::getScreenPos()
 
 void Character::resetScreenPosHeight()
 {
-	if(screenPosHeight < 0.5){
-		screenPosHeight += 0.02;
+	if (screenPosHeight < 0.5)
+	{
+		screenPosHeight += 0.01;
+	}
+	else if (screenPosHeight > 0.5)
+	{
+		screenPosHeight -= 0.01;
+	}
+}
+
+void Character::resetScreenPosWidth()
+{
+	if (screenPosWidth < 0.5)
+	{
+		screenPosWidth += 0.01;
+	}
+	else if (screenPosWidth > 0.5)
+	{
+		screenPosWidth -= 0.01;
 	}
 }
 

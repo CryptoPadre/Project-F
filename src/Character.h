@@ -13,10 +13,12 @@ public:
 	Rectangle getDaggerCollisionRec(){ return daggerCollisionRec;}
 	void incrementScreenPosWidth(){if (screenPosWidth < -5.5){ screenPosWidth += 0.05;};}
 	void descreaseScreenPosWidth(){if (screenPosWidth > -5.5){ screenPosWidth -= 0.05;};}
-	// void resetScreenPosWidth();
+	void resetScreenPosWidth();
+	void setScreenPosWidth(){ screenPosWidth = 0.5;}
 	void incrementScreenPosHeight(){if(screenPosHeight < -2.5){ screenPosHeight += 0.05;};}
 	void descreaseScreenPosHeight(){if(screenPosHeight > -2.5){ screenPosHeight -= 0.05;};}
 	void resetScreenPosHeight();
+	void setScreenPosHeight(){ screenPosHeight = 0.5;}
 	float getScreenPosWidth(){return screenPosWidth;}
 	float getScreePosHeight(){return screenPosHeight;}
 
