@@ -596,11 +596,16 @@ int main()
 				hero.getWorldPos().y > 1415)
 			{
 				hero.undoMovement();
+				decreaseHeight = true;
+				resetHeight = false;
+			}
+			else
+			{
+				decreaseHeight = false;
+				resetHeight = true;
 			}
 			if (hero.getWorldPos().y >= 1410)
 			{
-				resetHeight = false;
-				decreaseHeight = true;
 				if (startMapCounter > 0 && !hasBattery)
 				{
 					conversation("I should get those batteries!", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -616,11 +621,6 @@ int main()
 						increaseWidth = true;
 					}
 				}
-			}
-			if (hero.getWorldPos().y < 1410)
-			{
-				decreaseHeight = false;
-				resetHeight = true;
 			}
 			if (hero.getWorldPos().x > 145 && hero.getWorldPos().x < 300 && hero.getWorldPos().y < 285)
 			{
@@ -783,28 +783,33 @@ int main()
 					PlayMapMusic(5);
 				}
 			}
-
-			if (hero.getWorldPos().x < 50 &&
+			if (hero.getWorldPos().x < 12 &&
 				hero.getWorldPos().y > town_exit_height_min &&
 				hero.getWorldPos().y < town_exit_height_max)
 			{
 
 				increaseWidth = true;
+				resetWidth = false;
+				hero.undoMovement();
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = true;
 					isInTown = false;
 					hero.setWorldPos(300.f, 1400.f);
 					hero.setScreenPosWidth();
+					increaseWidth = false;
 				}
 			}
-			if (hero.getWorldPos().x > 100){
+			else {
 				increaseWidth = false;
 				resetWidth = true;
 			}
 			if (hero.getWorldPos().x > town_exit_width_min &&
 				hero.getWorldPos().y > town_exit_height_min && hero.getWorldPos().y < town_exit_height_max)
 			{
+				hero.undoMovement();
+				decreaseWidth = true;
+				resetWidth = false;
 				if (!hasStarted)
 				{
 					conversation("I shoud look around in town.", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -828,6 +833,7 @@ int main()
 							isInTown = false;
 							hero.setWorldPos(340.f, 188.f);
 							hero.setScreenPosWidth();
+							decreaseWidth = false;
 						}
 					}
 					else
@@ -838,11 +844,15 @@ int main()
 							isInTown = false;
 							hero.setWorldPos(340.f, 188.f);
 							hero.setScreenPosWidth();
+							decreaseWidth = false;
 						}
 					}
 				}
 			}
-
+			else {
+				decreaseWidth = false;
+				resetWidth = true;
+			}
 			// draw props
 			for (int i = 0; i < 4; i++)
 			{
@@ -852,7 +862,6 @@ int main()
 				hero.getWorldPos().x + screenWidth > maps[0].width * mapScale ||
 				hero.getWorldPos().y + screenHeight > maps[0].height * mapScale)
 			{
-
 				hero.undoMovement();
 			}
 			if (hero.getScreenPos().y < npcs[0]->getScreenPos().y)
@@ -1677,6 +1686,7 @@ int main()
 			}
 			if (hero.getWorldPos().y < 10 && hero.getWorldPos().x < 600)
 			{
+
 				if (IsKeyPressed(KEY_E))
 				{
 					isOutsideTown = false;

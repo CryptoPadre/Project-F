@@ -11,12 +11,12 @@ public:
 	virtual Vector2 getScreenPos() override;
 	void setHasDagger(bool foundDagger) { hasDagger = foundDagger; }
 	Rectangle getDaggerCollisionRec(){ return daggerCollisionRec;}
-	void incrementScreenPosWidth(){if (screenPosWidth < -5.5){ screenPosWidth += 0.05;};}
-	void descreaseScreenPosWidth(){if (screenPosWidth > -5.5){ screenPosWidth -= 0.05;};}
+	void incrementScreenPosWidth(){if (screenPosWidth < 6.f && IsKeyDown(KEY_A)){ screenPosWidth += 0.05;};}
+	void descreaseScreenPosWidth(){if (screenPosWidth > -6.f && IsKeyDown(KEY_D)){ screenPosWidth -= 0.05;};}
 	void resetScreenPosWidth();
 	void setScreenPosWidth(){ screenPosWidth = 0.5;}
-	void incrementScreenPosHeight(){if(screenPosHeight < -2.5){ screenPosHeight += 0.05;};}
-	void descreaseScreenPosHeight(){if(screenPosHeight > -2.5){ screenPosHeight -= 0.05;};}
+	void incrementScreenPosHeight(){if(screenPosHeight < 2.5 && IsKeyDown(KEY_W)){ screenPosHeight += 0.05;};}
+	void descreaseScreenPosHeight(){if(screenPosHeight > -2.5 && IsKeyDown(KEY_S)){ screenPosHeight -= 0.05;};}
 	void resetScreenPosHeight();
 	void setScreenPosHeight(){ screenPosHeight = 0.5;}
 	float getScreenPosWidth(){return screenPosWidth;}

@@ -18,25 +18,45 @@ Vector2 Character::getScreenPos()
 
 void Character::resetScreenPosHeight()
 {
-	if (screenPosHeight < 0.5)
+	if (fabs(screenPosHeight - 0.5f) < 0.05f)
 	{
-		screenPosHeight += 0.01;
+		screenPosHeight = 0.5f;
 	}
-	else if (screenPosHeight > 0.5)
+	else if (screenPosHeight < 0.5f)
 	{
-		screenPosHeight -= 0.01;
+		if (IsKeyDown(KEY_W))
+		{
+			screenPosHeight += 0.02f;
+		}
+	}
+	else if (screenPosHeight > 0.5f)
+	{
+		if (IsKeyDown(KEY_S))
+		{
+			screenPosHeight -= 0.02f;
+		}
 	}
 }
 
 void Character::resetScreenPosWidth()
 {
-	if (screenPosWidth < 0.5)
+	if (fabs(screenPosWidth - 0.5f) < 0.04f)
 	{
-		screenPosWidth += 0.01;
+		screenPosWidth = 0.5f;
 	}
-	else if (screenPosWidth > 0.5)
+	else if (screenPosWidth < 0.5f)
 	{
-		screenPosWidth -= 0.01;
+		if (IsKeyDown(KEY_A))
+		{
+			screenPosWidth += 0.04f;
+		}
+	}
+	else if (screenPosWidth > 0.5f)
+	{
+		if (IsKeyDown(KEY_D))
+		{
+			screenPosWidth -= 0.04f;
+		}
 	}
 }
 
