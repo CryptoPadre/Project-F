@@ -342,7 +342,7 @@ int main()
 		{"Created by Tamas Gavlider", 30, RED, 110},
 		{"Music from Pixabay.com", 20, RED, 40},
 		{"Graphics are not created or owned by me.", 20, RED, 40},
-		{"Graphics were used from Itch.io, Pinterest,", 20, RED, 40},
+		{"Graphics were used from Itch.io, Pinterest, Craftpix.net", 20, RED, 40},
 		{"or generated with ChatGPT.", 20, RED, 40},
 		{"Playable character, NPCs, enemies were", 20, RED, 40},
 		{"created via Liberated Pixel Cup generator:", 20, RED, 40},
@@ -606,7 +606,7 @@ int main()
 			}
 			if (hero.getWorldPos().y >= 1410)
 			{
-				if (startMapCounter > 0 && !hasBattery)
+				if (metJade && !hasBattery)
 				{
 					conversation("I should get those batteries!", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
@@ -618,7 +618,7 @@ int main()
 						isInTown = true;
 						hero.setWorldPos(90.f, 1100.f);
 						hero.setScreenPosHeight();
-						increaseWidth = true;
+						decreaseHeight = false;
 					}
 				}
 			}
@@ -783,14 +783,21 @@ int main()
 					PlayMapMusic(5);
 				}
 			}
-			if (hero.getWorldPos().x < 12 &&
+			if (!hero.getAlive())
+			{
+				deathTimer++;
+				if (deathTimer == 600)
+				{
+					isInTown = false;
+					isGameOver = true;
+				}
+			}
+			if (hero.getWorldPos().x < 30 &&
 				hero.getWorldPos().y > town_exit_height_min &&
 				hero.getWorldPos().y < town_exit_height_max)
 			{
-
 				increaseWidth = true;
 				resetWidth = false;
-				hero.undoMovement();
 				if (IsKeyPressed(KEY_E))
 				{
 					isGameStart = true;
@@ -800,16 +807,19 @@ int main()
 					increaseWidth = false;
 				}
 			}
-			else {
+			else
+			{
 				increaseWidth = false;
 				resetWidth = true;
 			}
 			if (hero.getWorldPos().x > town_exit_width_min &&
 				hero.getWorldPos().y > town_exit_height_min && hero.getWorldPos().y < town_exit_height_max)
 			{
-				hero.undoMovement();
 				decreaseWidth = true;
 				resetWidth = false;
+				if(IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S)){
+					hero.undoMovement();
+				}
 				if (!hasStarted)
 				{
 					conversation("I shoud look around in town.", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -849,9 +859,15 @@ int main()
 					}
 				}
 			}
-			else {
+			else
+			{
 				decreaseWidth = false;
 				resetWidth = true;
+			}
+			if(decreaseWidth || increaseWidth){
+				if(IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S)){
+					hero.undoMovement();
+				}
 			}
 			// draw props
 			for (int i = 0; i < 4; i++)
@@ -916,16 +932,6 @@ int main()
 					{
 						hero.setAlive(false);
 					}
-					if (!hero.getAlive())
-					{
-						deathTimer++;
-						isDayTime = false;
-						if (deathTimer == 600)
-						{
-							isInTown = false;
-							isGameOver = true;
-						}
-					}
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 					{
 						enemies[i]->setHitCounter();
@@ -985,6 +991,8 @@ int main()
 						isInTown = false;
 						hero.setWorldPos(-70.f, 320.f);
 						interactionWithDoors = 0;
+						hero.setScreenPosWidth();
+						decreaseWidth = false;
 					}
 					else
 					{
@@ -1020,6 +1028,8 @@ int main()
 						hero.setWorldPos(0.f, 270.f);
 						interactionWithDoors = 0;
 						wasInTemple = true;
+						hero.setScreenPosWidth();
+						decreaseWidth = false;
 					}
 				}
 			}
@@ -1040,6 +1050,8 @@ int main()
 						isInTown = false;
 						hero.setWorldPos(-387.f, 320.f);
 						interactionWithDoors = 0;
+						hero.setScreenPosWidth();
+						decreaseWidth = false;
 					}
 				}
 			}
@@ -1065,6 +1077,8 @@ int main()
 						isInTown = false;
 						isInSecretRoom = true;
 						hero.setWorldPos(-294.f, 56.f);
+						hero.setScreenPosWidth();
+						decreaseWidth = false;
 					}
 				}
 			}
@@ -1563,7 +1577,7 @@ int main()
 			{
 				PlayMapMusic(12);
 			}
-			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 | hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0 ||
+			if (hero.getWorldPos().x < 70 || hero.getWorldPos().x > 1043 || hero.getWorldPos().y > 1408 || hero.getWorldPos().y < 0 ||
 				hero.getWorldPos().x > 675 && hero.getWorldPos().y < 235)
 			{
 				hero.undoMovement();
@@ -1667,6 +1681,8 @@ int main()
 			if (
 				hero.getWorldPos().x < 560 && hero.getWorldPos().y > 1350)
 			{
+				decreaseHeight = true;
+				resetHeight = false;
 				if (IsKeyPressed(KEY_E))
 				{
 					if (metJade && !hasBattery)
@@ -1675,25 +1691,49 @@ int main()
 						isGameStart = true;
 						hero.setWorldPos(400.f, 1330.f);
 						startMapCounter++;
+						hero.setScreenPosHeight();
+						decreaseHeight = false;
 					}
 					else
 					{
 						isOutsideTown = false;
 						isInTown = true;
 						hero.setWorldPos(1700, 1150);
+						hero.setScreenPosHeight();
+						decreaseHeight = false;
 					}
+				}
+			}
+			else
+			{
+				decreaseHeight = false;
+				resetHeight = true;
+			}
+			if (decreaseHeight || increaseHeight)
+			{
+				if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D))
+				{
+					hero.undoMovement();
 				}
 			}
 			if (hero.getWorldPos().y < 10 && hero.getWorldPos().x < 600)
 			{
-
+				increaseHeight = true;
+				resetHeight = false;
 				if (IsKeyPressed(KEY_E))
 				{
 					isOutsideTown = false;
 					isGameStart = true;
 					hero.setWorldPos(400.f, 1330.f);
 					startMapCounter++;
+					hero.setScreenPosHeight();
+					increaseHeight = false;
 				}
+			}
+			else
+			{
+				increaseHeight = false;
+				resetHeight = true;
 			}
 			if (hero.getWorldPos().x > 840 && hero.getWorldPos().x < 920 && hero.getWorldPos().y < 270 && outsideHouseCounter <= interactionWithHouseOutsideTown.size() - 1)
 			{
@@ -1734,6 +1774,15 @@ int main()
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
+			if (!hero.getAlive())
+			{
+				deathTimer++;
+				if (deathTimer == 600)
+				{
+					isOutsideCave = false;
+					isGameOver = true;
+				}
+			}
 			if (!isDayTime)
 			{
 				props[8].Render(hero.getWorldPos());
@@ -1753,15 +1802,6 @@ int main()
 					if (CheckCollisionRecs(enemies[1]->GetCollisionRec(), hero.GetCollisionRec()) && enemies[1]->getAlive())
 					{
 						hero.setAlive(false);
-					}
-					if (!hero.getAlive())
-					{
-						deathTimer++;
-						if (deathTimer == 600)
-						{
-							isOutsideCave = false;
-							isGameOver = true;
-						}
 					}
 					if (hasDagger)
 					{
@@ -1887,6 +1927,7 @@ int main()
 			}
 			if (hero.getWorldPos().x > 1270 && hero.getWorldPos().y > 720 && hero.getWorldPos().y < 840)
 			{
+
 				if (npcs[3]->getAlive() && metJade && !talkedToKid)
 				{
 					conversation("I need to get that flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -2017,6 +2058,12 @@ int main()
 			}
 			if (hero.getWorldPos().y > 2360 && hero.getWorldPos().x > 830 && hero.getWorldPos().x < 899)
 			{
+				decreaseHeight = true;
+				resetHeight = false;
+				if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D))
+				{
+					hero.undoMovement();
+				}
 				conversation("An exit!!!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))
 				{
@@ -2025,7 +2072,14 @@ int main()
 					npcs[3]->setWorldPos(750.f, 1000.f);
 					yellow.addDialog(yellowDialogBeforeFight);
 					hero.setWorldPos(282.f, 12.f);
+					hero.setScreenPosHeight();
+					decreaseHeight = false;
 				}
+			}
+			else
+			{
+				decreaseHeight = false;
+				resetHeight = true;
 			}
 			if (npcs[3]->getAlive())
 			{
@@ -2193,14 +2247,15 @@ int main()
 					currentY += lineSpacing + dialog[i].extraSpacing;
 				}
 
-				// move upward
 				introY -= 1;
 
-				// optional: when all text scrolled off screen, reset or trigger next scene
 				if (currentY < 0)
 				{
-					// e.g., switch state, reset introY, etc.
-					// introY = GetScreenHeight();
+					deathTimer++;
+					if (deathTimer == 100)
+					{
+						break;
+					}
 				}
 			}
 			else
@@ -2412,6 +2467,11 @@ int main()
 
 			if (currentY < 0)
 			{
+				deathTimer++;
+				if (deathTimer == 100)
+				{
+					break;
+				}
 			}
 		}
 		else if (isEndGame)
@@ -2528,10 +2588,6 @@ int main()
 				}
 			}
 		}
-
-		DrawText(TextFormat("Time %.2f", time), 50, 50, 20, RED);
-		DrawText(TextFormat("Days Survived: %i", daysSurvived), 150, 50, 20, RED);
-		DrawText(TextFormat("Random value: %d", randomValue), 190, 200, 20, RED);
 
 		if (hasTalisman)
 		{
