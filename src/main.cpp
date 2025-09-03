@@ -536,7 +536,6 @@ int main()
 		{
 			PlayMapMusic(10);
 			DrawText(title, screenWidth / 2 - titleWidth / 2, 50, fontSize, RED);
-			DrawText("How to Play", 180, 160, 30, RED);
 			DrawText("W - Up", 210, 210, 20, RED);
 			DrawText("S - Down", 210, 310, 20, RED);
 			DrawText("A - Left", 120, 260, 20, RED);
@@ -571,7 +570,14 @@ int main()
 		}
 		else if (isGameStart)
 		{
-			PlayMapMusic(0);
+			if (npcs[3]->getAlive())
+			{
+				PlayMapMusic(0);
+			}
+			else
+			{
+				PlayMapMusic(12);
+			}
 			if (isDayTime)
 			{
 				DrawTextureEx(maps[5], startPos, 0.0, mapScale, WHITE);
@@ -619,14 +625,23 @@ int main()
 						hero.setWorldPos(90.f, 1100.f);
 						hero.setScreenPosHeight();
 						decreaseHeight = false;
+						if (metYellow)
+						{
+							enemies[0]->setWorldPos(1500.f, 1200.f);
+							enemies[1]->setWorldPos(1000.f, 1000.f);
+							enemies[2]->setWorldPos(1700.f, 1400.f);
+						}
 					}
 				}
 			}
 			if (hero.getWorldPos().x > 145 && hero.getWorldPos().x < 300 && hero.getWorldPos().y < 285)
 			{
-				if (heroStartMapCounter < heroTextStartMap.size() && !metJade)
+				if (!metJade)
 				{
-					conversation(heroTextStartMap[heroStartMapCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+					if (heroStartMapCounter < heroTextStartMap.size())
+					{
+						conversation(heroTextStartMap[heroStartMapCounter], hero.getScreenPos().x, hero.getScreenPos().y);
+					}
 					if (IsKeyPressed(KEY_E))
 					{
 
@@ -669,7 +684,7 @@ int main()
 					{
 						npcs[3]->setInteractionCount();
 					}
-					if (hero.getWorldPos().y > 350.f && hero.getWorldPos().y < 400.f && yellowWarningCounter <= yellowWarning.size())
+					if (hero.getWorldPos().y < 380.f && yellowWarningCounter <= yellowWarning.size())
 					{
 						conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 					}
@@ -695,7 +710,7 @@ int main()
 					if (!hero.getAlive())
 					{
 						deathTimer++;
-						if (deathTimer == 600)
+						if (deathTimer == 400)
 						{
 							isInTown = false;
 							isGameOver = true;
@@ -714,11 +729,11 @@ int main()
 					{
 						npcs[3]->setInteractionCount();
 					}
-					if (hero.getWorldPos().y > 420.f && hero.getWorldPos().y < 520.f && yellowWarningCounter <= yellowWarning.size())
+					if (hero.getWorldPos().y < 380.f && yellowWarningCounter <= yellowWarning.size())
 					{
 						conversation(yellowWarning[yellowWarningCounter], npcs[3]->getScreenPos().x, npcs[3]->getScreenPos().y);
 					}
-					if (hero.getWorldPos().y < 370.f)
+					if (hero.getWorldPos().y < 300.f)
 					{
 						npcs[3]->setAttack(true);
 						yellowWarningCounter++;
@@ -740,7 +755,7 @@ int main()
 					if (!hero.getAlive())
 					{
 						deathTimer++;
-						if (deathTimer == 600)
+						if (deathTimer == 400)
 						{
 							isInTown = false;
 							isGameOver = true;
@@ -786,7 +801,7 @@ int main()
 			if (!hero.getAlive())
 			{
 				deathTimer++;
-				if (deathTimer == 600)
+				if (deathTimer == 400)
 				{
 					isInTown = false;
 					isGameOver = true;
@@ -817,7 +832,8 @@ int main()
 			{
 				decreaseWidth = true;
 				resetWidth = false;
-				if(IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S)){
+				if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S))
+				{
 					hero.undoMovement();
 				}
 				if (!hasStarted)
@@ -864,8 +880,10 @@ int main()
 				decreaseWidth = false;
 				resetWidth = true;
 			}
-			if(decreaseWidth || increaseWidth){
-				if(IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S)){
+			if (decreaseWidth || increaseWidth)
+			{
+				if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S))
+				{
 					hero.undoMovement();
 				}
 			}
@@ -977,7 +995,7 @@ int main()
 			if (hero.getWorldPos().x >= house_two_entry_width_min && hero.getWorldPos().x <= house_two_entry_width_max &&
 				hero.getWorldPos().y <= house_two_entry_height)
 			{
-				if (npcs[0]->getAlive())
+				if (npcs[0]->getAlive() && !talkedToWoman)
 				{
 					conversation(heroInteractionWithDoors[interactionWithDoors], hero.getScreenPos().x, hero.getScreenPos().y);
 				}
@@ -1089,7 +1107,14 @@ int main()
 			switch (currentInterior)
 			{
 			case HOUSE_ONE:
-				PlayMapMusic(7);
+				if (npcs[3]->getAlive())
+				{
+					PlayMapMusic(7);
+				}
+				else
+				{
+					PlayMapMusic(12);
+				}
 				DrawTextureEx(maps[8], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -450 || hero.getWorldPos().x > 156 ||
 					hero.getWorldPos().y > 320 || hero.getWorldPos().y < -230 ||
@@ -1175,7 +1200,10 @@ int main()
 				}
 				if (hero.getWorldPos().x < -420 && hero.getWorldPos().y < -185)
 				{
-					conversation("Is anybody upstairs?", hero.getScreenPos().x, hero.getScreenPos().y);
+					if (!hasMedkit)
+					{
+						conversation("Is anybody upstairs?", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
 					if (IsKeyPressed(KEY_E))
 					{
 						isUpstairs = true;
@@ -1222,6 +1250,10 @@ int main()
 				if (hero.getWorldPos().x >= -134 && hero.getWorldPos().x <= -23 &&
 					hero.getWorldPos().y >= 310)
 				{
+					if (!isDayTime)
+					{
+						conversation("They are outside!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
 					if (IsKeyPressed(KEY_E))
 					{
 						isInside = false;
@@ -1277,7 +1309,7 @@ int main()
 					if (!hero.getAlive())
 					{
 						deathTimer++;
-						if (deathTimer == 600)
+						if (deathTimer == 400)
 						{
 							isInside = false;
 							currentInterior = NONE;
@@ -1358,7 +1390,14 @@ int main()
 				}
 				break;
 			case TEMPLE:
-				PlayMapMusic(7);
+				if (npcs[3]->getAlive())
+				{
+					PlayMapMusic(7);
+				}
+				else
+				{
+					PlayMapMusic(12);
+				}
 				DrawTextureEx(maps[2], interiorPos, 0.0, 1.5, WHITE);
 				if (hero.getWorldPos().x < -390 || hero.getWorldPos().x > 102 ||
 					hero.getWorldPos().y > 270 || hero.getWorldPos().y < -200 ||
@@ -1370,6 +1409,10 @@ int main()
 				if (hero.getWorldPos().x >= -28 && hero.getWorldPos().x <= 28 &&
 					hero.getWorldPos().y >= 260)
 				{
+					if (!isDayTime)
+					{
+						conversation("They are outside!", hero.getScreenPos().x, hero.getScreenPos().y);
+					}
 					if (hasTempleKey)
 					{
 						if (IsKeyPressed(KEY_E))
@@ -1651,8 +1694,8 @@ int main()
 						{
 							npcs[1]->setWorldPos(1450.f, 2270.f);
 						}
-						enemies[1]->setWorldPos(150.f, 700.f);
-						enemies[0]->setWorldPos(150.f, 850.f);
+						enemies[1]->setWorldPos(0.f, 1550.f);
+						enemies[0]->setWorldPos(0.f, 1250.f);
 					}
 				}
 				else
@@ -1777,7 +1820,7 @@ int main()
 			if (!hero.getAlive())
 			{
 				deathTimer++;
-				if (deathTimer == 600)
+				if (deathTimer == 400)
 				{
 					isOutsideCave = false;
 					isGameOver = true;
@@ -1823,7 +1866,7 @@ int main()
 			{
 				hero.undoMovement();
 			}
-			if (metYellow && wasInCave && npcs[6]->getAlive())
+			if (metYellow && wasInCave && npcs[6]->getAlive() && hero.getSpeed() == 3)
 			{
 				npcs[6]->tick(GetFrameTime());
 				npcs[6]->talk();
@@ -1931,21 +1974,25 @@ int main()
 				if (npcs[3]->getAlive() && metJade && !talkedToKid)
 				{
 					conversation("I need to get that flashlight!", hero.getScreenPos().x, hero.getScreenPos().y);
-					if (IsKeyPressed(KEY_E))
-					{
-						isOutsideCave = false;
-						isOutsideTown = true;
-						hero.setWorldPos(90.f, 750.f);
-					}
 				}
-				if (!wasInCave)
+				else if (!wasInCave && metYellow)
 				{
 					conversation("What could be in that cave?", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				else if (!metYellow)
+				{
+					conversation("What is this place?", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+				if (IsKeyPressed(KEY_E))
+				{
+					isOutsideCave = false;
+					isOutsideTown = true;
+					hero.setWorldPos(90.f, 750.f);
 				}
 			}
 			if (hero.getWorldPos().x > 930 && hero.getWorldPos().x < 1040 && hero.getWorldPos().y > 1830 && hero.getWorldPos().y < 1910)
 			{
-				if (hasScroll && talkedToKid && npcs[3]->getAlive())
+				if (talkedToKid && npcs[3]->getAlive())
 				{
 					conversation("Would it be the exit?", hero.getScreenPos().x, hero.getScreenPos().y);
 					if (IsKeyPressed(KEY_E))
@@ -2093,7 +2140,7 @@ int main()
 					if (!hero.getAlive())
 					{
 						deathTimer++;
-						if (deathTimer == 600)
+						if (deathTimer == 400)
 						{
 							isInCave = false;
 							isGameOver = true;
@@ -2145,6 +2192,8 @@ int main()
 						isInCave = false;
 						currentInterior = HOUSE_TWO;
 						isInside = true;
+						hero.setScreenPosHeight();
+						decreaseHeight = false;
 						hero.setWorldPos(0.f, 180.f);
 						npcs[0]->setWorldPos(180.f, 420.f);
 						npcs[0]->setCanAttack(false);
@@ -2176,7 +2225,7 @@ int main()
 			if (!hero.getAlive() && npcs[3]->getAlive())
 			{
 				deathTimer++;
-				if (deathTimer == 600)
+				if (deathTimer == 400)
 				{
 					isInTown = false;
 					isGameOver = true;
@@ -2227,10 +2276,32 @@ int main()
 				DrawTextureEx(maps[15], gameOverScreenPos, 0.0, 2.f, WHITE);
 				DrawText("You may escape in another life.", screenWidth / 6, screenHeight / 2, 40, RED);
 				PlayMapMusic(0);
+				hasBattery = false;
+				hasDagger = false;
+				hasKey = false;
+				hasTalisman = false;
+				hasTempleKey = false;
+				hasFlashlight = false;
+				hasRustyKey = false;
+				hasScroll = false;
+				hasTempleKey = false;
+				deathTimer++;
+				if (deathTimer > 600)
+				{
+					break;
+				}
 			}
-			else if (talkedToKid && npcs[3]->getAlive() && !hasScroll)
+			else if (talkedToKid && npcs[3]->getAlive() && npcs[6]->getAlive())
 			{
-
+				hasBattery = false;
+				hasDagger = false;
+				hasKey = false;
+				hasTalisman = false;
+				hasTempleKey = false;
+				hasFlashlight = false;
+				hasRustyKey = false;
+				hasScroll = false;
+				hasTempleKey = false;
 				PlayMapMusic(1);
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
 				// Scrolling text
@@ -2309,6 +2380,11 @@ int main()
 				{
 					conversation("Who locked this door?", hero.getScreenPos().x, hero.getScreenPos().y);
 				}
+				else if (!isDayTime && doorUnlocked)
+				{
+					conversation("They are outside!", hero.getScreenPos().x, hero.getScreenPos().y);
+				}
+
 				if (IsKeyPressed(KEY_E))
 				{
 					isInSecretRoom = false;
@@ -2355,7 +2431,14 @@ int main()
 		}
 		else if (isInSarasHouse)
 		{
-			PlayMapMusic(9);
+			if (npcs[3]->getAlive())
+			{
+				PlayMapMusic(9);
+			}
+			else
+			{
+				PlayMapMusic(12);
+			}
 			DrawTextureEx(maps[18], interiorPos, 0.0, 2.f, WHITE);
 			props[22].Render(hero.getWorldPos());
 			hero.tick(GetFrameTime());
@@ -2565,7 +2648,7 @@ int main()
 				if (!hero.getAlive())
 				{
 					deathTimer++;
-					if (deathTimer == 600)
+					if (deathTimer == 400)
 					{
 						isEndGame = false;
 						isGameOver = true;
@@ -2652,6 +2735,7 @@ int main()
 			Vector2 batteriesPos = {410.f, (float)GetScreenHeight() - tex.height * scale - 10.f};
 			DrawTextureEx(tex, batteriesPos, 0.f, scale, WHITE);
 		}
+
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
 	}

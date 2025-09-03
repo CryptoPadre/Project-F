@@ -104,7 +104,6 @@ inline std::vector<std::string> kidDialogScroll = {
 
 inline std::vector<std::string> yellowDialogStartMap = {
     "You don't remember me, do you?",
-    "Of course not. No one ever does.",
     "You did this to yourself.",
     "You arrived early.",
     "Boyd knows... but he doesn't remember.",
