@@ -790,7 +790,7 @@ int main()
 					isGameOver = true;
 				}
 			}
-			if (hero.getWorldPos().x < 30 &&
+			if (hero.getWorldPos().x < 20 &&
 				hero.getWorldPos().y > town_exit_height_min &&
 				hero.getWorldPos().y < town_exit_height_max)
 			{
@@ -815,10 +815,7 @@ int main()
 			{
 				decreaseWidth = true;
 				resetWidth = false;
-				if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S))
-				{
-					hero.undoMovement();
-				}
+
 				if (!hasStarted)
 				{
 					conversation("I shoud look around in town.", hero.getScreenPos().x, hero.getScreenPos().y);
@@ -863,7 +860,7 @@ int main()
 				decreaseWidth = false;
 				resetWidth = true;
 			}
-			if (decreaseWidth || increaseWidth)
+			if (decreaseWidth || hero.getScreenPosWidth() > 2.0)
 			{
 				if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_S))
 				{
@@ -1053,6 +1050,7 @@ int main()
 						interactionWithDoors = 0;
 						hero.setScreenPosWidth();
 						decreaseWidth = false;
+						enemies[1]->setWorldPos(500.f, 1500.f);
 					}
 				}
 			}
@@ -1292,7 +1290,7 @@ int main()
 							conversation("Daaaad...", npcs[5]->getScreenPos().x + 30, npcs[5]->getScreenPos().y + 20);
 						}
 					}
-					if (npcs[5]->getAlive())
+					if (npcs[5]->getAlive() && npcs[5]->getCanAttack())
 					{
 						if (CheckCollisionRecs(npcs[5]->GetCollisionRec(), hero.GetCollisionRec()))
 						{
@@ -1745,9 +1743,9 @@ int main()
 				decreaseHeight = false;
 				resetHeight = true;
 			}
-			if (decreaseHeight || increaseHeight)
+			if (increaseHeight || decreaseHeight)
 			{
-				if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D))
+				if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_D) || IsKeyDown(KEY_A) || IsKeyDown(KEY_D))
 				{
 					hero.undoMovement();
 				}
@@ -2100,9 +2098,12 @@ int main()
 			{
 				decreaseHeight = true;
 				resetHeight = false;
-				if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D))
+				if (hero.getScreePosHeight() < 0.5)
 				{
-					hero.undoMovement();
+					if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_D))
+					{
+						hero.undoMovement();
+					}
 				}
 				conversation("An exit!!!", hero.getScreenPos().x, hero.getScreenPos().y);
 				if (IsKeyPressed(KEY_E))

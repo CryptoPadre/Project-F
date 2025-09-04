@@ -1,14 +1,14 @@
 #include "Prop.h"
 #include "raymath.h"
 
-Prop::Prop(Vector2 pos, Texture2D tex, float scale, bool building, int heightA,int heightB, int widthA, int widthB) : worldPos(pos),
-                                                                     texture(tex),
-                                                                     scale(scale),
-                                                                     isBuilding(building),
-                                                                     adjustmentHeightA(heightA),
-                                                                     adjustmentHeightB(heightB),
-                                                                     adjustmentWidthA(widthA),
-                                                                     adjustmentWidthB(widthB)
+Prop::Prop(Vector2 pos, Texture2D tex, float scale, bool building, int heightA, int heightB, int widthA, int widthB) : worldPos(pos),
+                                                                                                                       texture(tex),
+                                                                                                                       scale(scale),
+                                                                                                                       isBuilding(building),
+                                                                                                                       adjustmentHeightA(heightA),
+                                                                                                                       adjustmentHeightB(heightB),
+                                                                                                                       adjustmentWidthA(widthA),
+                                                                                                                       adjustmentWidthB(widthB)
 
 {
 };
@@ -19,8 +19,10 @@ void Prop::Render(Vector2 heroPos)
     float totalWidth = texture.width * scale;
     float totalHeight = texture.height * scale;
     DrawTextureEx(texture, screenPos, 0.f, scale, WHITE);
+    /*
     if (isBuilding)
     {
+
         DrawRectangleLines(
             screenPos.x + adjustmentWidthA, // modify width by adding adjustmentWidthA
             screenPos.y + totalHeight * 0.6f - adjustmentHeightA, // lower half
@@ -38,6 +40,7 @@ void Prop::Render(Vector2 heroPos)
             trunkHeight + adjustmentHeightB,
             BLUE);
     }
+            */
 }
 
 Rectangle Prop::GetCollisionRec(Vector2 heroPos)

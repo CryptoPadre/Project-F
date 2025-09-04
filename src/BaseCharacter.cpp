@@ -147,8 +147,9 @@ void BaseCharacter::tick(float deltaTime)
         deathAnimDone = false;
         getUpFrame = 5;
     }
+    /*
     DrawRectangleLines(getScreenPos().x + 35,
                        getScreenPos().y + 15,
                        width / scale + 25,
-                       height / scale + 40, RED);
+                       height / scale + 40, RED); */
 }

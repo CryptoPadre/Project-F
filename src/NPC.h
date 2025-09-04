@@ -15,6 +15,7 @@ public:
     void setTarget(Character *character) { hero = character; useCustomTarget = false; }
     void setAttack(bool attack) { willAttack = attack; }
     bool getAttack() { return willAttack; }
+    bool getCanAttack(){ return canAttack;}
     void setCurrentFrame(int frame) { currentFrame = frame; }
     void advanceDialogue();
     void resetDialogue();
