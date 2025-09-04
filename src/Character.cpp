@@ -157,13 +157,13 @@ void Character::tick(float deltaTime)
 				destDagger.height};
 
 			DrawTexturePro(currentDagger, source, destDagger, origin, 0.f, WHITE);
-
-			DrawRectangleLines(
-				daggerCollisionRec.x,
-				daggerCollisionRec.y,
-				daggerCollisionRec.width,
-				daggerCollisionRec.height,
-				RED);
+			/*
+						DrawRectangleLines(
+							daggerCollisionRec.x,
+							daggerCollisionRec.y,
+							daggerCollisionRec.width,
+							daggerCollisionRec.height,
+							RED); */
 		}
 		Rectangle source{
 			width * attackFrame,
@@ -186,5 +186,5 @@ void Character::tick(float deltaTime)
 		BaseCharacter::tick(deltaTime); // This draws the walking animation
 	}
 
-	DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
+	// DrawText(TextFormat("Width: %.2f Height: %.2f", worldPos.x, worldPos.y), 10, 10, 20, RED);
 }

@@ -39,6 +39,7 @@ int main()
 	Vector2 targetAfterDeath = {1000.f, 1000.f};
 	Character hero{screenWidth, screenHeight};
 	// draw NPCs
+	// yellow 1200 2130
 	NPC boyd{Vector2{1000.f, 700.f}, LoadTexture("boyd-walk.png"), LoadTexture("boyd-attack.png"), LoadTexture("boyd-hurt.png"), true};
 	NPC sara{Vector2{1200.f, 670.f}, LoadTexture("sara-walk.png"), LoadTexture("sara-hurt.png"), LoadTexture("sara-hurt.png"), true};
 	NPC kid{Vector2{1150.f, 1300.f}, LoadTexture("kid-walk.png"), LoadTexture("kid-jump.png"), LoadTexture("kid-jump.png"), false};
@@ -285,7 +286,6 @@ int main()
 	bool talkedBeforeFight{};
 	bool talkedToWoman{};
 	bool scrollDialogAdded{};
-	bool renderEnemy{};
 	bool doorUnlocked{};
 	bool boxOpen{};
 	bool daggerPickedUp{};
@@ -404,7 +404,6 @@ int main()
 		TEMPLE
 	};
 	InteriorType currentInterior = NONE;
-	int daysSurvived = 0;
 	double lastDayTriggerTime = 0.0;
 
 	// counting the conversation of the hero on the start map
@@ -456,17 +455,10 @@ int main()
 		mapPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		outsideTownPos = Vector2Scale(hero.getWorldPos(), -1.f);
 		startPos = Vector2Scale(hero.getWorldPos(), -1.f);
-		// counting the time since gamestart and days survived
-		double time = GetTime();
-		if (time - lastDayTriggerTime >= 40.0)
-		{
-			daysSurvived++;
-			lastDayTriggerTime = time;
-		}
 		// change the map if it night or daytime
 		if (hasStarted)
 		{
-			isDayTime = fmod(GetTime(), 40.0) < 20.0;
+			isDayTime = fmod(GetTime(), 120.0) < 40.0;
 		}
 		if (templeBookInteraction > 5 && !boydDialogAfterBook)
 		{
@@ -707,15 +699,6 @@ int main()
 							hero.undoMovement();
 						}
 					}
-					if (!hero.getAlive())
-					{
-						deathTimer++;
-						if (deathTimer == 400)
-						{
-							isInTown = false;
-							isGameOver = true;
-						}
-					}
 				}
 			}
 			else
@@ -752,17 +735,17 @@ int main()
 							hero.undoMovement();
 						}
 					}
-					if (!hero.getAlive())
-					{
-						deathTimer++;
-						if (deathTimer == 400)
-						{
-							isInTown = false;
-							isGameOver = true;
-						}
-					}
 				}
 				hero.tick(GetFrameTime());
+			}
+			if (!hero.getAlive())
+			{
+				deathTimer++;
+				if (deathTimer == 300)
+				{
+					isGameStart = false;
+					isGameOver = true;
+				}
 			}
 		}
 		// World map changing between daytime/nighttime
@@ -801,7 +784,7 @@ int main()
 			if (!hero.getAlive())
 			{
 				deathTimer++;
-				if (deathTimer == 400)
+				if (deathTimer == 300)
 				{
 					isInTown = false;
 					isGameOver = true;
@@ -1137,7 +1120,6 @@ int main()
 					npcs[3]->setAttack(true);
 					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
 					{
-						hero.undoMovement();
 						hero.setAlive(false);
 					}
 				}
@@ -1181,6 +1163,16 @@ int main()
 								npcs[6]->setWorldPos(2000.f, 2000.f);
 							}
 						}
+					}
+				}
+				if (!hero.getAlive())
+				{
+					deathTimer++;
+					if (deathTimer == 300)
+					{
+						currentInterior = NONE;
+						isInside = false;
+						isGameOver = true;
 					}
 				}
 				if (hero.getWorldPos().x > -114 && hero.getWorldPos().x < 30 && hero.getWorldPos().y < -200)
@@ -1284,7 +1276,8 @@ int main()
 				if (hasMedkit)
 				{
 					npcs[5]->tick(GetFrameTime());
-					if (Vector2Distance(npcs[5]->getScreenPos(), hero.getScreenPos()) < 150.f)
+					if (Vector2Distance(npcs[5]->getScreenPos(), hero.getScreenPos()) < 150.f ||
+						Vector2Distance(npcs[0]->getScreenPos(), hero.getScreenPos()) < 150.f)
 					{
 						npcs[5]->setAttack(true);
 					}
@@ -1309,7 +1302,7 @@ int main()
 					if (!hero.getAlive())
 					{
 						deathTimer++;
-						if (deathTimer == 400)
+						if (deathTimer == 250)
 						{
 							isInside = false;
 							currentInterior = NONE;
@@ -1817,15 +1810,6 @@ int main()
 			{
 				DrawTextureEx(maps[12], outsideTownPos, 0.0, 3.f, WHITE);
 			}
-			if (!hero.getAlive())
-			{
-				deathTimer++;
-				if (deathTimer == 400)
-				{
-					isOutsideCave = false;
-					isGameOver = true;
-				}
-			}
 			if (!isDayTime)
 			{
 				props[8].Render(hero.getWorldPos());
@@ -1857,6 +1841,15 @@ int main()
 							enemies[1]->setAlive(false);
 						}
 					}
+				}
+			}
+			if (!hero.getAlive())
+			{
+				deathTimer++;
+				if (deathTimer == 300)
+				{
+					isOutsideCave = false;
+					isGameOver = true;
 				}
 			}
 			if (hero.getWorldPos().x > 915 && hero.getWorldPos().x < 1059 && hero.getWorldPos().y > 1779 && hero.getWorldPos().y < 1820 ||
@@ -2137,15 +2130,6 @@ int main()
 					{
 						hero.setAlive(false);
 					}
-					if (!hero.getAlive())
-					{
-						deathTimer++;
-						if (deathTimer == 400)
-						{
-							isInCave = false;
-							isGameOver = true;
-						}
-					}
 					if (CheckCollisionRecs(enemies[i]->GetCollisionRec(), npcs[6]->GetCollisionRec()) && enemies[i]->hasAwaken() && enemies[i]->getAlive())
 					{
 						npcs[6]->setAlive(false);
@@ -2267,6 +2251,15 @@ int main()
 					hasFallen = false;
 				}
 			}
+			if (!hero.getAlive())
+			{
+				deathTimer++;
+				if (deathTimer == 400)
+				{
+					isInCave = false;
+					isGameOver = true;
+				}
+			}
 		}
 		else if (isGameOver)
 		{
@@ -2285,6 +2278,7 @@ int main()
 				hasRustyKey = false;
 				hasScroll = false;
 				hasTempleKey = false;
+				hasMedkit = false;
 				deathTimer++;
 				if (deathTimer > 600)
 				{
@@ -2302,6 +2296,7 @@ int main()
 				hasRustyKey = false;
 				hasScroll = false;
 				hasTempleKey = false;
+				hasMedkit = false;
 				PlayMapMusic(1);
 				DrawTexturePro(maps[16], srcEnd, destEnd, {0, 0}, 0.0f, WHITE);
 				// Scrolling text
@@ -2648,7 +2643,7 @@ int main()
 				if (!hero.getAlive())
 				{
 					deathTimer++;
-					if (deathTimer == 400)
+					if (deathTimer == 300)
 					{
 						isEndGame = false;
 						isGameOver = true;
@@ -2657,9 +2652,12 @@ int main()
 			}
 			if (hasDagger && npcs[3]->getAttack())
 			{
-				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+				if (npcs[3]->getAlive())
 				{
-					hero.setAlive(false);
+					if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.GetCollisionRec()))
+					{
+						hero.setAlive(false);
+					}
 				}
 				if (CheckCollisionRecs(npcs[3]->GetCollisionRec(), hero.getDaggerCollisionRec()) && IsKeyPressed(KEY_SPACE))
 				{

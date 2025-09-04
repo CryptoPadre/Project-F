@@ -7,7 +7,7 @@ inline std::vector<std::string> boydDialoguesDayOne = {
     "He killed them all.",
     "Everyone...except me and Sara.",
     "It'll get dark soon!",
-    "Take this talisman !",
+    "Take this talisman!",
     "And stay inside a house at night...",
     "But stay away from the house next to the temple!",
     "They are coming!"};
@@ -17,7 +17,7 @@ inline std::vector<std::string> boydDialoguesDayTwo = {
     "She still thinks there's a way out.",
     "But let me tell you something...",
     "Only one woman ever got out, and...",
-    "She died here."};
+    "she died here."};
 
 inline std::vector<std::string> boydDialoguesAfterReadingTheBook = {
     "He tried to escape at all costs.",
@@ -66,7 +66,7 @@ inline std::vector<std::string> saraDialoguesDayOne = {
     "He let us live, because he can't kill us!",
     "He let us live, because he can't live without us!",
     "He let us live, because he was one of us!",
-    "He was... he was you, before you died!",
+    "He was... you, before you died!",
     "He is you, but not now...",
     "The voices are back again!",
     "They were waiting for you...",
@@ -98,8 +98,8 @@ inline std::vector<std::string> saraDialoguesDayAfterFight = {
 inline std::vector<std::string> kidDialogScroll = {
     "Remember!",
     "You need to remember!",
-    "I'm your daugther, we are!",
-    "You die, you left, you return!",
+    "I'm your daugther. We are!",
+    "You died, you left, you returned!",
     "The only escape is thru the tree"};
 
 inline std::vector<std::string> yellowDialogStartMap = {
@@ -116,7 +116,7 @@ inline std::vector<std::string> yellowDialogStartMap = {
     "Blaming who we'll become..."};
 
 inline std::vector<std::string> yellowWarning = {
-    "I'd turn back!"};
+    "I'd turn back if I were you!"};
 
 inline std::vector<std::string> yellowDialogByTree = {
     "Beautiful, isn't it?",
@@ -156,17 +156,17 @@ inline std::vector<std::string> heroInCave = {
     "I need to get out quickly and silently!"};
 
 inline std::vector<std::string> heroScroll = {
-    "Would it be that scroll?",
-    "Some gibberish text on it...",
+    "Could this be the scroll?",
+    "Some gibberish text written on it...",
     "Quickly go back to Jade!",
     "He might know what is written on it!"};
 
 inline std::vector<std::string> heroInteractionWithDoors = {
-    "Heeeelp!",
+    "Heeelp!",
     "It's locked!"};
 
 inline std::vector<std::string> heroInteractionWithDoor2 = {
-    "It's locked from inside!",
+    "It's locked from the inside!",
     "Is anybody inside?",
     "I need to find another way in."};
 
@@ -181,20 +181,20 @@ inline std::vector<std::string> interactionWithHouseOutsideTown = {
 
 inline std::vector<std::string> heroInteractionWithBookInTemple = {
     "A book?",
-    "Somebody wrote this page just yesterday.",
+    "Someone wrote this page just yesterday.",
     "I went into the cave for answers.",
     "It was full of those monsters.",
     "I hid behind a rock.",
     "And there, I found this dagger.",
     "Stabbed into a skeleton's head.",
     "It must have been there for ages.",
-    "But the blood is still fresh on it.",
+    "But the blood is still fresh.",
     "I'm afraid it has something to do with the man in yellow.",
     "He appeared the next day.",
     "He might have been looking for the dagger.",
     "It's better to lock it away.",
     "I'll need to go back to that cave.",
-    "Those kids want to show me something.",
+    "The kids want to show me something.",
     "Who wrote this?",
     "Jade?",
 };
@@ -205,7 +205,7 @@ inline std::vector<std::string> womanInTheHouse = {
     "There's a flashlight in the drawer!",
     "I need the medkit!",
     "It's under... my bed.",
-    "Please,hurry!",
+    "Please, hurry!",
     "The baby is coming!"};
 
 inline std::vector<std::string> jadeDialog{
@@ -218,7 +218,7 @@ inline std::vector<std::string> jadeDialog{
     "Here, take this key!",
     "There's a flashlight in the temple.",
     "If you get some batteries, we can use it.",
-    "You have them in your car?",
+    "Do you have them in your car?",
     "Jackpot!",
     "However… there's a tiny problem.",
     "Fatima is locked inside the temple.",
@@ -252,7 +252,7 @@ inline std::vector<std::string> interactionWithPotion{
 
 inline std::vector<std::string> interactionWithClock{
     "Why would anyone need a clock here?",
-    "Something is hidden between the clogs!",
+    "Something is hidden between the cogs!",
     "Another key?"};
 
 inline std::vector<std::string> awakening{
